@@ -5,5 +5,16 @@ php:
 #  - '7.0'
 #  - 'hhvm'
 #  - 'nightly'
-install: composer install
+env:
+  global:
+    - DBNAME='variation' 
+    - DBUSER='deploy' 
+    - DBPASS='variation'
+services:
+  - postgresql
+addons:
+  postgresql: "9.1"
+install: 
+  - composer install
+  - ./scripts/install.sh
 script: ./vendor/bin/phpunit src/
