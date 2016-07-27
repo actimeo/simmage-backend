@@ -2,9 +2,8 @@ language: php
 php: 
   - '5.5'
   - '5.6'
-  - '7.0'
-  - 'hhvm'
-  - 'nightly'
+#  - '7.0'
+#  - 'nightly'
 env:
   global:
     - DBNAME='variation' 
@@ -13,7 +12,9 @@ env:
 services:
   - postgresql
 addons:
-  postgresql: "9.1"
+  postgresql: 
+  - "9.1"
+  - "9.4"
 install: 
   - composer install
   - ./scripts/install.sh
