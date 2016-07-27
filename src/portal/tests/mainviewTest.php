@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class mainviewTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -102,7 +105,7 @@ class mainviewTest extends PHPUnit_Framework_TestCase {
 
     self::$base->portal->mainview_set($this->token, $this->mmeId, $title, $icon, $this->mve_id1, null);
     self::$base->portal->mainview_delete($this->token, $this->mmeId);
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $mvi = self::$base->portal->mainview_get($this->token, $this->mmeId);
   }
 

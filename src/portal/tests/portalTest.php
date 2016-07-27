@@ -13,8 +13,11 @@
  - reorder
  - unique order
 */
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class portalTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -64,7 +67,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Add two portals with same name
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPortalAddSameName() {
     $name = 'a portal';
@@ -108,7 +111,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to rename an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPortalRenameUnknown() {
     $name1 = 'a portal';
@@ -130,7 +133,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPortalDeleteUnknown() {
     $name = 'a portal';
@@ -140,7 +143,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete a portal with null value as por_id raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPortalDeleteNull() {
     $name = 'a portal';
@@ -161,7 +164,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
     self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name1);
     self::$base->portal->personsection_add($this->token, $por_id, 'staff', $pse_name2);
     self::$base->portal->portal_clean($this->token, $por_id);
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->portal->portal_rename($this->token, $por_id, 'new name');
   }
 

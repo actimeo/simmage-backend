@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class personviewTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -77,7 +80,7 @@ class personviewTest extends PHPUnit_Framework_TestCase {
 
     self::$base->portal->personview_set($this->token, $this->pmeId, $title, $icon, $this->pve_id1);
     self::$base->portal->personview_delete($this->token, $this->pmeId);
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $pvi = self::$base->portal->personview_get($this->token, $this->pmeId);
   }
 

@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class personviewElementTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -97,7 +100,7 @@ class personviewElementTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testPersonviewElementSetNullEntities() {
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $pve_type = 'personsample1';
     $pve_name4 = 'element 4';
     $entities4 = null;
@@ -105,7 +108,7 @@ class personviewElementTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testPersonviewElementSetEmptyEntities() {
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $pve_type = 'personsample1';
     $pve_name5 = 'element 5';
     $entities5 = array ();

@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class participantAssignmentTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -80,7 +83,7 @@ class participantAssignmentTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete an inexistant assignment raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testSgaDeleteUnknown() {
     $id = self::$base->organ->participant_assignment_add($this->token, $this->grpId, $this->parId);

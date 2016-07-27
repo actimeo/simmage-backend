@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class personmenuTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -70,7 +73,7 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Add two personmenus with same name in same personsection
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPersonMenuAddSameName() {
     $por_name = 'a portal';
@@ -193,7 +196,7 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
  /**
    * Trying to rename an inexistant personmenu raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
    public function testPersonMenuRenameUnknown() {
     $name1 = 'a section';
@@ -223,7 +226,7 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testPersonMenuDeleteUnknown() {
     $name = 'a portal';

@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class coreTest extends PHPUnit_Framework_TestCase {
     private static $base;
@@ -55,7 +58,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
   
   /**
    * Login exception with wrong password
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testUserLoginExceptionWrongPwd() {
     $login = 'testdejfhcqcsdfkhn';
@@ -67,7 +70,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Login exception with insufficient/no rights
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testUserLoginExceptionNoRight() {
     $login = 'testdejfhcqcsdfkhn';
@@ -79,7 +82,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Login exception with insufficient/wrong rights
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testUserLoginExceptionWrongRight() {
     $login = 'testdejfhcqcsdfkhn';
@@ -103,7 +106,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->login->user_logout($res['usr_token']);
 
     // Token should be invalid now
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->login->user_logout($res['usr_token']);
   }
 
@@ -127,7 +130,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $this->assertFalse($res['usr_temp_pwd']);
     
     self::$base->login->user_logout($res['usr_token']);
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $res = self::$base->login->user_login($login, 'wrong_pwd', null);
   }
 
@@ -173,7 +176,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
     $this->assertGreaterThan(0, $admin['usr_token']);
     
-    $this->setExpectedException('PgProcException');
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $tmppwd = self::$base->login->user_regenerate_password($admin['usr_token'], $loginAdmin);    
   }
 

@@ -6,8 +6,11 @@
  - reorder
  - unique order
 */
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class mainsectionTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -71,7 +74,7 @@ class mainsectionTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Add two mainsections with same name in same portal
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testMainsectionAddSameName() {
     $por_name = 'a portal';
@@ -172,7 +175,7 @@ class mainsectionTest extends PHPUnit_Framework_TestCase {
 
  /**
    * Trying to rename an inexistant mainsection raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
    public function testMainsectionRenameUnknown() {
     $name1 = 'a section';
@@ -195,7 +198,7 @@ class mainsectionTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testMainsectionDeleteUnknown() {
     $name = 'a portal';

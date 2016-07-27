@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class topicTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -51,7 +54,7 @@ class topicTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Add two portals with same name
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */  
   public function testTopicAddSameName() {
     $name = 'topic 1';

@@ -1,6 +1,9 @@
 <?php
-require_once '../../pgproc/php/pgprocedures.php';
-require_once '../../config.inc.php';
+require_once 'pgproc/php/pgprocedures.php';
+require_once 'config.inc.php';
+
+use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcException;
 
 class organizationTest extends PHPUnit_Framework_TestCase {
   private static $base;
@@ -61,7 +64,7 @@ class organizationTest extends PHPUnit_Framework_TestCase {
   
   /**
    * Add two portals with same name
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */  
   public function testOrganizationAddSameName() {
     $name = 'an organization';
@@ -109,7 +112,7 @@ class organizationTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to rename an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testOrganizationRenameUnknown() {
     $name1 = 'a portal';
@@ -133,7 +136,7 @@ class organizationTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete an inexistant portal raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testOrganizationDeleteUnknown() {
     $name = 'an organization';
@@ -144,7 +147,7 @@ class organizationTest extends PHPUnit_Framework_TestCase {
 
   /**
    * Trying to delete a portal with null value as por_id raises an exception
-   * @expectedException PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
    */
   public function testOrganizationDeleteNull() {
     $name = 'an organization';
