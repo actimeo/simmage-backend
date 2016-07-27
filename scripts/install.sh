@@ -7,8 +7,9 @@ PGPASSWORD=$DBPASS psql $DBNAME -c "CREATE SCHEMA pgcrypto AUTHORIZATION $DBUSER
 psql $DBNAME -c "CREATE EXTENSION pgcrypto WITH SCHEMA pgcrypto;" -U postgres
 
 # Install schemas
+PGBASE=vendor/actimeo/pgproc/src
 BASE=src
-FILES="$BASE/pgproc/sql/*.sql $BASE/pgproc/plpgsql/*.sql"
+FILES="$PGBASE/sql/*.sql $PGBASE/plpgsql/*.sql"
 FILES="$FILES $BASE/portal/sql/portal.sql $BASE/portal/sql/comments.sql $BASE/portal/sql/mainview_*.sql $BASE/portal/sql/personview_*.sql $BASE/portal/plpgsql/*.sql"
 FILES="$FILES $BASE/organ/sql/organ.sql $BASE/organ/sql/comments.sql $BASE/organ/plpgsql/*.sql"
 FILES="$FILES $BASE/login/sql/auth.sql $BASE/login/sql/comments.sql $BASE/login/plpgsql/*.sql"
