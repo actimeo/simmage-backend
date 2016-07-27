@@ -6,7 +6,7 @@
  - reorder
  - unique order
 */
-require_once 'pgproc/php/pgprocedures.php';
+require 'vendor/autoload.php';
 require_once 'config.inc.php';
 
 use \actimeo\pgproc\PgProcedures2;

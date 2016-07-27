@@ -1,5 +1,12 @@
 {
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/actimeo/pgproc"
+        }
+    ],
     "require": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8",
+	"actimeo/pgproc": "dev-master"
     }
 }

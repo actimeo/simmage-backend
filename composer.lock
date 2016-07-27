@@ -4,9 +4,39 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1564d02b58aa67a0381537557bd10f6c",
-    "content-hash": "471725a725a0e45a1b596bd13677f239",
+    "hash": "87c677fd70e0db59dad806aba31b644f",
+    "content-hash": "cfe1af5a806ea161dd3aec80a62fe76c",
     "packages": [
+        {
+            "name": "actimeo/pgproc",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/actimeo/pgproc.git",
+                "reference": "dac7548b67189a52f6adf80f75a7e177e4234580"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/actimeo/pgproc/zipball/dac7548b67189a52f6adf80f75a7e177e4234580",
+                "reference": "dac7548b67189a52f6adf80f75a7e177e4234580",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "description": "Call PostgreSQL PL/PgSQL procedures from PHP",
+            "support": {
+                "source": "https://github.com/actimeo/pgproc/tree/master",
+                "issues": "https://github.com/actimeo/pgproc/issues"
+            },
+            "time": "2016-07-27 15:00:35"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -1114,7 +1144,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "actimeo/pgproc": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
