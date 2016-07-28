@@ -9,7 +9,7 @@
 require 'vendor/autoload.php';
 require_once 'config.inc.php';
 
-use \actimeo\pgproc\PgProcedures2;
+use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
 class mainsectionTest extends PHPUnit_Framework_TestCase {
@@ -33,7 +33,7 @@ class mainsectionTest extends PHPUnit_Framework_TestCase {
     self::assertNotNull(self::$pgDatabase);
     
     // Create object
-    self::$base = new PgProcedures2 (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase);
+    self::$base = new PgProcedures (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase);
     self::assertNotNull(self::$base);    
   }
 
