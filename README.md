@@ -9,6 +9,11 @@ For a normal usage, the database should not be accessed directly with SQL reques
 
 The PgProcedures (https://github.com/actimeo/pgproc) PHP module can be used to access PL/PgSQL procedures from PHP.
 
+## Prerequisites:
+
+- PostgreSQL server 9.1 or higher
+- PHP 5.5 or higher
+
 ## Install
 
 - get sources from github:
