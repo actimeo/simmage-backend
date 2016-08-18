@@ -7,6 +7,8 @@ The backend is composed of a PostgreSQL database, divided in several schemas, an
 
 For a normal usage, the database should not be accessed directly with SQL requests, but PL/PgSQL procedures should be used.
 
+The PgProcedures (https://github.com/actimeo/pgproc) PHP module can be used to access PL/PgSQL procedures from PHP.
+
 ## Install
 
 - get sources from github:
