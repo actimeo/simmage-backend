@@ -28,7 +28,7 @@ FILES="$PGBASE/sql/*.sql $PGBASE/plpgsql/*.sql"
 FILES="$FILES $BASE/portal/sql/portal.sql $BASE/portal/sql/comments.sql $BASE/portal/sql/mainview_*.sql $BASE/portal/sql/personview_*.sql $BASE/portal/plpgsql/*.sql"
 FILES="$FILES $BASE/organ/sql/organ.sql $BASE/organ/sql/comments.sql $BASE/organ/plpgsql/*.sql"
 FILES="$FILES $BASE/login/sql/auth.sql $BASE/login/sql/comments.sql $BASE/login/plpgsql/*.sql"
-FILES="$FILES $BASE/pgdoc/sql/schema.sql $BASE/pgdoc/sql/*.sql"
+FILES="$FILES $BASE/pgdoc/sql/schema.sql $BASE/pgdoc/plpgsql/*.sql"
 
 echo 'Installing SQL from files:'
 for i in $FILES; do 
