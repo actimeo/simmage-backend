@@ -1,39 +1,42 @@
 language: php
-php: 
-  - '5.5'
-  - '5.6'
-  - '7.0'
-#  - 'hhvm'
-  - 'nightly'
+php:
+- '5.5'
+- '5.6'
+- '7.0'
+- nightly
 env:
   global:
-    - DBNAME='variation' 
-    - DBUSER='deploy' 
-    - DBPASS='variation'
+  - DBNAME='variation'
+  - DBUSER='deploy'
+  - DBPASS='variation'
   matrix:
-    - SAMPLE=mecs
-    - SAMPLE=simple
+  - SAMPLE=mecs
+  - SAMPLE=simple
 services:
-  - postgresql
+- postgresql
 addons:
   ssh_known_hosts: maya.elol.fr
-  postgresql: "9.1"
+  postgresql: '9.1'
 before_install:
-  - openssl aes-256-cbc -K $encrypted_ba31cb1a56b5_key -iv $encrypted_ba31cb1a56b5_iv
-    -in deploy/deploy_rsa.enc -out deploy/deploy_rsa -d
-install: 
-  - composer install
-  - ./scripts/install.sh
+- openssl aes-256-cbc -K $encrypted_7194d2db567b_key -iv $encrypted_7194d2db567b_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
+- openssl aes-256-cbc -K $encrypted_ba31cb1a56b5_key -iv $encrypted_ba31cb1a56b5_iv
+  -in deploy/deploy_rsa.enc -out deploy/deploy_rsa -d
+install:
+- composer install
+- ./scripts/install.sh
 script: ./vendor/bin/phpunit src/
 before_deploy:
-  - (cd data && php $SAMPLE.php) && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz && ls -l $SAMPLE.sql.gz
-  - eval "$(ssh-agent -s)"
-  - chmod 600 $TRAVIS_BUILD_DIR/deploy/deploy_rsa
-  - ssh-add $TRAVIS_BUILD_DIR/deploy/deploy_rsa
+- (cd data && php $SAMPLE.php) && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz
+  && ls -l $SAMPLE.sql.gz
+- eval "$(ssh-agent -s)"
+- chmod 600 $TRAVIS_BUILD_DIR/deploy/deploy_rsa
+- ssh-add $TRAVIS_BUILD_DIR/deploy/deploy_rsa
 deploy:
   provider: script
   skip_cleanup: true
-  script: scp $SAMPLE.sql.gz "deploy@maya.elol.fr:" && ssh deploy@maya.elol.fr ./deploy-db.sh $SAMPLE
+  script: scp $SAMPLE.sql.gz "deploy@maya.elol.fr:" && ssh deploy@maya.elol.fr ./deploy-db.sh
+    $SAMPLE
   on:
     branch: master
     php: 5.6
