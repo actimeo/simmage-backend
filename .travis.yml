@@ -25,7 +25,7 @@ install:
 - ./scripts/install.sh
 script: ./vendor/bin/phpunit src/
 before_deploy:
-- (cd data && php $SAMPLE.php) && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz
+- php data/$SAMPLE.php && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz
   && ls -l $SAMPLE.sql.gz
 - eval "$(ssh-agent -s)"
 - chmod 600 $TRAVIS_BUILD_DIR/deploy/deploy_rsa
