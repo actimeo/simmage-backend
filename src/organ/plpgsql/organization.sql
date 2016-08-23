@@ -83,6 +83,7 @@ AS $$
 DECLARE
 
 BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
   UPDATE organ.organization SET org_description = prm_description
     WHERE org_id = prm_id;
 END;
