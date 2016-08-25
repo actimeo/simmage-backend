@@ -70,7 +70,10 @@ CREATE TYPE user_login AS (
   usr_token integer,
   usr_temp_pwd boolean,
   usr_rights login.user_right[],
-  par_id integer
+  par_id integer,
+  ugr_id integer,
+  par_firstname text,
+  par_lastname text
 );
 COMMENT ON TYPE user_login IS 'Type returned by user_login function';
 COMMENT ON COLUMN user_login.usr_token IS 'Token to use for other functions';
@@ -97,7 +100,8 @@ BEGIN
   IF NOT FOUND THEN
     SELECT * INTO tok FROM login._user_token_create (usr);
   END IF;
-  SELECT DISTINCT tok, (usr_pwd NOTNULL), usr_rights, par_id INTO row FROM login."user"
+  SELECT DISTINCT tok, (usr_pwd NOTNULL), usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO row FROM login."user"
+    LEFT JOIN organ.participant USING(par_id)
     WHERE usr_login = usr;
   RETURN row;
 END;
@@ -179,7 +183,9 @@ CREATE TYPE login.user_info AS (
   usr_temp_pwd text,
   usr_rights login.user_right[],
   par_id integer,
-  ugr_id integer
+  ugr_id integer,
+  par_firstname text,
+  par_lastname text
 );
 
 CREATE FUNCTION login.user_info(prm_token integer, prm_login text)
@@ -191,8 +197,9 @@ DECLARE
   ret login.user_info;
 BEGIN
   PERFORM login._token_assert (prm_token, '{users}');
-  SELECT usr_login, usr_pwd, usr_rights, par_id, ugr_id INTO ret 
+  SELECT usr_login, usr_pwd, usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO ret 
     FROM login."user" 
+    LEFT JOIN organ.participant USING(par_id)
     WHERE usr_login = prm_login;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
