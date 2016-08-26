@@ -86,5 +86,25 @@ $base->login->usergroup_set_groups($token, $ug1, array($grpI1));
 // Give user2 access to 2 groups
 $base->login->usergroup_set_groups($token, $ug2, array($grpII1, $grpII2));
 
+// BUILD PORTALS
+$mseAI = $base->portal->mainsection_add($token, $porId1, 'Section AI');
+$mseAII = $base->portal->mainsection_add($token, $porId1, 'Section AII');
+$mseAIII = $base->portal->mainsection_add($token, $porId1, 'Section AIII');
 
+$mseBI = $base->portal->mainsection_add($token, $porId2, 'Section BI');
+$mseBII = $base->portal->mainsection_add($token, $porId2, 'Section BII');
+$mseBIII = $base->portal->mainsection_add($token, $porId2, 'Section BIII');
+
+$mseCI = $base->portal->mainsection_add($token, $porId3, 'Section CI');
+$mseCII = $base->portal->mainsection_add($token, $porId3, 'Section CII');
+$mseCIII = $base->portal->mainsection_add($token, $porId3, 'Section CIII');
+
+$base->portal->mainmenu_add($token, $mseCI, "Menu CI1");
+
+$base->portal->mainmenu_add($token, $mseCII, "Menu CII1");
+$base->portal->mainmenu_add($token, $mseCII, "Menu CII2");
+
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII1");
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII2");
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII3");
 $base->commit ();
