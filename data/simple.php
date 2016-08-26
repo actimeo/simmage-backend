@@ -80,4 +80,11 @@ $base->organ->participant_assignment_add($token, $grpI1, $stfId2);
 $base->organ->participant_assignment_add($token, $grpI2, $stfId2);
 $base->organ->participant_assignment_add($token, $grpII2, $stfId2);
 
+// Give user1 access to 1 group
+$base->login->usergroup_set_groups($token, $ug1, array($grpI1));
+
+// Give user2 access to 2 groups
+$base->login->usergroup_set_groups($token, $ug2, array($grpII1, $grpII2));
+
+
 $base->commit ();
