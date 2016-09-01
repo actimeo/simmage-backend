@@ -172,7 +172,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(null, $grpIds);
 
     self::$base->login->usergroup_set_groups($this->token, $ugr, null);
-    $porIds = self::$base->login->usergroup_group_list($this->token, $ugr);
+    $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(null, $grpIds);
   }
 
