@@ -39,6 +39,17 @@ CREATE TABLE organ.group_topic (
   UNIQUE(grp_id, top_id)
 );
 
+CREATE TABLE organ.group_exclusive (
+  gre_id serial PRIMARY KEY,
+  gre_name text NOT NULL UNIQUE
+);
+
+CREATE TABLE organ.group_exclusive_group (
+  geg_id serial PRIMARY KEY,
+  gre_id integer NOT NULL REFERENCES organ.group_exclusive,
+  grp_id integer NOT NULL REFERENCES organ.group UNIQUE  
+);
+
 CREATE TABLE organ.dossier_assignment (
   doa_id serial PRIMARY KEY,
   dos_id integer NOT NULL REFERENCES organ.dossier,

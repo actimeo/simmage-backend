@@ -72,6 +72,9 @@ $base->organ->group_set_topics($token, $grpII1, array($tSport));
 $grpII2 = $base->organ->group_add($token, $orgII, 'Group 2 institution II', 'Group II 2');
 $base->organ->group_set_topics($token, $grpII2, array($tFinancer, $tSupport));
 
+// set exclusive Institution I groups 1 and 2
+$base->organ->group_exclusive_new($token, 'exclusive group', array($grpI1, $grpI2));
+
 // add a mandatory group
 $grpIMand = $base->organ->group_add($token, $orgI, 'Mandatory Group', 'Group mandarory on Org I');
 $base->organ->group_set_topics($token, $grpIMand, array($tPsycho));

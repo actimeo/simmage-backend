@@ -82,6 +82,7 @@ $gPavillon1 = $base->organ->group_add($token, $oMecs, 'Pavillon 1', 'Pavillon No
 $gPavillon2 = $base->organ->group_add($token, $oMecs, 'Pavillon 2', 'Pavillon Sud');
 $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
+$base->organ->group_exclusive_new($token, 'Pavillons', array($gPavillon1, $gPavillon2));
 
 // Group Suivi psychologique
 $gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY');
@@ -102,6 +103,7 @@ $gCe1 = $base->organ->group_add($token, $oEcole, 'CE1', '2e année primaire');
 $gCe2 = $base->organ->group_add($token, $oEcole, 'CE2', '3e année primaire');
 $gCm1 = $base->organ->group_add($token, $oEcole, 'CM1', '4e année primaire');
 $gCm2 = $base->organ->group_add($token, $oEcole, 'CM2', '5e année primaire');
+$base->organ->group_exclusive_new($token, 'Classes', array($gCp, $gCe1, $gCe2, $gCm1, $gCm2));
 
 foreach (array($gCp, $gCe1, $gCe2, $gCm1, $gCm2) as $group) { 
   $base->organ->group_set_topics($token, $group, $topicsEcole);

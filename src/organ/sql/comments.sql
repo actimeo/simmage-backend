@@ -31,6 +31,10 @@ COMMENT ON TABLE organ.dossier IS 'Information about patient, family';
 
 COMMENT ON TABLE organ.group IS 'Group receiving patients';
 
+COMMENT ON TABLE organ.group_exclusive IS 'A set of exclusive groups';
+
+COMMENT ON TABLE organ.group_exclusive_group IS 'The groups contained in a set of exclusive groups.';
+
 COMMENT ON TABLE organ.participant IS 'Base information about a participant. Uniqueness of participants is done in firstname/lastname.';
 
 COMMENT ON TABLE organ.dossier_assignment IS 'Assignation of a patient to a group';

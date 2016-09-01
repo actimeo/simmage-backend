@@ -155,5 +155,5 @@ class organizationTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
     self::$base->organ->organization_delete($this->token, null);
   }
-
+    
 }

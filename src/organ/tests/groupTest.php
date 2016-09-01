@@ -253,4 +253,154 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp = self::$base->organ->group_get($this->token, $grpId);
     $this->assertFalse($grp['grp_mandatory']);
   }
+
+  public function testGroupExclusiveNew() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $grp_name3 = 'group 3';
+    $grp_desc3 = 'group desc 3';
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+
+    $grp_name4 = 'group 4';
+    $grp_desc4 = 'group desc 4';
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+
+    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    $res = self::$base->organ->group_exclusive_with($this->token, $grpId1);
+    $resIds = array_map(function($e) { return $e['grp_id']; }, $res);
+    $this->assertEquals($resIds, array ($grpId1, $grpId2, $grpId3));
+  }
+
+  /**
+   * Trying to add a group in two sets of exclusive groups should raise an exception
+   */
+  public function testGroupExclusiveNewGroupInSingleSet() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $grp_name3 = 'group 3';
+    $grp_desc3 = 'group desc 3';
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+
+    $grp_name4 = 'group 4';
+    $grp_desc4 = 'group desc 4';
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+
+    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    self::$base->organ->group_exclusive_new($this->token, 'other exclusive groups', array($grpId1, $grpId4));
+  }
+
+  public function testGroupExclusiveWithNothing() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $grp_name3 = 'group 3';
+    $grp_desc3 = 'group desc 3';
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+
+    $grp_name4 = 'group 4';
+    $grp_desc4 = 'group desc 4';
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+
+    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    $res = self::$base->organ->group_exclusive_with($this->token, $grpId4);
+    $this->assertNull($res);
+  }
+
+  public function testGroupExclusiveDelete() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $grp_name3 = 'group 3';
+    $grp_desc3 = 'group desc 3';
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+
+    $grp_name4 = 'group 4';
+    $grp_desc4 = 'group desc 4';
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    $this->assertNotNull($gre);
+    self::$base->organ->group_exclusive_delete($this->token, $grpId2);
+    $res = self::$base->organ->group_exclusive_with($this->token, $grpId2);
+    $this->assertNull($res);    
+  }
+
+  // create a set of exclusive groups with a mandtory group -> Exception
+  public function testGroupExclusiveWhenMandatory() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    self::$base->organ->group_set_mandatory($this->token, $grpId1, true);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2));
+  }
+
+  // set a group mandatory when it is in an exclusive set -> Exception
+  public function testGroupExclusiveMandatoryWhenExclusive() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2));
+
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    self::$base->organ->group_set_mandatory($this->token, $grpId1, true);
+  }
+
 }

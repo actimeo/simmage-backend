@@ -142,6 +142,9 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
+  IF EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
+    RAISE EXCEPTION 'The group with id=% is in an exclusive set and cannot be set as mandatory', prm_id USING ERRCODE = 'data_exception';
+  END IF;
   UPDATE organ.group SET grp_mandatory = prm_mandatory WHERE grp_id = prm_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
@@ -149,3 +152,64 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.group_set_mandatory(prm_token integer, prm_id integer, prm_mandatory boolean) IS 'Set the mandatory property as true/false for a group';
+
+CREATE OR REPLACE FUNCTION organ.group_exclusive_new(prm_token integer, prm_name text, prm_grp_ids integer[])
+RETURNS integer
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  ret integer;
+  i integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  INSERT INTO organ.group_exclusive (gre_name) VALUES (prm_name)
+    RETURNING gre_id INTO ret;
+  FOREACH i IN ARRAY prm_grp_ids 
+  LOOP
+    -- forbid mandatory and exclusive group
+    IF EXISTS (SELECT 1 FROM organ."group" WHERE grp_id = i AND grp_mandatory) THEN
+      RAISE EXCEPTION 'The group with id=% is mandatory and cannot be added to an exclusive set', i USING ERRCODE = 'data_exception';
+    END IF;
+    INSERT INTO organ.group_exclusive_group (gre_id, grp_id) VALUES (ret, i);
+  END LOOP;  
+  RETURN ret;  
+END;
+$$;
+COMMENT ON FUNCTION organ.group_exclusive_new(prm_token integer, prm_name text, prm_grp_ids integer[]) IS 'Create a new set of exclusive groups. A group can be contained in no more than one set of exclusive groups.';
+
+CREATE OR REPLACE FUNCTION organ.group_exclusive_with(prm_token integer, prm_grp_id integer)
+RETURNS SETOF organ.group
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  row organ.group;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  RETURN QUERY SELECT "group".* FROM organ.group
+    INNER JOIN organ.group_exclusive_group USING(grp_id)
+    WHERE gre_id = (SELECT gre_id FROM organ.group_exclusive_group WHERE grp_id = prm_grp_id)
+    ORDER BY grp_id;
+END;
+$$;
+COMMENT ON FUNCTION organ.group_exclusive_with(prm_token integer, prm_grp_id integer) IS 'Returns the list of groups exclusive with the given group';
+
+CREATE OR REPLACE FUNCTION organ.group_exclusive_delete(prm_token integer, prm_grp_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  gre integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  SELECT gre_id INTO gre FROM organ.group_exclusive_group WHERE grp_id = prm_grp_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+  DELETE FROM organ.group_exclusive_group WHERE gre_id = gre;
+  DELETE FROM organ.group_exclusive WHERE gre_id = gre;
+END;
+$$;
+COMMENT ON FUNCTION organ.group_exclusive_delete(prm_token integer, prm_grp_id integer) IS 'Delete the set of exclusive groups containing the given group';
