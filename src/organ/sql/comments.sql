@@ -43,6 +43,10 @@ COMMENT ON COLUMN organ.organization.org_id IS 'Unique identifier';
 
 COMMENT ON COLUMN organ.organization.org_name IS 'Organization name';
 
+COMMENT ON COLUMN organ.organization.org_description IS 'Organization description';
+
+COMMENT ON COLUMN organ.organization.org_internal IS 'Indicates if internal or external organization';
+
 COMMENT ON COLUMN organ.dossier.dos_id IS 'Unique identifier';
 
 COMMENT ON COLUMN organ.dossier.dos_firstname IS 'Person firstname';
@@ -57,8 +61,14 @@ COMMENT ON COLUMN organ.group.org_id IS 'Organization to which is attached the g
 
 COMMENT ON COLUMN organ.group.grp_name IS 'Name of the group';
 
+COMMENT ON COLUMN organ.group.grp_description IS 'Description of the group';
+
+COMMENT ON COLUMN organ.group.grp_mandatory IS 'Default: false. Indicates if new dossiers are inevitably assigned to this group.';
+
 COMMENT ON COLUMN organ.participant.par_id IS 'Unique identifier';
 
 COMMENT ON COLUMN organ.participant.par_firstname IS 'Participant first name(s)';
 
 COMMENT ON COLUMN organ.participant.par_lastname IS 'Participant last name';
+
+COMMENT ON COLUMN organ.participant.par_email IS 'Participant email';

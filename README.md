@@ -13,6 +13,7 @@ The PgProcedures (https://github.com/actimeo/pgproc) PHP module can be used to a
 
 - PostgreSQL server 9.1 or higher
 - PHP 5.5 or higher
+- php-pgsql module
 
 ## Install
 
