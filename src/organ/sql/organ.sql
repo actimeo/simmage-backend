@@ -28,6 +28,7 @@ CREATE TABLE organ.group (
   org_id integer NOT NULL REFERENCES organ.organization,
   grp_name text NOT NULL,
   grp_description text NOT NULL DEFAULT '',
+  grp_mandatory boolean NOT NULL DEFAULT FALSE,
   UNIQUE(org_id, grp_name)
 );
 

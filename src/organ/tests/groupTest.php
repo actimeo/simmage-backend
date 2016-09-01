@@ -208,4 +208,49 @@ class groupTest extends PHPUnit_Framework_TestCase {
   public function testServiceDeleteNull() {
     self::$base->organ->group_delete($this->token, null);
   }
+
+  public function testSetMandatoryFalseDefault() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name = 'a service group';
+    $grp_desc = 'a group desc';
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+
+    $grp = self::$base->organ->group_get($this->token, $grpId);
+    $this->assertFalse($grp['grp_mandatory']);
+  }
+
+  public function testSetMandatorySetTrue() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name = 'a service group';
+    $grp_desc = 'a group desc';
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+
+    self::$base->organ->group_set_mandatory($this->token, $grpId, true);
+    $grp = self::$base->organ->group_get($this->token, $grpId);
+    $this->assertTrue($grp['grp_mandatory']);
+  }
+
+  public function testSetMandatorySetFalse() {
+    $name = 'an organization';
+    $desc = 'an organization desc';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name = 'a service group';
+    $grp_desc = 'a group desc';
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+
+    self::$base->organ->group_set_mandatory($this->token, $grpId, true);
+    $grp = self::$base->organ->group_get($this->token, $grpId);
+    $this->assertTrue($grp['grp_mandatory']);
+
+    self::$base->organ->group_set_mandatory($this->token, $grpId, false);
+    $grp = self::$base->organ->group_get($this->token, $grpId);
+    $this->assertFalse($grp['grp_mandatory']);
+  }
 }

@@ -84,11 +84,13 @@ $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
 
 // Group Suivi psychologique
-$gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY'); // TODO mandatory
+$gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY');
+$base->organ->group_set_mandatory($token, $gPsy, true);
 $base->organ->group_set_topics($token, $gPsy, array($tPsy, $tProjet));
 
 // Group Suivi administratif
-$gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN'); // TODO mandatory
+$gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN'); 
+$base->organ->group_set_mandatory($token, $gAdmin, true);
 $base->organ->group_set_topics($token, $gAdmin, array($tPriseEnCharge));
 
 // Create Ecole Georges Brassens with classes

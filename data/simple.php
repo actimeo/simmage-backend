@@ -20,7 +20,7 @@ $tSport = $base->organ->topic_add($token, 'Sport', 'Sport');
 $tCulture = $base->organ->topic_add($token, 'Culture', 'Culture');
 $tFinancer = $base->organ->topic_add($token, 'Financer', 'Financer');
 $tSupport = $base->organ->topic_add($token, 'Support', 'Support');
-
+$tPsycho = $base->organ->topic_add($token, 'Psychologist', 'Psychologist');
 
 // Create user foo1
 $userLogin1 = 'foo1';
@@ -71,6 +71,10 @@ $base->organ->group_set_topics($token, $grpII1, array($tSport));
 
 $grpII2 = $base->organ->group_add($token, $orgII, 'Group 2 institution II', 'Group II 2');
 $base->organ->group_set_topics($token, $grpII2, array($tFinancer, $tSupport));
+
+// add a mandatory group
+$grpIMand = $base->organ->group_add($token, $orgI, 'Mandatory Group', 'Group mandarory on Org I');
+$base->organ->group_set_topics($token, $grpIMand, array($tPsycho));
 
 // Assign user1 to 1 group
 $base->organ->participant_assignment_add($token, $grpI1, $stfId1);

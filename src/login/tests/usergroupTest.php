@@ -151,20 +151,20 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA2, $grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1), 
-			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2)), 
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false), 
+			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 'grp_mandatory' => false)), 
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1), 
-			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2),
-			       array('grp_id'=>$grpIdB1, 'org_id' => $orgIdB, 'grp_name'=>$grpNameB1, 'grp_description' => $grpDescB1)),
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false), 
+			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 'grp_mandatory' => false),
+			       array('grp_id'=>$grpIdB1, 'org_id' => $orgIdB, 'grp_name'=>$grpNameB1, 'grp_description' => $grpDescB1, 'grp_mandatory' => false)),
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1)),
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false)),
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array());

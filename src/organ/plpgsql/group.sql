@@ -134,3 +134,18 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.group_set_topics(prm_token integer, prm_id integer, prm_topics integer[]) IS 'Set the topics covered by a group';
+
+CREATE OR REPLACE FUNCTION organ.group_set_mandatory(prm_token integer, prm_id integer, prm_mandatory boolean)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  UPDATE organ.group SET grp_mandatory = prm_mandatory WHERE grp_id = prm_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;  
+END;
+$$;
+COMMENT ON FUNCTION organ.group_set_mandatory(prm_token integer, prm_id integer, prm_mandatory boolean) IS 'Set the mandatory property as true/false for a group';
