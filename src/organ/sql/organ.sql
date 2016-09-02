@@ -30,7 +30,7 @@ CREATE TABLE organ.group (
   grp_name text NOT NULL,
   grp_description text NOT NULL DEFAULT '',
   grp_mandatory boolean NOT NULL DEFAULT FALSE,
-  grp_orientation organ.group_orientation DEFAULT 'organization',
+  grp_orientation organ.group_orientation NOT NULL DEFAULT 'organization',
   UNIQUE(org_id, grp_name)
 );
 
