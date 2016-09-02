@@ -403,4 +403,26 @@ class groupTest extends PHPUnit_Framework_TestCase {
     self::$base->organ->group_set_mandatory($this->token, $grpId1, true);
   }
 
+  // set a group orientation to another value than the default "organization" one
+  public function testGroupSetOrientation() {
+    $name = 'an organization';
+    $desc = 'an organization description';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name1 = 'group 1';
+    $grp_desc1 = 'group desc 1';
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+
+    $grp_name2 = 'group 2';
+    $grp_desc2 = 'group desc 2';
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+
+    self::$base->organ->group_set_orientation($this->token, $grpId2, 'participant');
+
+    $grp1 = self::$base->organ->group_get($this->token, $grpId1);
+    $this->assertEquals('organization', $grp1['grp_orientation']);
+
+    $grp2 = self::$base->organ->group_get($this->token, $grpId2);
+    $this->assertEquals('participant', $grp2['grp_orientation']);
+  }
 }

@@ -88,6 +88,7 @@ $base->organ->group_exclusive_new($token, 'Pavillons', array($gPavillon1, $gPavi
 $gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY');
 $base->organ->group_set_mandatory($token, $gPsy, true);
 $base->organ->group_set_topics($token, $gPsy, array($tPsy, $tProjet));
+$base->organ->group_set_orientation($token, $gPsy, 'participant');
 
 // Group Suivi administratif
 $gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN'); 

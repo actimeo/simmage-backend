@@ -50,6 +50,25 @@ END;
 $$;
 COMMENT ON FUNCTION organ.group_set(prm_token integer, prm_id integer, prm_description text) IS 'Set basic information about a service group';
 
+CREATE OR REPLACE FUNCTION organ.group_set_orientation(prm_token integer, prm_id integer, prm_orientation organ.group_orientation)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  UPDATE organ.group SET
+    grp_orientation = prm_orientation
+    WHERE grp_id = prm_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION organ.group_set_orientation(prm_token integer, prm_id integer, prm_orientation organ.group_orientation) IS 'Set the orientation of a group.
+- organization : the default value - several dossiers are affected to the groups, several participants are working on the group
+- participant : only one participant is working on the group (doctor in his office, psychologist, etc...)';
+
 DROP FUNCTION IF EXISTS organ.group_list(prm_token integer, prm_org_id integer);
 DROP TYPE IF EXISTS organ.group_list;
 CREATE TYPE organ.group_list AS (

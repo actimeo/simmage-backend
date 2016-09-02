@@ -79,6 +79,9 @@ $base->organ->group_exclusive_new($token, 'exclusive group', array($grpI1, $grpI
 $grpIMand = $base->organ->group_add($token, $orgI, 'Mandatory Group', 'Group mandarory on Org I');
 $base->organ->group_set_topics($token, $grpIMand, array($tPsycho));
 
+// update group orientation
+$base->organ->group_set_orientation($token, $grpIMand, 'participant');
+
 // Assign user1 to 1 group
 $base->organ->participant_assignment_add($token, $grpI1, $stfId1);
 

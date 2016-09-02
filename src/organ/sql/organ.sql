@@ -23,12 +23,14 @@ CREATE TABLE organ.dossier (
   UNIQUE(dos_firstname, dos_lastname, dos_birthdate)
 );
 
+CREATE TYPE organ.group_orientation as ENUM ('organization', 'participant');
 CREATE TABLE organ.group (
   grp_id serial PRIMARY KEY,
   org_id integer NOT NULL REFERENCES organ.organization,
   grp_name text NOT NULL,
   grp_description text NOT NULL DEFAULT '',
   grp_mandatory boolean NOT NULL DEFAULT FALSE,
+  grp_orientation organ.group_orientation DEFAULT 'organization',
   UNIQUE(org_id, grp_name)
 );
 
