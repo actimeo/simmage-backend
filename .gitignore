@@ -1,4 +1,4 @@
 vendor/
 config.inc.php
 config.sh
-composer.lock
+
