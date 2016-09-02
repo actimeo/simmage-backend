@@ -15,6 +15,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
   private $procs;
   private $skip = array (array('login', '_token_assert'),
 			 array('login', '_token_assert_other_login'),
+			 array('login', 'user_login'),
 			 array('login', '_user_token_create'),
 			 array('portal', 'entity_list'),
 			 array('portal', 'mainview_element_type_list'),
@@ -85,7 +86,8 @@ order by nspname, proname";
 
   /**
    * @dataProvider proceduresList
-   * @expectedException actimeo\pgproc\PgProcException
+   * @expectedException \actimeo\pgproc\PgProcException
+   * @expectedExceptionMessage insufficient_privilege
    */
   public function testAssertTokenInProcedure($schema, $proc, $nargs) {
     $args = array_fill(0, $nargs, NULL);

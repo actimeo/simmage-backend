@@ -24,6 +24,7 @@ AS $$
 DECLARE
   ret organ.organization;
 BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
   SELECT * INTO ret FROM organ.organization WHERE org_id = prm_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
