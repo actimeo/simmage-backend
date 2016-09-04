@@ -3,19 +3,23 @@ Each user has a login and a password.
 
 Adding a user
 -------------
-A first user is created during installation, with the login ''variation'' and a password provided during installation.
+A first user is created during installation, with the login ''variation'' and a password provided during 
+installation.
 
 Users with "users" privileges can add users.
 
-A password is composed of at least 8 characters, from 3 different types from (uppercase, lowercase, digit, special char).
+A password is composed of at least 8 characters, from 3 different types from (uppercase, lowercase, digit, 
+special char).
 
 A password must be changed at least every 6(param) months.
 
 User Authentication
 -------------------
-A user can authenticate with the function user_login(login, pwd). This function returns a token which is used to access other functions of the api.
+A user can authenticate with the function user_login(login, pwd). This function returns a token which is used to 
+access other functions of the api.
 
-If authentication fails 5 times in a row for the same user, the account is blocked during a certain period of time and/or can be unblocked from an administrator (depending on parametrization).
+If authentication fails 5 times in a row for the same user, the account is blocked during a certain period of time 
+and/or can be unblocked from an administrator (depending on parametrization).
 
 The token becomes invalid:
 - after a certain period of inactivity (ie no function was called with this token)
@@ -23,7 +27,8 @@ The token becomes invalid:
 
 Staff member
 ------------
-A user can be linked to a staff member. If so, the user will have access to patients assigned to groups at which the staff member is also assigned.
+A user can be linked to a staff member. If so, the user will have access to patients assigned to groups at which 
+the staff member is also assigned.
 If a user is not linked to a staff member, he will be considered an admin and hace access to all patients.
 
 Portals

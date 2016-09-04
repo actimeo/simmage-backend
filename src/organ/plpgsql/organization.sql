@@ -1,6 +1,10 @@
 SET search_path = organ;
 
-CREATE OR REPLACE FUNCTION organ.organization_add(prm_token integer, prm_name text, prm_description text, prm_internal boolean)
+CREATE OR REPLACE FUNCTION organ.organization_add(
+  prm_token integer, 
+  prm_name text, 
+  prm_description text, 
+  prm_internal boolean)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -9,12 +13,14 @@ DECLARE
   ret integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  INSERT INTO organ.organization (org_name, org_internal, org_description) VALUES (prm_name, prm_internal, prm_description)
+  INSERT INTO organ.organization (org_name, org_internal, org_description) 
+    VALUES (prm_name, prm_internal, prm_description)
     RETURNING org_id INTO ret;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_add(prm_token integer, prm_name text, prm_description text, prm_internal boolean) IS 'Add a new organization';
+COMMENT ON FUNCTION organ.organization_add(prm_token integer, prm_name text, prm_description text, 
+  prm_internal boolean) IS 'Add a new organization';
 
 CREATE OR REPLACE FUNCTION organ.organization_get(prm_token integer, prm_id integer)
 RETURNS organ.organization
@@ -32,7 +38,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_get(prm_token integer, prm_id integer) IS 'Return basic information about a particular organization';
+COMMENT ON FUNCTION organ.organization_get(prm_token integer, prm_id integer) 
+IS 'Return basic information about a particular organization';
 
 CREATE OR REPLACE FUNCTION organ.organization_delete(prm_token integer, prm_id integer)
 RETURNS VOID
@@ -47,7 +54,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_delete(prm_token integer, prm_id integer) IS 'Delete a particular organization';
+COMMENT ON FUNCTION organ.organization_delete(prm_token integer, prm_id integer) 
+IS 'Delete a particular organization';
 
 CREATE OR REPLACE FUNCTION organ.organization_list(prm_token integer)
 RETURNS SETOF organ.organization
@@ -74,7 +82,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_rename(prm_token integer, prm_id integer, prm_name text) IS 'Rename a particular organization';
+COMMENT ON FUNCTION organ.organization_rename(prm_token integer, prm_id integer, prm_name text) 
+IS 'Rename a particular organization';
 
 CREATE OR REPLACE FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text)
 RETURNS void
@@ -89,4 +98,5 @@ BEGIN
     WHERE org_id = prm_id;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text) IS 'Set information about an organization';
+COMMENT ON FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text) 
+IS 'Set information about an organization';

@@ -28,7 +28,10 @@ END;
 $$;
 COMMENT ON FUNCTION param_list() IS 'Return the list of the portal parameters';
 
-CREATE OR REPLACE FUNCTION portal.param_value_get_bool(prm_token integer, prm_por_id integer, prm_param portal.param)
+CREATE OR REPLACE FUNCTION portal.param_value_get_bool(
+  prm_token integer, 
+  prm_por_id integer, 
+  prm_param portal.param)
 RETURNS boolean
 LANGUAGE plpgsql
 STABLE
@@ -43,9 +46,13 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION portal.param_value_get_bool(prm_token integer, prm_por_id integer, prm_param portal.param) IS 'Return the value of a boolean portal parameter';
+COMMENT ON FUNCTION portal.param_value_get_bool(prm_token integer, prm_por_id integer, prm_param portal.param) 
+IS 'Return the value of a boolean portal parameter';
 
-CREATE OR REPLACE FUNCTION portal.param_value_set_bool(prm_token integer, prm_por_id integer, prm_param portal.param, prm_value boolean)
+CREATE OR REPLACE FUNCTION portal.param_value_set_bool(
+  prm_token integer, 
+  prm_por_id integer, 
+  prm_param portal.param, prm_value boolean)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
@@ -61,9 +68,11 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION portal.param_value_set_bool(prm_token integer, prm_por_id integer, prm_param portal.param, prm_value boolean) IS 'Set the value of a boolean portal parameter';
+COMMENT ON FUNCTION portal.param_value_set_bool(prm_token integer, prm_por_id integer, prm_param portal.param, 
+  prm_value boolean) IS 'Set the value of a boolean portal parameter';
 /*
-CREATE OR REPLACE FUNCTION portal.param_value_get_topic(prm_token integer, prm_por_id integer, prm_param portal.param)
+CREATE OR REPLACE FUNCTION portal.param_value_get_topic(
+  prm_token integer, prm_por_id integer, prm_param portal.param)
 RETURNS portal.topics
 LANGUAGE plpgsql
 STABLE
@@ -78,9 +87,11 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION portal.param_value_get_topic(prm_token integer, prm_por_id integer, prm_param portal.param) IS 'Return the value of a topic portal parameter';
+COMMENT ON FUNCTION portal.param_value_get_topic(prm_token integer, prm_por_id integer, prm_param portal.param) 
+IS 'Return the value of a topic portal parameter';
 
-CREATE OR REPLACE FUNCTION portal.param_value_set_topic(prm_token integer, prm_por_id integer, prm_param portal.param, prm_value portal.topics)
+CREATE OR REPLACE FUNCTION portal.param_value_set_topic(
+  prm_token integer, prm_por_id integer, prm_param portal.param, prm_value portal.topics)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
@@ -96,8 +107,10 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION portal.param_value_set_topic(prm_token integer, prm_por_id integer, prm_param portal.param, prm_value portal.topics) IS 'Set the value of a topic portal parameter';
+COMMENT ON FUNCTION portal.param_value_set_topic(prm_token integer, prm_por_id integer, prm_param portal.param, 
+  prm_value portal.topics) IS 'Set the value of a topic portal parameter';
 */
+
 CREATE OR REPLACE FUNCTION portal.param_value_delete_all(prm_token integer, prm_por_id integer)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -110,4 +123,5 @@ BEGIN
   DELETE FROM portal.param_value WHERE por_id = prm_por_id;
 END;
 $$;
-COMMENT ON FUNCTION portal.param_value_delete_all(prm_token integer, prm_por_id integer) IS 'Delete all param values for a given portal';
+COMMENT ON FUNCTION portal.param_value_delete_all(prm_token integer, prm_por_id integer) 
+IS 'Delete all param values for a given portal';

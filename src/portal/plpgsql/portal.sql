@@ -43,7 +43,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text) IS 'Rename a particular portal';
+COMMENT ON FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text) 
+IS 'Rename a particular portal';
 
 CREATE OR REPLACE FUNCTION portal_delete(prm_token integer, prm_id integer)
 RETURNS VOID
@@ -74,4 +75,5 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION portal_clean(prm_token integer, prm_id integer) IS 'Clean a portal (recursively removing all its menus)';
+COMMENT ON FUNCTION portal_clean(prm_token integer, prm_id integer) 
+IS 'Clean a portal (recursively removing all its menus)';

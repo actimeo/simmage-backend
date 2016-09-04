@@ -7,7 +7,13 @@ mainview_set(mme_id, title, icon, pme_associated): void
 
 SET search_path = portal;
 
-CREATE OR REPLACE FUNCTION mainview_set(prm_token integer, prm_mme_id integer, prm_title text, prm_icon text, prm_mve_id integer, prm_pme_id_associated integer)
+CREATE OR REPLACE FUNCTION mainview_set(
+  prm_token integer, 
+  prm_mme_id integer, 
+  prm_title text, 
+  prm_icon text, 
+  prm_mve_id integer, 
+  prm_pme_id_associated integer)
 RETURNS void
 LANGUAGE plpgsql
 AS $$
@@ -25,7 +31,9 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION mainview_set(prm_token integer, prm_mme_id integer, prm_title text, prm_icon text, prm_mve_id integer, prm_pme_id_associated integer) IS 'Set or update information about a view attached to a specified main menu';
+COMMENT ON FUNCTION mainview_set(prm_token integer, prm_mme_id integer, prm_title text, prm_icon text, 
+  prm_mve_id integer, prm_pme_id_associated integer) 
+IS 'Set or update information about a view attached to a specified main menu';
 
 CREATE OR REPLACE FUNCTION mainview_delete(prm_token integer, prm_mme_id integer)
 RETURNS void
@@ -39,7 +47,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION mainview_delete(prm_token integer, prm_mme_id integer) IS 'Delete a view attached to a main menu';
+COMMENT ON FUNCTION mainview_delete(prm_token integer, prm_mme_id integer) 
+IS 'Delete a view attached to a main menu';
 
 CREATE OR REPLACE FUNCTION mainview_get(prm_token integer, prm_mme_id integer)
 RETURNS portal.mainview
@@ -57,7 +66,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION mainview_get(prm_token integer, prm_mme_id integer) IS 'Get information about a view attached to a main menu';
+COMMENT ON FUNCTION mainview_get(prm_token integer, prm_mme_id integer) 
+IS 'Get information about a view attached to a main menu';
 
 DROP FUNCTION IF EXISTS mainview_get_details(prm_token integer, prm_mme_id integer);
 DROP TYPE IF EXISTS portal.mainview_get_details;
@@ -90,7 +100,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION mainview_get_details(prm_token integer, prm_mme_id integer) IS 'Get detailled information about a view attached to a main menu, containing main view element information';
+COMMENT ON FUNCTION mainview_get_details(prm_token integer, prm_mme_id integer) 
+IS 'Get detailled information about a view attached to a main menu, containing main view element information';
 
 CREATE OR REPLACE FUNCTION mainview_element_type_list()
 RETURNS SETOF portal.mainview_element_type

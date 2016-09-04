@@ -36,7 +36,9 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,structure,users}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,structure,users}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -109,15 +111,22 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), array('por_id'=>$porId2, 'por_name'=>$porName2)), $porIds);
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
+			       array('por_id'=>$porId2, 'por_name'=>$porName2)), 
+			$porIds);
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), array('por_id'=>$porId2, 'por_name'=>$porName2), array('por_id'=>$porId3, 'por_name'=>$porName3)), $porIds);
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
+			       array('por_id'=>$porId2, 'por_name'=>$porName2), 
+			       array('por_id'=>$porId3, 'por_name'=>$porName3)), 
+			$porIds);
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1));
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), array('por_id'=>$porId3, 'por_name'=>$porName3)), $porIds);
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
+			       array('por_id'=>$porId3, 'por_name'=>$porName3)), 
+			$porIds);
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array());
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
@@ -151,20 +160,32 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA2, $grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false, 'grp_orientation' => 'organization'), 
-			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 'grp_mandatory' => false, 'grp_orientation' => 'organization')), 
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
+				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization'), 
+			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 
+				     'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization')), 
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false, 'grp_orientation' => 'organization'), 
-			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 'grp_mandatory' => false, 'grp_orientation' => 'organization'),
-			       array('grp_id'=>$grpIdB1, 'org_id' => $orgIdB, 'grp_name'=>$grpNameB1, 'grp_description' => $grpDescB1, 'grp_mandatory' => false, 'grp_orientation' => 'organization')),
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
+				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization'), 
+			       array('grp_id'=>$grpIdA2, 'org_id' => $orgIdA, 
+				     'grp_name'=>$grpNameA2, 'grp_description' => $grpDescA2, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization'),
+			       array('grp_id'=>$grpIdB1, 'org_id' => $orgIdB, 
+				     'grp_name'=>$grpNameB1, 'grp_description' => $grpDescB1, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization')),
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
-    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 'grp_mandatory' => false, 'grp_orientation' => 'organization')),
+    $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
+				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
+				     'grp_mandatory' => false, 'grp_orientation' => 'organization')),
 			$grpIds);
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array());

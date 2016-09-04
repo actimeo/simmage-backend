@@ -408,7 +408,13 @@ DECLARE
   row pgdoc.comments_get_all;
 BEGIN
   RETURN QUERY 
-    SELECT nspname as schema, 'schema'::pgdoc.typ as typ, nspname::text as nam, NULL, pg_description.description, 0 as num
+    SELECT 
+      nspname as schema, 
+      'schema'::pgdoc.typ as typ, 
+      nspname::text as nam, 
+      NULL, 
+      pg_description.description, 
+      0 as num
     FROM pg_namespace
     LEFT JOIN pg_description ON pg_namespace.oid = pg_description.objoid AND pg_description.objsubid = 0
     WHERE nspname NOT like all(prm_ignore_schema) 
@@ -451,4 +457,5 @@ BEGIN
   ORDER BY schema, typ, nam, num;
 END;
 $$;
-COMMENT ON FUNCTION pgdoc.comments_get_all(prm_ignore_schema text[]) IS 'Return comments for schemas, tables, types, enums';
+COMMENT ON FUNCTION pgdoc.comments_get_all(prm_ignore_schema text[]) 
+IS 'Return comments for schemas, tables, types, enums';

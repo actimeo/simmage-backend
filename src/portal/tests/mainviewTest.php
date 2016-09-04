@@ -35,7 +35,9 @@ class mainviewTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
 
@@ -79,7 +81,9 @@ class mainviewTest extends PHPUnit_Framework_TestCase {
     
     self::$base->portal->mainview_set($this->token, $this->mmeId, $title, $icon, $this->mve_id1, null);
     $mvi = self::$base->portal->mainview_get($this->token, $this->mmeId);
-    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 'pme_id_associated' => null));
+    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 
+				    'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 
+				    'pme_id_associated' => null));
   }
 
   public function testMainviewAddWithPme() {
@@ -95,7 +99,9 @@ class mainviewTest extends PHPUnit_Framework_TestCase {
 
     self::$base->portal->mainview_set($this->token, $this->mmeId, $title, $icon, $this->mve_id1, $this->pmeId);
     $mvi = self::$base->portal->mainview_get($this->token, $this->mmeId);
-    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 'pme_id_associated' => $this->pmeId));
+    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 
+				    'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 
+				    'pme_id_associated' => $this->pmeId));
   }
 
   public function testMainviewDelete() {
@@ -118,10 +124,14 @@ class mainviewTest extends PHPUnit_Framework_TestCase {
     $type2 = 'sample2';
     self::$base->portal->mainview_set($this->token, $this->mmeId, $title, $icon, $this->mve_id1, null);
     $mvi = self::$base->portal->mainview_get($this->token, $this->mmeId);
-    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 'pme_id_associated' => null));
+    $this->assertEquals($mvi, array('mme_id' => $this->mmeId, 'mvi_title' => $title, 
+				    'mvi_icon' => $icon, 'mve_id' => $this->mve_id1, 
+				    'pme_id_associated' => null));
     self::$base->portal->mainview_set($this->token, $this->mmeId, $title2, $icon2, $this->mve_id2, null);
     $mvi2 = self::$base->portal->mainview_get($this->token, $this->mmeId);
-    $this->assertEquals($mvi2, array('mme_id' => $this->mmeId, 'mvi_title' => $title2, 'mvi_icon' => $icon2, 'mve_id' => $this->mve_id2, 'pme_id_associated' => null));
+    $this->assertEquals($mvi2, array('mme_id' => $this->mmeId, 'mvi_title' => $title2, 
+				     'mvi_icon' => $icon2, 'mve_id' => $this->mve_id2, 
+				     'pme_id_associated' => null));
   }
   
   public function testMainviewTypeList() {

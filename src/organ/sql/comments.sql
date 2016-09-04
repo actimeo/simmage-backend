@@ -14,15 +14,19 @@ Participants are working for organizations. They are attached to groups.
 
 Dossier
 -------
-A dossier contains information about patients or family members. They are attached to different groups, depending the topics.
+A dossier contains information about patients or family members. They are attached to different groups, 
+depending the topics.
 
 Group
 -----
-A group belongs to an organization. One or several participants are attached to this group, and have access to one or several dossiers.
+A group belongs to an organization. One or several participants are attached to this group, and have access 
+to one or several dossiers.
 
-A group can be mandatory: all new dossiers will be added to this group and it won''t be possible to remove dossiers from this group.
+A group can be mandatory: all new dossiers will be added to this group and it won''t be possible 
+to remove dossiers from this group.
 
-A set of groups can be exclusive: it won''t be allowed to add a dossier to several groups in a same set of exclusive groups.
+A set of groups can be exclusive: it won''t be allowed to add a dossier to several groups in a same set 
+of exclusive groups.
 
 A mandatory group cannot be in an exclusive set.
 
@@ -41,7 +45,8 @@ COMMENT ON TABLE organ.group_exclusive IS 'A set of exclusive groups';
 
 COMMENT ON TABLE organ.group_exclusive_group IS 'The groups contained in a set of exclusive groups.';
 
-COMMENT ON TABLE organ.participant IS 'Base information about a participant. Uniqueness of participants is done in firstname/lastname.';
+COMMENT ON TABLE organ.participant IS 'Base information about a participant. Uniqueness of participants is done 
+in firstname/lastname.';
 
 COMMENT ON TABLE organ.dossier_assignment IS 'Assignation of a patient to a group';
 
@@ -73,7 +78,8 @@ COMMENT ON COLUMN organ.group.grp_name IS 'Name of the group';
 
 COMMENT ON COLUMN organ.group.grp_description IS 'Description of the group';
 
-COMMENT ON COLUMN organ.group.grp_mandatory IS 'Default: false. Indicates if new dossiers are inevitably assigned to this group.';
+COMMENT ON COLUMN organ.group.grp_mandatory IS 'Default: false. Indicates if new dossiers are inevitably assigned 
+to this group.';
 
 COMMENT ON COLUMN organ.participant.par_id IS 'Unique identifier';
 
