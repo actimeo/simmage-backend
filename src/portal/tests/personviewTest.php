@@ -35,7 +35,9 @@ class personviewTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
 
@@ -70,7 +72,8 @@ class personviewTest extends PHPUnit_Framework_TestCase {
 
     self::$base->portal->personview_set($this->token, $this->pmeId, $title, $icon, $this->pve_id1);
     $pvi = self::$base->portal->personview_get($this->token, $this->pmeId);
-    $this->assertEquals($pvi, array('pme_id' => $this->pmeId, 'pvi_title' => $title, 'pvi_icon' => $icon, 'pve_id' => $this->pve_id1));
+    $this->assertEquals($pvi, array('pme_id' => $this->pmeId, 'pvi_title' => $title, 
+				    'pvi_icon' => $icon, 'pve_id' => $this->pve_id1));
   }
 
   public function testPersonviewDelete() {
@@ -94,10 +97,12 @@ class personviewTest extends PHPUnit_Framework_TestCase {
     $type2 = 'personsample1';
     self::$base->portal->personview_set($this->token, $this->pmeId, $title, $icon, $this->pve_id1);
     $pvi = self::$base->portal->personview_get($this->token, $this->pmeId);
-    $this->assertEquals($pvi, array('pme_id' => $this->pmeId, 'pvi_title' => $title, 'pve_id' => $this->pve_id1, 'pvi_icon' => $icon));
+    $this->assertEquals($pvi, array('pme_id' => $this->pmeId, 'pvi_title' => $title, 
+				    'pve_id' => $this->pve_id1, 'pvi_icon' => $icon));
     self::$base->portal->personview_set($this->token, $this->pmeId, $title2, $icon2, $this->pve_id2);
     $pvi2 = self::$base->portal->personview_get($this->token, $this->pmeId);
-    $this->assertEquals($pvi2, array('pme_id' => $this->pmeId, 'pvi_title' => $title2, 'pve_id' => $this->pve_id2, 'pvi_icon' => $icon2));
+    $this->assertEquals($pvi2, array('pme_id' => $this->pmeId, 'pvi_title' => $title2, 
+				     'pve_id' => $this->pve_id2, 'pvi_icon' => $icon2));
   }
   
   public function testPersonviewTypeList() {

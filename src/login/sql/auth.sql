@@ -41,7 +41,10 @@ CREATE TABLE login."user" (
   usr_token_creation_date timestamp with time zone
 );
 
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) values ('variation', pgcrypto.crypt('variation', pgcrypto.gen_salt('bf', 8)), '{users,structure,organization}');
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) values ('portaluser', pgcrypto.crypt('portal/user', pgcrypto.gen_salt('bf', 8)), '{structure}');
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) values ('organuser', pgcrypto.crypt('organ/user', pgcrypto.gen_salt('bf', 8)), '{organization}');
+INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
+  VALUES ('variation', pgcrypto.crypt('variation', pgcrypto.gen_salt('bf', 8)), '{users,structure,organization}');
+INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
+  VALUES ('portaluser', pgcrypto.crypt('portal/user', pgcrypto.gen_salt('bf', 8)), '{structure}');
+INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
+  VALUES ('organuser', pgcrypto.crypt('organ/user', pgcrypto.gen_salt('bf', 8)), '{organization}');
 

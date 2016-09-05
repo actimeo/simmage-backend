@@ -1,7 +1,10 @@
 SET search_path = portal;
 
 -- add
-CREATE OR REPLACE FUNCTION mainview_element_add(prm_token integer, prm_type portal.mainview_element_type, prm_name text)
+CREATE OR REPLACE FUNCTION mainview_element_add(
+  prm_token integer, 
+  prm_type portal.mainview_element_type, 
+  prm_name text)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -15,10 +18,13 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION mainview_element_add(prm_token integer, prm_type portal.mainview_element_type, prm_name text) IS 'Add a new main view element of a given type';
+COMMENT ON FUNCTION mainview_element_add(prm_token integer, prm_type portal.mainview_element_type, prm_name text) 
+IS 'Add a new main view element of a given type';
   
 -- list
-CREATE OR REPLACE FUNCTION mainview_element_list(prm_token integer, prm_type portal.mainview_element_type)
+CREATE OR REPLACE FUNCTION mainview_element_list(
+  prm_token integer, 
+  prm_type portal.mainview_element_type)
 RETURNS SETOF portal.mainview_element
 LANGUAGE plpgsql
 STABLE
@@ -30,7 +36,8 @@ BEGIN
     ORDER BY mve_name;
 END;
 $$;
-COMMENT ON FUNCTION mainview_element_list(prm_token integer, prm_type portal.mainview_element_type) IS 'List all the mainview elements for a given type, or all types if given type is null';
+COMMENT ON FUNCTION mainview_element_list(prm_token integer, prm_type portal.mainview_element_type) 
+IS 'List all the mainview elements for a given type, or all types if given type is null';
 
 -- rename
 CREATE OR REPLACE FUNCTION mainview_element_rename(prm_token integer, prm_id integer, prm_name text)
@@ -45,7 +52,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION mainview_element_rename(prm_token integer, prm_id integer, prm_name text) IS 'Rename a particular main view element';
+COMMENT ON FUNCTION mainview_element_rename(prm_token integer, prm_id integer, prm_name text) 
+IS 'Rename a particular main view element';
 
 -- delete
 CREATE OR REPLACE FUNCTION mainview_element_delete(prm_token integer, prm_id integer)
@@ -60,4 +68,5 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION mainview_element_delete(prm_token integer, prm_id integer) IS 'Delete a particular main view element';
+COMMENT ON FUNCTION mainview_element_delete(prm_token integer, prm_id integer) 
+IS 'Delete a particular main view element';

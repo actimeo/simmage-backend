@@ -3,7 +3,8 @@ Portals are views of person data. Several portals can be created, depending on i
 
 A portal contains:
 - a main navigation, which will contain information about all persons,
-- and a navigation for each entity type (patient, staff, etc), which will contain information about a particular person of this type.
+- and a navigation for each entity type (patient, staff, etc), which will contain information about 
+  a particular person of this type.
 
 Each navigation is composed of sections containing menu entries.
 
@@ -11,7 +12,8 @@ All functions from this module require the ''structure'' user right.';
 
 COMMENT ON TABLE portal.mainmenu IS 'Menu entries of a main view';
 
-COMMENT ON TABLE portal.mainsection IS 'The main view of a portal consists of menus regrouped in sections. This table defines these sections.';
+COMMENT ON TABLE portal.mainsection 
+IS 'The main view of a portal consists of menus regrouped in sections. This table defines these sections.';
 
 COMMENT ON TABLE portal.mainview IS 'Common information about a page displayed by a main menu.';
 
@@ -19,13 +21,18 @@ COMMENT ON TABLE portal.mainview_element IS 'Elements that can be attached to a 
 
 COMMENT ON TABLE portal.personmenu IS 'Menu entries of a view for an entity type';
 
-COMMENT ON TABLE portal.personsection IS 'A view of a portal for an entity type consists of menus regrouped in sections. This table defines these sections.';
+COMMENT ON TABLE portal.personsection 
+IS 'A view of a portal for an entity type consists of menus regrouped in sections. 
+This table defines these sections.';
 
 COMMENT ON TABLE portal.personview IS 'Common information about a page displayed by an entity menu';
 
 COMMENT ON TABLE portal.personview_element IS 'Elements that can be attached to a person view';
 
-COMMENT ON TABLE portal.portal IS 'A portal is a particular view of the data contained in the database. It will be defined by several navigation views, one main view (mainsection and mainmenu) and one view per entity type (personsection and personmenu).';
+COMMENT ON TABLE portal.portal 
+IS 'A portal is a particular view of the data contained in the database. It will be defined 
+by several navigation views, one main view (mainsection and mainmenu) and one view per entity type 
+(personsection and personmenu).';
 
 COMMENT ON COLUMN portal.mainmenu.mme_id IS 'Unique identifier';
 
@@ -43,7 +50,8 @@ COMMENT ON COLUMN portal.mainsection.mse_name IS 'Section name';
 
 COMMENT ON COLUMN portal.mainsection.mse_order IS 'Order of the section in the portal';
 
-COMMENT ON COLUMN portal.mainview.mme_id IS 'Main menu to which the page is attached. At most one page can be attached to a menu';
+COMMENT ON COLUMN portal.mainview.mme_id 
+IS 'Main menu to which the page is attached. At most one page can be attached to a menu';
 
 COMMENT ON COLUMN portal.mainview.mvi_title IS 'Page title';
 
@@ -77,7 +85,8 @@ COMMENT ON COLUMN portal.personsection.pse_name IS 'Section name';
 
 COMMENT ON COLUMN portal.personsection.pse_order IS 'Order of the section in the portal for the entity type';
 
-COMMENT ON COLUMN portal.personview.pme_id IS 'Person menu to which the page is attached. At most one page can be attached to a menu';
+COMMENT ON COLUMN portal.personview.pme_id 
+IS 'Person menu to which the page is attached. At most one page can be attached to a menu';
 
 COMMENT ON COLUMN portal.personview.pvi_title IS 'Page title';
 
@@ -97,11 +106,16 @@ COMMENT ON COLUMN portal.portal.por_name IS 'Portal name';
 
 COMMENT ON TYPE portal.entity IS 'The different types of persons';
 
-COMMENT ON TYPE portal.mainview_element_type IS 'Different types of main views. Modules can add values to this type';
+COMMENT ON TYPE portal.mainview_element_type 
+IS 'Different types of main views. Modules can add values to this type';
 
-COMMENT ON TYPE portal.param IS 'The portal parameters. The name is composed of two elements, separated by a dot (.): the name and the type (from portal.param_type). Modules can add values to this type';
+COMMENT ON TYPE portal.param 
+IS 'The portal parameters. The name is composed of two elements, separated by a dot (.): 
+the name and the type (from portal.param_type). Modules can add values to this type';
 
-COMMENT ON TYPE portal.param_type IS 'The different types of portal parameters. Modules *cannot* add values to this type';
+COMMENT ON TYPE portal.param_type 
+IS 'The different types of portal parameters. Modules *cannot* add values to this type';
 
-COMMENT ON TYPE portal.personview_element_type IS 'Different types of person views. Modules can add values to this type';
+COMMENT ON TYPE portal.personview_element_type 
+IS 'Different types of person views. Modules can add values to this type';
 

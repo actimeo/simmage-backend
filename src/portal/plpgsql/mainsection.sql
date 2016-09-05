@@ -67,7 +67,10 @@ $$;
 COMMENT ON FUNCTION mainsection_delete(prm_token integer, prm_id integer) 
 IS 'Delete a particular section of a portal main view';
 
-CREATE OR REPLACE FUNCTION mainsection_move_before_position(prm_token integer, prm_id integer, prm_position integer)
+CREATE OR REPLACE FUNCTION mainsection_move_before_position(
+  prm_token integer, 
+  prm_id integer, 
+  prm_position integer)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
@@ -106,6 +109,7 @@ BEGIN
   END LOOP;
 END;
 $$;
-COMMENT ON FUNCTION mainsection_move_before_position(prm_token integer, prm_id integer, prm_position integer) IS 'Move a particular section of a portal main view before a given position';
+COMMENT ON FUNCTION mainsection_move_before_position(prm_token integer, prm_id integer, prm_position integer) 
+IS 'Move a particular section of a portal main view before a given position';
 
 -- todo clean

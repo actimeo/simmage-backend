@@ -14,4 +14,5 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.participant_add(prm_token integer, prm_firstname text, prm_lastname text) IS 'Add a new participant';
+COMMENT ON FUNCTION organ.participant_add(prm_token integer, prm_firstname text, prm_lastname text) 
+IS 'Add a new participant';

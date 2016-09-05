@@ -4,7 +4,11 @@ SET search_path = portal;
 -- PERSONSECTION --
 -----------------
 
-CREATE OR REPLACE FUNCTION personsection_add(prm_token integer, prm_por_id integer, prm_entity portal.entity, prm_name text)
+CREATE OR REPLACE FUNCTION personsection_add(
+  prm_token integer, 
+  prm_por_id integer, 
+  prm_entity portal.entity, 
+  prm_name text)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -21,8 +25,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION personsection_add(prm_token integer, prm_por_id integer, prm_entity portal.entity, prm_name text) 
-IS 'Add a section to an entity view of a portal';
+COMMENT ON FUNCTION personsection_add(prm_token integer, prm_por_id integer, prm_entity portal.entity, 
+  prm_name text) IS 'Add a section to an entity view of a portal';
 
 CREATE OR REPLACE FUNCTION personsection_list(prm_token integer, prm_por_id integer, prm_entity portal.entity)
 RETURNS SETOF portal.personsection
@@ -69,7 +73,10 @@ $$;
 COMMENT ON FUNCTION personsection_delete(prm_token integer, prm_id integer) 
 IS 'Delete a section of an entity view';
 
-CREATE OR REPLACE FUNCTION personsection_move_before_position(prm_token integer, prm_id integer, prm_position integer)
+CREATE OR REPLACE FUNCTION personsection_move_before_position(
+  prm_token integer, 
+  prm_id integer, 
+  prm_position integer)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$

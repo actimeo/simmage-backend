@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION organ.participant_assignment_add(prm_token integer, prm_grp_id integer, prm_par_id integer)
+CREATE OR REPLACE FUNCTION organ.participant_assignment_add(
+  prm_token integer, 
+  prm_grp_id integer, 
+  prm_par_id integer)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -13,9 +16,13 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.participant_assignment_add(prm_token integer, prm_grp_id integer, prm_par_id integer) IS 'Assign a participant to a new group';
+COMMENT ON FUNCTION organ.participant_assignment_add(prm_token integer, prm_grp_id integer, prm_par_id integer) 
+IS 'Assign a participant to a new group';
 
-CREATE OR REPLACE FUNCTION organ.participant_assignment_delete(prm_token integer, prm_grp_id integer, prm_par_id integer)
+CREATE OR REPLACE FUNCTION organ.participant_assignment_delete(
+  prm_token integer, 
+  prm_grp_id integer, 
+  prm_par_id integer)
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -31,7 +38,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION organ.participant_assignment_delete(prm_token integer, prm_grp_id integer, prm_par_id integer) IS 'Unassign a participant from a group';
+COMMENT ON FUNCTION organ.participant_assignment_delete(prm_token integer, prm_grp_id integer, prm_par_id integer)
+IS 'Unassign a participant from a group';
 
 CREATE OR REPLACE FUNCTION organ.participant_assignment_list_participants(prm_token integer, prm_grp_id integer)
 RETURNS SETOF organ.participant
@@ -48,7 +56,8 @@ BEGIN
     WHERE grp_id = prm_grp_id;
 END;
 $$;
-COMMENT ON FUNCTION organ.participant_assignment_list_participants(prm_token integer, prm_grp_id integer) IS 'Return the list of participants assigned to a group';
+COMMENT ON FUNCTION organ.participant_assignment_list_participants(prm_token integer, prm_grp_id integer) 
+IS 'Return the list of participants assigned to a group';
 
 CREATE OR REPLACE FUNCTION organ.participant_assignment_list_groups(prm_token integer, prm_par_id integer)
 RETURNS SETOF organ.group
@@ -65,4 +74,5 @@ BEGIN
     WHERE par_id = prm_par_id;
 END;
 $$;
-COMMENT ON FUNCTION organ.participant_assignment_list_groups(prm_token integer, prm_par_id integer) IS 'Return the list of groups a participant is assigned to';
+COMMENT ON FUNCTION organ.participant_assignment_list_groups(prm_token integer, prm_par_id integer) 
+IS 'Return the list of groups a participant is assigned to';

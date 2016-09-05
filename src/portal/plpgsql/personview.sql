@@ -1,6 +1,11 @@
 SET search_path = portal;
 
-CREATE OR REPLACE FUNCTION personview_set(prm_token integer, prm_pme_id integer, prm_title text, prm_icon text, prm_pve_id integer)
+CREATE OR REPLACE FUNCTION personview_set(
+  prm_token integer, 
+  prm_pme_id integer, 
+  prm_title text, 
+  prm_icon text, 
+  prm_pve_id integer)
 RETURNS void
 LANGUAGE plpgsql
 AS $$
@@ -14,7 +19,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION personview_set(prm_token integer, prm_pme_id integer, prm_title text, prm_icon text, prm_pve_id integer) IS 'Set or update information about a view attached to a specified person menu';
+COMMENT ON FUNCTION personview_set(prm_token integer, prm_pme_id integer, prm_title text, prm_icon text, 
+  prm_pve_id integer) IS 'Set or update information about a view attached to a specified person menu';
 
 CREATE OR REPLACE FUNCTION personview_delete(prm_token integer, prm_pme_id integer)
 RETURNS void
@@ -28,7 +34,8 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION personview_delete(prm_token integer, prm_pme_id integer) IS 'Delete a view attached to a person menu';
+COMMENT ON FUNCTION personview_delete(prm_token integer, prm_pme_id integer) 
+IS 'Delete a view attached to a person menu';
 
 CREATE OR REPLACE FUNCTION personview_get(prm_token integer, prm_pme_id integer)
 RETURNS portal.personview
@@ -46,7 +53,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION personview_get(prm_token integer, prm_pme_id integer) IS 'Get information about a view attached to a person menu';
+COMMENT ON FUNCTION personview_get(prm_token integer, prm_pme_id integer) 
+IS 'Get information about a view attached to a person menu';
 
 DROP FUNCTION IF EXISTS personview_get_details(prm_token integer, prm_pme_id integer);
 DROP TYPE IF EXISTS portal.personview_get_details;
@@ -79,7 +87,8 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION personview_get_details(prm_token integer, prm_pme_id integer) IS 'Get detailled information about a view attached to a person menu, containing person view element information';
+COMMENT ON FUNCTION personview_get_details(prm_token integer, prm_pme_id integer) 
+IS 'Get detailled information about a view attached to a person menu, containing person view element information';
 
 DROP FUNCTION IF EXISTS personview_details_list(prm_token integer, prm_entity portal.entity, prm_por_id integer);
 DROP TYPE IF EXISTS personview_details_list;
@@ -118,7 +127,9 @@ BEGIN
     ORDER BY pse_entity, pse_order, pme_order;
 END;
 $$;
-COMMENT ON FUNCTION personview_details_list(prm_token integer, prm_entity portal.entity, prm_por_id integer) IS 'Return the detailled list of person views for a given portal. It is possible to filter by entities specifying a non-null value for prm_entity';
+COMMENT ON FUNCTION personview_details_list(prm_token integer, prm_entity portal.entity, prm_por_id integer) 
+IS 'Return the detailled list of person views for a given portal. It is possible to filter by entities 
+specifying a non-null value for prm_entity';
 
 CREATE OR REPLACE FUNCTION personview_element_type_list()
 RETURNS SETOF portal.personview_element_type

@@ -25,7 +25,8 @@ $tVeture = $base->organ->topic_add($token, 'Vêture', 'Vêture et autres fournit
 $tFamille = $base->organ->topic_add($token, 'Famille', 'Famille, tuteur et parrainage');
 $tLogement = $base->organ->topic_add($token, 'Logement', 'Logement collectif ou individuel');
 $tScolarite = $base->organ->topic_add($token, 'Scolarité', 'Scolarité');
-$tPriseEnCharge = $base->organ->topic_add($token, 'Prises en charge', 'Prises en charge, admission et autorisations');
+$tPriseEnCharge = $base->organ->topic_add($token, 
+					  'Prises en charge', 'Prises en charge, admission et autorisations');
 $tProjet = $base->organ->topic_add($token, 'Projet individuel', 'Projet individuel');
 $tPsy = $base->organ->topic_add($token, 'Psychologie', 'Accompagnement psychologique');
 $tRestauration = $base->organ->topic_add($token, 'Restauration', 'Restauration et alimentation');
@@ -77,7 +78,9 @@ foreach (array($loginPaul, $loginJean, $loginPierre, $loginSophie) as $login) {
 $oMecs = $base->organ->organization_add($token, "MECS Sauvegarde", 'Description...', true);
 
 // Groups Pavillon 1, 2
-$topicsPavillons = array($tLogement, $tRestauration, $tEducation, $tProjet, $tVeture, $tEntretien, $tBudget, $tTransport);
+$topicsPavillons = array($tLogement, $tRestauration, $tEducation, 
+			 $tProjet, $tVeture, $tEntretien, 
+			 $tBudget, $tTransport);
 $gPavillon1 = $base->organ->group_add($token, $oMecs, 'Pavillon 1', 'Pavillon Nord');
 $gPavillon2 = $base->organ->group_add($token, $oMecs, 'Pavillon 2', 'Pavillon Sud');
 $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
@@ -110,11 +113,15 @@ foreach (array($gCp, $gCe1, $gCe2, $gCm1, $gCm2) as $group) {
   $base->organ->group_set_topics($token, $group, $topicsEcole);
 }
 
-$oTribunalBordeaux = $base->organ->organization_add($token, "Tribunal pour enfants de Bordeaux", "Tribunal ...", false);
+$oTribunalBordeaux = $base->organ->organization_add($token, 
+						    "Tribunal pour enfants de Bordeaux", "Tribunal ...", 
+						    false);
 $gTribunalBordeaux = $base->organ->group_add($token, $oTribunalBordeaux, "Assistance éducative", 'desc ...');
 $base->organ->group_set_topics($token, $gTribunalBordeaux, array($tPlacement));
 
-$oTribunalLangon = $base->organ->organization_add($token, "Tribunal pour enfants de Langon", "Rue du Tribunal ...", false);
+$oTribunalLangon = $base->organ->organization_add($token, 
+						  "Tribunal pour enfants de Langon", "Rue du Tribunal ...", 
+						  false);
 $gTribunalLangon = $base->organ->group_add($token, $oTribunalLangon, "Assistance éducative", "Porte 4");
 $base->organ->group_set_topics($token, $gTribunalLangon, array($tPlacement));
 

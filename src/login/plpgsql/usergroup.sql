@@ -1,6 +1,8 @@
 SET search_path = login;
 
-CREATE OR REPLACE FUNCTION login.usergroup_add(prm_token integer, prm_name text)
+CREATE OR REPLACE FUNCTION login.usergroup_add(
+  prm_token integer, 
+  prm_name text)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -16,7 +18,8 @@ END;
 $$;
 COMMENT ON FUNCTION login.usergroup_add(prm_token integer, prm_name text) IS 'Add a new user group';
 
-CREATE OR REPLACE FUNCTION login.usergroup_list(prm_token integer)
+CREATE OR REPLACE FUNCTION login.usergroup_list(
+  prm_token integer)
 RETURNS SETOF login.usergroup
 LANGUAGE plpgsql
 STABLE
@@ -28,7 +31,10 @@ END;
 $$;
 COMMENT ON FUNCTION login.usergroup_list(prm_token integer) IS 'List the users groups';
 
-CREATE OR REPLACE FUNCTION login.usergroup_set_portals(prm_token integer, prm_ugr_id integer, prm_por_ids integer[])
+CREATE OR REPLACE FUNCTION login.usergroup_set_portals(
+  prm_token integer, 
+  prm_ugr_id integer, 
+  prm_por_ids integer[])
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -57,9 +63,13 @@ BEGIN
   END LOOP;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_set_portals(prm_token integer, prm_ugr_id integer, prm_por_ids integer[]) IS 'Set authorized portals for a user group';
+COMMENT ON FUNCTION login.usergroup_set_portals(prm_token integer, prm_ugr_id integer, prm_por_ids integer[]) 
+IS 'Set authorized portals for a user group';
 
-CREATE OR REPLACE FUNCTION login.usergroup_set_groups(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[])
+CREATE OR REPLACE FUNCTION login.usergroup_set_groups(
+  prm_token integer, 
+  prm_ugr_id integer, 
+  prm_grp_ids integer[])
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -88,9 +98,12 @@ BEGIN
   END LOOP;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_set_groups(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[]) IS 'Set authorized groups for a user group';
+COMMENT ON FUNCTION login.usergroup_set_groups(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[]) 
+IS 'Set authorized groups for a user group';
 
-CREATE OR REPLACE FUNCTION login.usergroup_portal_list(prm_token integer, prm_ugr_id integer)
+CREATE OR REPLACE FUNCTION login.usergroup_portal_list(
+  prm_token integer, 
+  prm_ugr_id integer)
 RETURNS SETOF portal.portal
 LANGUAGE plpgsql
 STABLE
@@ -103,9 +116,12 @@ BEGIN
     ORDER BY por_name;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_portal_list(prm_token integer, prm_ugr_id integer) IS 'Returns the portals authorized for a user group';
+COMMENT ON FUNCTION login.usergroup_portal_list(prm_token integer, prm_ugr_id integer) 
+IS 'Returns the portals authorized for a user group';
 
-CREATE OR REPLACE FUNCTION login.usergroup_group_list(prm_token integer, prm_ugr_id integer)
+CREATE OR REPLACE FUNCTION login.usergroup_group_list(
+  prm_token integer, 
+  prm_ugr_id integer)
 RETURNS SETOF organ.group
 LANGUAGE plpgsql
 STABLE
@@ -118,4 +134,5 @@ BEGIN
     ORDER BY grp_name;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_group_list(prm_token integer, prm_ugr_id integer) IS 'Returns the groups authorized for a user group';
+COMMENT ON FUNCTION login.usergroup_group_list(prm_token integer, prm_ugr_id integer) 
+IS 'Returns the groups authorized for a user group';

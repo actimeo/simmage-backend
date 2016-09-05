@@ -35,7 +35,9 @@ class groupTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -275,7 +277,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_desc4 = 'group desc 4';
     $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
 
-    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
+					    array($grpId1, $grpId2, $grpId3));
     $res = self::$base->organ->group_exclusive_with($this->token, $grpId1);
     $resIds = array_map(function($e) { return $e['grp_id']; }, $res);
     $this->assertEquals($resIds, array ($grpId1, $grpId2, $grpId3));
@@ -331,7 +334,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_desc4 = 'group desc 4';
     $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
 
-    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
+					    array($grpId1, $grpId2, $grpId3));
     $res = self::$base->organ->group_exclusive_with($this->token, $grpId4);
     $this->assertNull($res);
   }
@@ -357,7 +361,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_desc4 = 'group desc 4';
     $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
 
-    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
+						   array($grpId1, $grpId2, $grpId3));
     $this->assertNotNull($gre);
     self::$base->organ->group_exclusive_delete($this->token, $grpId2);
     $res = self::$base->organ->group_exclusive_with($this->token, $grpId2);
@@ -380,7 +385,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2));
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
+						   array($grpId1, $grpId2));
   }
 
   // set a group mandatory when it is in an exclusive set -> Exception
@@ -397,7 +403,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_desc2 = 'group desc 2';
     $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
     
-    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2));
+    $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
+						   array($grpId1, $grpId2));
 
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->organ->group_set_mandatory($this->token, $grpId1, true);
