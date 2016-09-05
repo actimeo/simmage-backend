@@ -17,11 +17,17 @@ CREATE TABLE organ.organization (
 
 CREATE TABLE organ.dossier (
   dos_id serial PRIMARY KEY,
-  dos_firstname text NOT NULL,
-  dos_lastname text NOT NULL,
-  dos_birthdate date NOT NULL,
+  dos_firstname text,
+  dos_lastname text,
+  dos_birthdate date,
+  dos_grouped boolean NOT NULL DEFAULT false,
+  dos_external boolean NOT NULL DEFAULT false,
+  dos_groupname text,
   UNIQUE(dos_firstname, dos_lastname, dos_birthdate)
 );
+ALTER TABLE organ.dossier
+ADD CONSTRAINT CC_Check_field_grouped_based
+CHECK ((dos_grouped = true AND dos_groupname IS NOT NULL AND dos_firstname IS NULL AND dos_lastname IS NULL) OR (dos_grouped = false AND dos_groupname IS NULL AND dos_firstname IS NOT NULL AND dos_lastname IS NOT NULL));
 
 CREATE TYPE organ.group_orientation as ENUM ('organization', 'participant');
 CREATE TABLE organ.group (

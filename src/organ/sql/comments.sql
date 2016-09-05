@@ -65,6 +65,12 @@ COMMENT ON COLUMN organ.dossier.dos_lastname IS 'Person lastname';
 
 COMMENT ON COLUMN organ.dossier.dos_birthdate IS 'Person birthdate';
 
+COMMENT ON COLUMN organ.dossier.dos_external IS 'Defines if a person is a patient or external';
+
+COMMENT ON COLUMN organ.dossier.dos_grouped IS 'Defines if the dossier is about a person or a whole group (family)';
+
+COMMENT ON COLUMN organ.dossier.dos_groupname IS 'If the dossier is about a whole group, the name of this group';
+
 COMMENT ON COLUMN organ.group.grp_id IS 'Unique identifier';
 
 COMMENT ON COLUMN organ.group.org_id IS 'Organization to which is attached the group';
@@ -74,6 +80,8 @@ COMMENT ON COLUMN organ.group.grp_name IS 'Name of the group';
 COMMENT ON COLUMN organ.group.grp_description IS 'Description of the group';
 
 COMMENT ON COLUMN organ.group.grp_mandatory IS 'Default: false. Indicates if new dossiers are inevitably assigned to this group.';
+
+COMMENT ON COLUMN organ.group.grp_orientation IS 'Default: organization. Defines if the group is oriented towards organization or participant.';
 
 COMMENT ON COLUMN organ.participant.par_id IS 'Unique identifier';
 
