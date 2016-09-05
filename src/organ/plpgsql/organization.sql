@@ -57,17 +57,20 @@ $$;
 COMMENT ON FUNCTION organ.organization_delete(prm_token integer, prm_id integer) 
 IS 'Delete a particular organization';
 
-CREATE OR REPLACE FUNCTION organ.organization_list(prm_token integer)
+CREATE OR REPLACE FUNCTION organ.organization_list(prm_token integer, prm_internal boolean)
 RETURNS SETOF organ.organization
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RETURN QUERY SELECT * FROM organ.organization ORDER BY org_name;
+  RETURN QUERY SELECT * FROM organ.organization 
+    WHERE (prm_internal ISNULL OR org_internal = prm_internal)
+    ORDER BY org_name;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_list(prm_token integer) IS 'Return the list of all the organizations';
+COMMENT ON FUNCTION organ.organization_list(prm_token integer, prm_internal boolean) 
+IS 'Return the list of all the organizations';
 
 CREATE OR REPLACE FUNCTION organ.organization_rename(prm_token integer, prm_id integer, prm_name text)
 RETURNS VOID

@@ -81,7 +81,7 @@ class organizationTest extends PHPUnit_Framework_TestCase {
     $name = 'an organization';
     $desc = 'an organization desc';
     $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
-    $orgs = self::$base->organ->organization_list($this->token);
+    $orgs = self::$base->organ->organization_list($this->token, null);
     $this->assertGreaterThan(0, count($orgs));
     $found = false;
     foreach ($orgs as $org) {
@@ -93,13 +93,46 @@ class organizationTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($found);
   }
 
+  public function testOrganizationListFiltered() {
+    $nameI = 'an internal organization';
+    $descI = 'an internal organization desc';
+    $idI = self::$base->organ->organization_add($this->token, $nameI, $descI, true);
+
+    $nameE = 'an external organization';
+    $descE = 'an external organization desc';
+    $idE = self::$base->organ->organization_add($this->token, $nameE, $descE, false);
+
+    $orgsAll = self::$base->organ->organization_list($this->token, null);
+    $orgsInt = self::$base->organ->organization_list($this->token, true); 
+    $orgsExt = self::$base->organ->organization_list($this->token, false); 
+   
+    $filter = function($f) use($idI, $idE) { 
+      return in_array($f['org_id'], array($idI, $idE)); 
+    };
+
+    $getNameMap = function($f) {
+      return $f['org_name'];
+    };
+    
+    $nAll = array_filter($orgsAll, $filter);
+    $this->assertEquals(2, count($nAll));
+
+    $listInt = array_filter($orgsInt, $filter);
+    $this->assertEquals(1, count($listInt));
+    $this->assertEquals(array($nameI), array_map($getNameMap, $listInt));
+
+    $listExt = array_filter($orgsExt, $filter);
+    $this->assertEquals(1, count($listExt));
+    $this->assertEquals(array($nameE), array_map($getNameMap, $listExt));
+  }
+
   public function testOrganizationRename() {
     $name1 = 'an organization';
     $name2 = 'another organization';
     $desc = 'an organization desc';
     $id = self::$base->organ->organization_add($this->token, $name1, $desc, true);
     self::$base->organ->organization_rename($this->token, $id, $name2);
-    $orgs = self::$base->organ->organization_list($this->token);
+    $orgs = self::$base->organ->organization_list($this->token, null);
     $this->assertGreaterThan(0, count($orgs));
     $org = $orgs[0];
     $found = false;
@@ -128,11 +161,11 @@ class organizationTest extends PHPUnit_Framework_TestCase {
     $name = 'an organization';
     $desc = 'an organization desc';
     $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
-    $orgs = self::$base->organ->organization_list($this->token);
+    $orgs = self::$base->organ->organization_list($this->token, null);
     $nAfterAdd = count($orgs);
     $this->assertGreaterThan(0, count($orgs));
     self::$base->organ->organization_delete($this->token, $id);
-    $orgs = self::$base->organ->organization_list($this->token);
+    $orgs = self::$base->organ->organization_list($this->token, null);
     $this->assertEquals($nAfterAdd-1, count($orgs));
   }
 
