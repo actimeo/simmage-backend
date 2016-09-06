@@ -54,12 +54,12 @@ $uPierre = create_user($base, $token, $loginPierre, 'pierre', 'Pierre', 'ÉDUC')
 $uSophie = create_user($base, $token, $loginSophie, 'sophie', 'Sophie', 'ÉDUC');
 
 // Create portals
-$pEncadrement = $base->portal->portal_add($token, 'Encadrement');
-$pEducateur = $base->portal->portal_add($token, 'Éducateur');
+$pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement');
+$pEducateur = $base->portal->portal_add($token, 'Portail Éducateur');
 
 // Create user groups
-$ugEncadrement = $base->login->usergroup_add($token, 'Encadrement');
-$ugEducateur = $base->login->usergroup_add($token, 'Éducateur');
+$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement');
+$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur');
 
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));
@@ -87,6 +87,9 @@ $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
 $base->organ->group_exclusive_new($token, 'Pavillons', array($gPavillon1, $gPavillon2));
 
+$base->login->usergroup_set_groups($token, $ugEncadrement, array($gPavillon1, $gPavillon2));
+$base->login->usergroup_set_groups($token, $ugEducateur, array($gPavillon1, $gPavillon2));
+
 // Group Suivi psychologique
 $gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY');
 $base->organ->group_set_mandatory($token, $gPsy, true);
@@ -97,6 +100,8 @@ $base->organ->group_set_orientation($token, $gPsy, 'participant');
 $gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN'); 
 $base->organ->group_set_mandatory($token, $gAdmin, true);
 $base->organ->group_set_topics($token, $gAdmin, array($tPriseEnCharge));
+
+$base->login->usergroup_set_groups($token, $ugEncadrement, array($gAdmin));
 
 // Create Ecole Georges Brassens with classes
 $oEcole = $base->organ->organization_add($token, "École Georges Brassens", 'Gare au Gorille !', false);
@@ -112,6 +117,8 @@ $base->organ->group_exclusive_new($token, 'Classes', array($gCp, $gCe1, $gCe2, $
 foreach (array($gCp, $gCe1, $gCe2, $gCm1, $gCm2) as $group) { 
   $base->organ->group_set_topics($token, $group, $topicsEcole);
 }
+
+$base->login->usergroup_set_groups($token, $ugEducateur, array($gCp, $gCe1, $gCe2, $gCm1, $gCm2));
 
 $oTribunalBordeaux = $base->organ->organization_add($token, 
 						    "Tribunal pour enfants de Bordeaux", "Tribunal ...", 
