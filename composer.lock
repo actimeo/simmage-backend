@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/actimeo/pgproc.git",
-                "reference": "b9bf8994223dc5952416d500bdb86a59d562c825"
+                "reference": "de0f1511db7c827df6b55a9af1bb754d3e877a0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/actimeo/pgproc/zipball/b9bf8994223dc5952416d500bdb86a59d562c825",
-                "reference": "b9bf8994223dc5952416d500bdb86a59d562c825",
+                "url": "https://api.github.com/repos/actimeo/pgproc/zipball/de0f1511db7c827df6b55a9af1bb754d3e877a0d",
+                "reference": "de0f1511db7c827df6b55a9af1bb754d3e877a0d",
                 "shasum": ""
             },
             "require": {
@@ -39,7 +39,7 @@
                 "source": "https://github.com/actimeo/pgproc/tree/master",
                 "issues": "https://github.com/actimeo/pgproc/issues"
             },
-            "time": "2016-09-02 12:09:22"
+            "time": "2016-09-06 15:49:35"
         },
         {
             "name": "doctrine/instantiator",
@@ -1353,7 +1353,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
