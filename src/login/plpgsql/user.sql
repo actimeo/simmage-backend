@@ -291,9 +291,8 @@ RETURNS SETOF login.user_details
 LANGUAGE plpgsql
 STABLE
 AS $$
-DECLARE
-
 BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
   RETURN QUERY 
     SELECT 
       usr_login, usr_rights,
