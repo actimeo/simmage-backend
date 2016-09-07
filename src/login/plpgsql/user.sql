@@ -273,3 +273,36 @@ END;
 $$;
 COMMENT ON FUNCTION login.user_usergroup_set(prm_token integer, prm_login text, prm_ugr_id integer) 
 IS 'Place a user in a user group';
+
+DROP FUNCTION IF EXISTS login.user_list(prm_token integer);
+DROP TYPE IF EXISTS login.user_details;
+CREATE TYPE login.user_details AS (
+  usr_login text,
+  usr_rights login.user_right[],
+  par_id integer,
+  par_firstname text,
+  par_lastname text,
+  ugr_id integer,
+  ugr_name text
+);
+
+CREATE FUNCTION login.user_list(prm_token integer)
+RETURNS SETOF login.user_details
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+
+BEGIN
+  RETURN QUERY 
+    SELECT 
+      usr_login, usr_rights,
+      par_id, par_firstname, par_lastname,
+      ugr_id, ugr_name
+      FROM login.user 
+      LEFT JOIN organ.participant USING(par_id)
+      LEFT JOIN login.usergroup USING(ugr_id)
+      ORDER BY usr_login;
+END;
+$$;
+COMMENT ON FUNCTION login.user_list(prm_token integer) IS 'Return the list of users';
