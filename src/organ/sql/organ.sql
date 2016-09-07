@@ -15,12 +15,15 @@ CREATE TABLE organ.organization (
   org_internal boolean NOT NULL
 );
 
+CREATE TYPE organ.gender 
+  as ENUM ('male', 'female');
+
 CREATE TABLE organ.dossier (
   dos_id serial PRIMARY KEY,
   dos_firstname text,
   dos_lastname text,
   dos_birthdate date,
-  dos_gender text,
+  dos_gender organ.gender,
   dos_grouped boolean NOT NULL DEFAULT false,
   dos_external boolean NOT NULL DEFAULT false,
   dos_groupname text,

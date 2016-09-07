@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION organ.dossier_add_individual(
   prm_firstname text, 
   prm_lastname text, 
   prm_birthdate date, 
-  prm_gender text, 
+  prm_gender organ.gender, 
   prm_external boolean)
 RETURNS integer
 LANGUAGE plpgsql
@@ -20,7 +20,7 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_add_individual(prm_token integer, prm_firstname text, prm_lastname text, 
-  prm_birthdate date, prm_gender text, prm_external boolean) IS 'Add a new dossier of an individual person';
+  prm_birthdate date, prm_gender organ.gender, prm_external boolean) IS 'Add a new dossier of an individual person';
 
 CREATE OR REPLACE FUNCTION organ.dossier_add_grouped(prm_token integer, prm_groupname text, prm_external boolean)
 RETURNS integer
@@ -76,7 +76,7 @@ CREATE OR REPLACE FUNCTION organ.dossier_set_individual_fields(
   prm_firstname text, 
   prm_lastname text, 
   prm_birthdate date, 
-  prm_gender text)
+  prm_gender organ.gender)
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -92,7 +92,7 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_set_individual_fields(prm_token integer, prm_id integer, prm_firstname text, 
-  prm_lastname text, prm_birthdate date, prm_gender text) IS 'Update the fields of an individual dossier';
+  prm_lastname text, prm_birthdate date, prm_gender organ.gender) IS 'Update the fields of an individual dossier';
 
 CREATE OR REPLACE FUNCTION organ.dossier_set_external(prm_token integer, prm_id integer, prm_external boolean)
 RETURNS VOID
@@ -120,8 +120,8 @@ VOLATILE
 AS $$
 DECLARE
   ret integer;
-  gender text;
-  gender_rel text;
+  gender organ.gender;
+  gender_rel organ.gender;
   scnd_relationship organ.dossier_relationship = null;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
@@ -232,8 +232,8 @@ COMMENT ON FUNCTION organ.dossier_link_set(prm_token integer, prm_id integer,
 
 CREATE OR REPLACE FUNCTION organ._dossier_link_get_inverted_relationship(
   prm_relationship organ.dossier_relationship, 
-  prm_gender text, 
-  prm_gender_rel text)
+  prm_gender organ.gender, 
+  prm_gender_rel organ.gender)
 RETURNS organ.dossier_relationship
 LANGUAGE plpgsql
 STABLE
