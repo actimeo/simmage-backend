@@ -20,6 +20,7 @@ CREATE TABLE organ.dossier (
   dos_firstname text,
   dos_lastname text,
   dos_birthdate date,
+  dos_gender text,
   dos_grouped boolean NOT NULL DEFAULT false,
   dos_external boolean NOT NULL DEFAULT false,
   dos_groupname text,
@@ -27,7 +28,20 @@ CREATE TABLE organ.dossier (
 );
 ALTER TABLE organ.dossier
 ADD CONSTRAINT CC_Check_field_grouped_based
-CHECK ((dos_grouped = true AND dos_groupname IS NOT NULL AND dos_firstname IS NULL AND dos_lastname IS NULL) OR (dos_grouped = false AND dos_groupname IS NULL AND dos_firstname IS NOT NULL AND dos_lastname IS NOT NULL));
+CHECK ((dos_grouped = true AND dos_groupname IS NOT NULL AND dos_firstname IS NULL AND dos_lastname IS NULL AND dos_birthdate IS NULL AND dos_gender IS NULL) 
+    OR (dos_grouped = false AND dos_groupname IS NULL AND dos_firstname IS NOT NULL AND dos_lastname IS NOT NULL AND dos_birthdate IS NOT NULL AND dos_gender IS NOT NULL));
+
+CREATE TYPE organ.dossier_relationship as ENUM ('brother', 'sister', 'father', 'mother', 'son', 'daughter', 'husband', 'wife');
+CREATE TABLE organ.dossier_link (
+  dol_id serial PRIMARY KEY,
+  dos_id integer NOT NULL REFERENCES organ.dossier,
+  dos_id_related integer NOT NULL REFERENCES organ.dossier,
+  dol_relationship organ.dossier_relationship,
+  UNIQUE(dos_id, dos_id_related)
+);
+ALTER TABLE organ.dossier_link
+ADD CONSTRAINT CC_Check_dossiers_linked_not_duplicate
+CHECK (dos_id != dos_id_related);
 
 CREATE TYPE organ.group_orientation as ENUM ('organization', 'participant');
 CREATE TABLE organ.group (
