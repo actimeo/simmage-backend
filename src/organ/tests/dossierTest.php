@@ -34,7 +34,9 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'kfarinzaona';
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -59,7 +61,6 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0, $dosId);
 
     $dos = self::$base->organ->dossier_get($this->token, $dosId);
-    //$this->assertEquals(array('dos_id' => $dosId, 'dos_firstname' => 'firstname', 'dos_lastname' => 'lastname', 'dos_birthdate' => '01/09/2016', 'dos_grouped' => false, 'dos_external' => false, 'dos_groupname' => null), $dos);
     $this->assertEquals($dos['dos_firstname'], $fname);
     $this->assertEquals($dos['dos_lastname'], $lname);
     $this->assertEquals($dos['dos_birthdate'], $bdate);

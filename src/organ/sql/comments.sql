@@ -87,7 +87,8 @@ COMMENT ON COLUMN organ.group.grp_description IS 'Description of the group';
 COMMENT ON COLUMN organ.group.grp_mandatory IS 'Default: false. Indicates if new dossiers are inevitably assigned 
 to this group.';
 
-COMMENT ON COLUMN organ.group.grp_orientation IS 'Default: organization. Defines if the group is oriented towards organization or participant.';
+COMMENT ON COLUMN organ.group.grp_orientation 
+IS 'Default: organization. Defines if the group is oriented towards organization or participant.';
 
 COMMENT ON COLUMN organ.participant.par_id IS 'Unique identifier';
 

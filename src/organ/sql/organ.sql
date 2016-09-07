@@ -28,10 +28,23 @@ CREATE TABLE organ.dossier (
 );
 ALTER TABLE organ.dossier
 ADD CONSTRAINT CC_Check_field_grouped_based
-CHECK ((dos_grouped = true AND dos_groupname IS NOT NULL AND dos_firstname IS NULL AND dos_lastname IS NULL AND dos_birthdate IS NULL AND dos_gender IS NULL) 
-    OR (dos_grouped = false AND dos_groupname IS NULL AND dos_firstname IS NOT NULL AND dos_lastname IS NOT NULL AND dos_birthdate IS NOT NULL AND dos_gender IS NOT NULL));
+CHECK ((dos_grouped = true 
+        AND dos_groupname IS NOT NULL 
+	AND dos_firstname IS NULL 
+	AND dos_lastname IS NULL 
+	AND dos_birthdate IS NULL 
+	AND dos_gender IS NULL)
+       OR 
+       (dos_grouped = false 
+        AND dos_groupname IS NULL 
+	AND dos_firstname IS NOT NULL 
+	AND dos_lastname IS NOT NULL 
+	AND dos_birthdate IS NOT NULL 
+	AND dos_gender IS NOT NULL));
 
-CREATE TYPE organ.dossier_relationship as ENUM ('brother', 'sister', 'father', 'mother', 'son', 'daughter', 'husband', 'wife');
+CREATE TYPE organ.dossier_relationship 
+  as ENUM ('brother', 'sister', 'father', 'mother', 'son', 'daughter', 'husband', 'wife');
+
 CREATE TABLE organ.dossier_link (
   dol_id serial PRIMARY KEY,
   dos_id integer NOT NULL REFERENCES organ.dossier,

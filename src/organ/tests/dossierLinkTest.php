@@ -34,7 +34,9 @@ class dossierLinkTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'kfarinzaona';
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('".$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+			     .$login."', pgcrypto.crypt('"
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -152,37 +154,43 @@ class dossierLinkTest extends PHPUnit_Framework_TestCase {
     $fname = 'firstname';
     $lname = 'lastname';
     $bdate = '01/09/2016';
-    $dos1 = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false); // Father
+    // Father
+    $dos1 = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
     $this->assertGreaterThan(0, $dos1);
 
     $fname2 = 'firstname2';
     $lname2 = 'lastname2';
     $bdate2 = '01/09/2016';
-    $dos2 = self::$base->organ->dossier_add_individual($this->token, $fname2, $lname2, $bdate2, 'male', false); // Son 1
+    // Son 1
+    $dos2 = self::$base->organ->dossier_add_individual($this->token, $fname2, $lname2, $bdate2, 'male', false);
     $this->assertGreaterThan(1, $dos2);
 
     $fname3 = 'firstname3';
     $lname3 = 'lastname3';
     $bdate3 = '01/09/2016';
-    $dos3 = self::$base->organ->dossier_add_individual($this->token, $fname3, $lname3, $bdate3, 'male', false); // Son 2
+    // Son 2
+    $dos3 = self::$base->organ->dossier_add_individual($this->token, $fname3, $lname3, $bdate3, 'male', false); 
     $this->assertGreaterThan(2, $dos3);
 
     $fname4 = 'firstname4';
     $lname4 = 'lastname4';
     $bdate4 = '01/09/2016';
-    $dos4 = self::$base->organ->dossier_add_individual($this->token, $fname4, $lname4, $bdate4, 'female', false); // Mother
+    // Mother
+    $dos4 = self::$base->organ->dossier_add_individual($this->token, $fname4, $lname4, $bdate4, 'female', false); 
     $this->assertGreaterThan(3, $dos4);
 
     $fname5 = 'firstname5';
     $lname5 = 'lastname5';
     $bdate5 = '01/09/2016';
-    $dos5 = self::$base->organ->dossier_add_individual($this->token, $fname5, $lname5, $bdate5, 'female', false); // Daughter 1
+    // Daughter 1
+    $dos5 = self::$base->organ->dossier_add_individual($this->token, $fname5, $lname5, $bdate5, 'female', false); 
     $this->assertGreaterThan(4, $dos5);
 
     $fname6 = 'firstname6';
     $lname6 = 'lastname6';
     $bdate6 = '01/09/2016';
-    $dos6 = self::$base->organ->dossier_add_individual($this->token, $fname6, $lname6, $bdate6, 'female', false); // Daughter 2
+    // Daughter 2
+    $dos6 = self::$base->organ->dossier_add_individual($this->token, $fname6, $lname6, $bdate6, 'female', false); 
     $this->assertGreaterThan(5, $dos6);
 
     $dosLBB = self::$base->organ->dossier_link_add($this->token, $dos2, $dos3, 'brother'); // Brother-Brother
