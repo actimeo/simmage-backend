@@ -109,7 +109,7 @@ BEGIN
     SELECT dos_gender INTO gender FROM organ.dossier WHERE dos_id = prm_id;
     SELECT dos_gender INTO gender_rel FROM organ.dossier WHERE dos_id = prm_id_related;
   END IF;
-  scnd_relationship = organ.dossier_link_get_inverted_relationship(prm_relationship, gender, gender_rel);
+  scnd_relationship = organ._dossier_link_get_inverted_relationship(prm_relationship, gender, gender_rel);
   INSERT INTO organ.dossier_link(dos_id, dos_id_related, dol_relationship) VALUES (prm_id_related, prm_id, scnd_relationship);
   RETURN ret;
 END;
@@ -164,13 +164,13 @@ BEGIN
     RAISE EXCEPTION 'Cannot set a defined relationship if a dossier is a grouped one' USING ERRCODE = 'data_exception';
   END IF;
   UPDATE organ.dossier_link SET dol_relationship = prm_relationship WHERE dol_id = prm_id;
-  scnd_relationship = organ.dossier_link_get_inverted_relationship(prm_relationship, (SELECT dos_gender FROM organ.dossier WHERE dos_id = dos_id1), (SELECT dos_gender FROM organ.dossier WHERE dos_id = dosid2));
+  scnd_relationship = organ._dossier_link_get_inverted_relationship(prm_relationship, (SELECT dos_gender FROM organ.dossier WHERE dos_id = dos_id1), (SELECT dos_gender FROM organ.dossier WHERE dos_id = dosid2));
   UPDATE organ.dossier_link SET dol_relationship = scnd_relationship WHERE dos_id = dos_id2 AND dos_id_related = dos_id1;
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_link_set(prm_token integer, prm_id integer, prm_relationship organ.dossier_relationship) IS 'Update the link between two dossiers';
 
-CREATE OR REPLACE FUNCTION organ.dossier_link_get_inverted_relationship(prm_relationship organ.dossier_relationship, prm_gender text, prm_gender_rel text)
+CREATE OR REPLACE FUNCTION organ._dossier_link_get_inverted_relationship(prm_relationship organ.dossier_relationship, prm_gender text, prm_gender_rel text)
 RETURNS organ.dossier_relationship
 LANGUAGE plpgsql
 VOLATILE
