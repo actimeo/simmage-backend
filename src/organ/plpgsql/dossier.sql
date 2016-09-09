@@ -39,6 +39,25 @@ $$;
 COMMENT ON FUNCTION organ.dossier_add_grouped(prm_token integer, prm_groupname text, prm_external boolean) 
 IS 'Add a new dossier for a whole group (family)';
 
+CREATE OR REPLACE FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean)
+RETURNS SETOF organ.dossier
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RETURN QUERY SELECT * FROM organ.dossier
+    WHERE dos_grouped = prm_grouped AND dos_external = prm_external
+    ORDER BY (CASE WHEN prm_grouped = false THEN dos_lastname END),
+	      (CASE WHEN prm_grouped = true THEN dos_groupname END);
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean) IS 'Return a list of dossiers filtered by grouped and external fields :
+- grouped = false && external = false ==> Patient
+- grouped = true && external = false ==> Family
+- grouped = false && external = true ==> Contact indiv
+- grouped = true && external = true ==> Contact family';
+
 CREATE OR REPLACE FUNCTION organ.dossier_get(prm_token integer, prm_id integer)
 RETURNS organ.dossier
 LANGUAGE plpgsql

@@ -117,4 +117,19 @@ $base->portal->mainmenu_add($token, $mseCII, "Menu CII2");
 $base->portal->mainmenu_add($token, $mseCIII, "Menu CIII1");
 $base->portal->mainmenu_add($token, $mseCIII, "Menu CIII2");
 $base->portal->mainmenu_add($token, $mseCIII, "Menu CIII3");
+
+$base->organ->dossier_add_individual($token, 'firstname', 'lastname', '01/09/2016', 'male', false);
+$base->organ->dossier_add_individual($token, 'firstname2', 'lastname2', '01/09/2016', 'male', false);
+$base->organ->dossier_add_individual($token, 'firstname3', 'lastname3', '01/09/2016', 'female', false);
+$base->organ->dossier_add_individual($token, 'firstname4', 'lastname4', '01/09/2016', 'female', false);
+$base->organ->dossier_add_individual($token, 'firstname5', 'lastname5', '01/09/2016', 'male', true);
+$base->organ->dossier_add_individual($token, 'firstname6', 'lastname6', '01/09/2016', 'female', true);
+$base->organ->dossier_add_individual($token, 'firstname7', 'lastname7', '01/09/2016', 'male', true);
+
+$base->organ->dossier_add_grouped($token, 'groupname', false);
+$base->organ->dossier_add_grouped($token, 'groupname2', false);
+$base->organ->dossier_add_grouped($token, 'groupname3', false);
+$base->organ->dossier_add_grouped($token, 'groupname4', true);
+$base->organ->dossier_add_grouped($token, 'groupname5', true);
+
 $base->commit ();
