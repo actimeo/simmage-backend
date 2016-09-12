@@ -87,4 +87,37 @@ class topicTest extends PHPUnit_Framework_TestCase {
     }
   }  
 
+  public function testTopicGet() {
+    $name1 = 'topic 1';
+    $desc1 = 'topic 1 description';
+    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1);
+    $this->assertGreaterThan(0, $id1);
+
+    $name2 = 'topic 2';
+    $desc2 = 'topic 2 description';
+    $id2 = self::$base->organ->topic_add($this->token, $name2, $desc2);
+    $this->assertGreaterThan($id1, $id2);
+
+    $topic = self::$base->organ->topic_get($this->token, $id1);
+    $this->assertEquals($id1, $topic['top_id']);
+    $this->assertEquals($name1, $topic['top_name']);
+    $this->assertEquals($desc1, $topic['top_description']);
+  }  
+
+  public function testTopicUpdate() {
+    $name1 = 'topic 1';
+    $desc1 = 'topic 1 description';
+    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1);
+    $this->assertGreaterThan(0, $id1);
+
+    $name2 = 'topic 2';
+    $desc2 = 'topic 2 description';
+    self::$base->organ->topic_update($this->token, $id1, $name2, $desc2);
+    
+    $topic = self::$base->organ->topic_get($this->token, $id1);
+    $this->assertEquals($id1, $topic['top_id']);
+    $this->assertEquals($name2, $topic['top_name']);
+    $this->assertEquals($desc2, $topic['top_description']);
+  }  
+
 }

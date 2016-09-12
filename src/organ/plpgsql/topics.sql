@@ -44,3 +44,42 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.topic_delete(prm_token integer, prm_id integer) IS 'Delete a topic';
+
+CREATE OR REPLACE FUNCTION organ.topic_get(prm_token integer, prm_id integer)
+RETURNS organ.topic
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret organ.topic;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT * INTO ret FROM organ.topic WHERE top_id = prm_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION organ.topic_get(prm_token integer, prm_id integer) IS 'Returns information about a topic';
+
+CREATE OR REPLACE FUNCTION organ.topic_update(
+  prm_token integer, 
+  prm_id integer, 
+  prm_name text, 
+  prm_description text)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  UPDATE organ.topic SET top_name = prm_name, top_description = prm_description
+    WHERE top_id = prm_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION organ.topic_update(prm_token integer, prm_id integer, prm_name text, prm_description text) 
+IS 'Update topic information';
