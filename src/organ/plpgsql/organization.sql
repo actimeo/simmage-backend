@@ -72,34 +72,18 @@ $$;
 COMMENT ON FUNCTION organ.organization_list(prm_token integer, prm_internal boolean) 
 IS 'Return the list of all the organizations';
 
-CREATE OR REPLACE FUNCTION organ.organization_rename(prm_token integer, prm_id integer, prm_name text)
-RETURNS VOID
+CREATE OR REPLACE FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_name text, prm_description text, prm_external boolean)
+RETURNS void
 LANGUAGE plpgsql
 VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  UPDATE organ.organization SET org_name = prm_name WHERE org_id = prm_id;
+  UPDATE organ.organization SET org_name = prm_name AND org_description = prm_description AND org_external = prm_external
+    WHERE org_id = prm_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION organ.organization_rename(prm_token integer, prm_id integer, prm_name text) 
-IS 'Rename a particular organization';
-
-CREATE OR REPLACE FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text)
-RETURNS void
-LANGUAGE plpgsql
-VOLATILE
-AS $$
-DECLARE
-
-BEGIN
-  PERFORM login._token_assert(prm_token, '{organization}');
-  UPDATE organ.organization SET org_description = prm_description
-    WHERE org_id = prm_id;
-END;
-$$;
-COMMENT ON FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text) 
-IS 'Set information about an organization';
+COMMENT ON FUNCTION organ.organization_set(prm_token integer, prm_id integer, prm_description text, prm_description text, prm_external boolean) IS 'Update informations about an organization';
