@@ -79,7 +79,7 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  UPDATE organ.organization SET org_name = prm_name AND org_description = prm_description AND org_internal = prm_internal
+  UPDATE organ.organization SET org_name = prm_name, org_description = prm_description, org_internal = prm_internal
     WHERE org_id = prm_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
