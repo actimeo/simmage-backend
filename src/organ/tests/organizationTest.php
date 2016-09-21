@@ -126,18 +126,25 @@ class organizationTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(array($nameE), array_map($getNameMap, $listExt));
   }
 
-  public function testOrganizationRename() {
+  public function testOrganizationSet() {
     $name1 = 'an organization';
     $name2 = 'another organization';
-    $desc = 'an organization desc';
-    $id = self::$base->organ->organization_add($this->token, $name1, $desc, true);
-    self::$base->organ->organization_rename($this->token, $id, $name2);
+    $desc1 = 'an organization desc';
+    $desc2 = 'another organization desc';
+    $internal1 = true;
+    $internal2 = false;
+    $id = self::$base->organ->organization_add($this->token, $name1, $desc2, $internal1);
+
+    self::$base->organ->organization_set($this->token, $id, $name2, $desc2, $internal2);
+
     $orgs = self::$base->organ->organization_list($this->token, null);
     $this->assertGreaterThan(0, count($orgs));
     $org = $orgs[0];
     $found = false;
     foreach ($orgs as $org) {
-      if ($name2 == $org['org_name']) {
+      if ($name2 == $org['org_name']
+	  && $desc2 == $org['org_description']
+	  && $internal2 == $org['org_internal']) {
 	$found = true;
 	break;
       }
@@ -149,12 +156,12 @@ class organizationTest extends PHPUnit_Framework_TestCase {
    * Trying to rename an inexistant portal raises an exception
    * @expectedException \actimeo\pgproc\PgProcException
    */
-  public function testOrganizationRenameUnknown() {
+  public function testOrganizationSetUnknown() {
     $name1 = 'a portal';
     $desc = 'an organization desc';
     $name2 = 'another portal';
     $id = self::$base->organ->organization_add($this->token, $name1, $desc, true);
-    self::$base->organ->organization_rename($this->token, $id+1, $name2);
+    self::$base->organ->organization_set($this->token, $id+1, $name2, $desc, true);
   }
 
   public function testOrganizationDelete() {

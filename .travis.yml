@@ -23,7 +23,7 @@ before_install:
 install:
 - composer install
 - ./scripts/install.sh
-script: ./vendor/bin/phpunit src/
+script: ./vendor/bin/phpunit --stop-on-error src/
 before_deploy:
 - php data/$SAMPLE.php && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz
   && ls -l $SAMPLE.sql.gz
