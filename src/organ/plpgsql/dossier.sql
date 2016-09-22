@@ -1,3 +1,20 @@
+CREATE OR REPLACE FUNCTION organ.dossiers_authorized_for_user(prm_token integer)
+RETURNS SETOF integer
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RETURN QUERY SELECT dos_id FROM organ.dossier
+    INNER JOIN organ.dossier_assignment USING(dos_id)
+    INNER JOIN login.usergroup_group USING(grp_id)
+    INNER JOIN login.user USING(ugr_id)
+    WHERE usr_token = prm_token;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossiers_authorized_for_user(prm_token integer) IS 'Returns the list of dossiers authorized for a given user (token)';
+
+
 CREATE OR REPLACE FUNCTION organ.dossier_add_individual(
   prm_token integer, 
   prm_firstname text, 
@@ -46,7 +63,8 @@ STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RETURN QUERY SELECT * FROM organ.dossier
+  RETURN QUERY SELECT dossier.* FROM organ.dossier
+    INNER JOIN organ.dossiers_authorized_for_user(prm_token) ON dossiers_authorized_for_user = dossier.dos_id
     WHERE dos_grouped = prm_grouped AND dos_external = prm_external
     ORDER BY (CASE WHEN prm_grouped = false THEN dos_lastname END),
 	      (CASE WHEN prm_grouped = true THEN dos_groupname END);

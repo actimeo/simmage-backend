@@ -127,7 +127,7 @@ foreach (array($gCp, $gCe1, $gCe2, $gCm1, $gCm2) as $group) {
   $base->organ->group_set_topics($token, $group, $topicsEcole);
 }
 
-$base->login->usergroup_set_groups($token, $ugEducateur, array($gCp, $gCe1, $gCe2, $gCm1, $gCm2));
+$base->login->usergroup_set_groups($token, $ugEducateur, array($gCe1, $gCe2, $gCm1, $gCm2));
 
 $oTribunalBordeaux = $base->organ->organization_add($token, 
 						    "Tribunal pour enfants de Bordeaux", "Tribunal ...", 
