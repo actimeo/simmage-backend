@@ -160,7 +160,13 @@ foreach ($assigns as $user => $groups) {
 
 // Create dossiers and affect to groups
 $dos1 = $base->organ->dossier_add_individual($token, 'Nom 1', 'prénom 1', '01/09/1998', 'male', false);
+$base->organ->dossier_assignment_add($token, $dos1, array ($gPavillon1, $gPsy, $gAdmin, $gCe2));
 
+$dos2 = $base->organ->dossier_add_individual($token, 'Nom 2', 'prénom 2', '02/09/1998', 'male', false);
+$base->organ->dossier_assignment_add($token, $dos2, array ($gPavillon1, $gPsy, $gAdmin, $gCe1));
+
+$dos3 = $base->organ->dossier_add_individual($token, 'Nom 3', 'prénom 3', '03/09/1998', 'female', false);
+$base->organ->dossier_assignment_add($token, $dos3, array ($gPavillon1, $gPsy, $gAdmin, $gCp));
 
 $base->commit ();
 
