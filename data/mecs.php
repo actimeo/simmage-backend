@@ -176,10 +176,10 @@ $dosExt1 = $base->organ->dossier_add_individual($token, 'NomExt 1', 'prénom 1',
 $dosExt2 = $base->organ->dossier_add_individual($token, 'NomExt 2', 'prénom 2', '02/09/1998', 'male', true);
 
 $dosFam1 = $base->organ->dossier_add_grouped($token, 'Famille 1', false);
-$base->organ->dossier_assignment_add($token, $dos1, array ($gAppart1, $gPsy, $gAdmin));
+$base->organ->dossier_assignment_add($token, $dosFam1, array ($gAppart1, $gAdmin));
 
 $dosFam2 = $base->organ->dossier_add_grouped($token, 'Famille 2', false);
-$base->organ->dossier_assignment_add($token, $dos2, array ($gAppart2, $gPsy, $gAdmin));
+$base->organ->dossier_assignment_add($token, $dosFam2, array ($gAppart2, $gAdmin));
 
 $dosFamExt1 = $base->organ->dossier_add_grouped($token, 'Famille de Pierre', true);
 
