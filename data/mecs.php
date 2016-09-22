@@ -57,6 +57,12 @@ $uSophie = create_user($base, $token, $loginSophie, 'sophie', 'Sophie', 'ÉDUC')
 $pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement');
 $pEducateur = $base->portal->portal_add($token, 'Portail Éducateur');
 
+$mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
+$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1");
+
+$mseEducateur = $base->portal->mainsection_add($token, $pEducateur, 'Section 1');
+$base->portal->mainmenu_add($token, $mseEducateur, "Menu 1");
+
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement');
 $ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur');
@@ -151,6 +157,10 @@ foreach ($assigns as $user => $groups) {
     $base->organ->participant_assignment_add($token, $group, $user);
   }
 }
+
+// Create dossiers and affect to groups
+$dos1 = $base->organ->dossier_add_individual($token, 'Nom 1', 'prénom 1', '01/09/1998', 'male', false);
+
 
 $base->commit ();
 

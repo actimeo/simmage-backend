@@ -300,3 +300,38 @@ BEGIN
   RETURN scnd_relationship;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION organ.dossier_assignment_add(prm_token integer, prm_dos_id integer, prm_grp_ids integer[])
+RETURNS void
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  the_grp_id integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  -- TODO verify user can access this dossier
+  FOREACH the_grp_id IN ARRAY prm_grp_ids LOOP
+    INSERT INTO organ.dossier_assignment (dos_id, grp_id) VALUES (prm_dos_id, the_grp_id);
+  END LOOP;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_assignment_add(prm_token integer, prm_dos_id integer, prm_grp_ids integer[]) IS 'Assign a dossier to groups';
+
+CREATE OR REPLACE FUNCTION organ.dossier_assignment_list(prm_token integer, prm_dos_id integer)
+RETURNS SETOF organ.group
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  row organ.group;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  -- TODO verify user can access this dossier
+  RETURN QUERY SELECT "group".*
+    FROM organ."group"
+    INNER JOIN organ.dossier_assignment USING(grp_id)
+    WHERE dos_id = prm_dos_id;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_assignment_list(prm_token integer, prm_dos_id integer) IS 'Returns the list of groups a dossier is assigned to';

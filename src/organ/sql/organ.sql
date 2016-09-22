@@ -92,7 +92,7 @@ CREATE TABLE organ.dossier_assignment (
   doa_id serial PRIMARY KEY,
   dos_id integer NOT NULL REFERENCES organ.dossier,
   grp_id integer NOT NULL REFERENCES organ.group,
-  doa_visible boolean NOT NULL
+  doa_visible boolean NOT NULL DEFAULT TRUE
 );
 
 -- PARTICIPANTS
