@@ -100,9 +100,6 @@ DECLARE
   row organ.group_list;
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  IF prm_org_id ISNULL THEN
-    RAISE EXCEPTION USING ERRCODE = 'null_value_not_allowed';
-  END IF;
   RETURN QUERY SELECT 
     grp_id, 
     grp_name, 
@@ -110,7 +107,7 @@ BEGIN
     ARRAY(SELECT top_id FROM organ.group_topic 
             INNER JOIN organ.topic USING(top_id) WHERE grp_id = grp.grp_id ORDER BY top_name)
     FROM organ.group grp
-    WHERE org_id = prm_org_id
+    WHERE prm_org_id IS NULL OR org_id = prm_org_id
     ORDER BY grp_name;
 END;
 $$;
