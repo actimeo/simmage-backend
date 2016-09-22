@@ -89,6 +89,9 @@ $topicsPavillons = array($tLogement, $tRestauration, $tEducation,
 			 $tBudget, $tTransport);
 $gPavillon1 = $base->organ->group_add($token, $oMecs, 'Pavillon 1', 'Pavillon Nord');
 $gPavillon2 = $base->organ->group_add($token, $oMecs, 'Pavillon 2', 'Pavillon Sud');
+$gAppart1 = $base->organ->group_add($token, $oMecs, 'Appartement 1', 'Appartement 1 pour famille');
+$gAppart2 = $base->organ->group_add($token, $oMecs, 'Appartement 2', 'Appartement 2 pour famille');
+
 $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
 $base->organ->group_exclusive_new($token, 'Pavillons', array($gPavillon1, $gPavillon2));
@@ -167,6 +170,21 @@ $base->organ->dossier_assignment_add($token, $dos2, array ($gPavillon1, $gPsy, $
 
 $dos3 = $base->organ->dossier_add_individual($token, 'Nom 3', 'prénom 3', '03/09/1998', 'female', false);
 $base->organ->dossier_assignment_add($token, $dos3, array ($gPavillon1, $gPsy, $gAdmin, $gCp));
+
+$dosExt1 = $base->organ->dossier_add_individual($token, 'NomExt 1', 'prénom 1', '01/09/1998', 'male', true);
+
+$dosExt2 = $base->organ->dossier_add_individual($token, 'NomExt 2', 'prénom 2', '02/09/1998', 'male', true);
+
+$dosFam1 = $base->organ->dossier_add_grouped($token, 'Famille 1', false);
+$base->organ->dossier_assignment_add($token, $dos1, array ($gAppart1, $gPsy, $gAdmin));
+
+$dosFam2 = $base->organ->dossier_add_grouped($token, 'Famille 2', false);
+$base->organ->dossier_assignment_add($token, $dos2, array ($gAppart2, $gPsy, $gAdmin));
+
+$dosFamExt1 = $base->organ->dossier_add_grouped($token, 'Famille de Pierre', true);
+
+$dosFamExt2 = $base->organ->dossier_add_grouped($token, 'Famille de Paul', true);
+
 
 $base->commit ();
 
