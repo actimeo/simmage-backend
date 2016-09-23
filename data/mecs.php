@@ -59,9 +59,11 @@ $pEducateur = $base->portal->portal_add($token, 'Portail Éducateur');
 
 $mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
 $base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1");
+$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 2");
 
 $mseEducateur = $base->portal->mainsection_add($token, $pEducateur, 'Section 1');
 $base->portal->mainmenu_add($token, $mseEducateur, "Menu 1");
+$base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
 
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement');

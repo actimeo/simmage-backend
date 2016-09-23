@@ -56,25 +56,33 @@ $$;
 COMMENT ON FUNCTION organ.dossier_add_grouped(prm_token integer, prm_groupname text, prm_external boolean) 
 IS 'Add a new dossier for a whole group (family)';
 
-CREATE OR REPLACE FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean)
+CREATE OR REPLACE FUNCTION organ.dossier_list(
+  prm_token integer, 
+  prm_grouped boolean, 
+  prm_external boolean, 
+  prm_grp_id integer)
 RETURNS SETOF organ.dossier
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RETURN QUERY SELECT dossier.* FROM organ.dossier
+  RETURN QUERY SELECT DISTINCT dossier.* FROM organ.dossier
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) ON dossiers_authorized_for_user = dossier.dos_id
+    LEFT JOIN organ.dossier_assignment USING(dos_id)
     WHERE dos_grouped = prm_grouped AND dos_external = prm_external
-    ORDER BY (CASE WHEN prm_grouped = false THEN dos_lastname END),
-	      (CASE WHEN prm_grouped = true THEN dos_groupname END);
+      AND (prm_grp_id ISNULL OR prm_grp_id = grp_id)
+    ORDER BY dos_lastname, dos_groupname;
 END;
 $$;
-COMMENT ON FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean) IS 'Return a list of dossiers filtered by grouped and external fields :
+COMMENT ON FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean, prm_grp_id integer) 
+IS 'Return a list of dossiers filtered by grouped and external fields :
 - grouped = false && external = false ==> Patient
 - grouped = true && external = false ==> Family
 - grouped = false && external = true ==> Contact indiv
-- grouped = true && external = true ==> Contact family';
+- grouped = true && external = true ==> Contact family
+- grp_id: all dossiers if null or the dossiers assigned to a particular group
+';
 
 CREATE OR REPLACE FUNCTION organ.dossier_get(prm_token integer, prm_id integer)
 RETURNS organ.dossier
