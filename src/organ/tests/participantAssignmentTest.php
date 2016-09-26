@@ -35,17 +35,19 @@ class participantAssignmentTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,users}');");
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,users}', "
+			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
 
     // Create a user
     $this->userLogin = 'a user';
-    self::$base->login->user_add($this->token, $this->userLogin, null, null);
     $this->parId = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
-    self::$base->login->user_participant_set($this->token, $this->userLogin, $this->parId);
+    self::$base->login->user_add($this->token, $this->userLogin, null, $this->parId);
 
     // Create an organization, service and group
     $org = self::$base->organ->organization_add($this->token, "An organization", "a desc", true);

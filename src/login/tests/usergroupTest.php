@@ -36,9 +36,13 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,structure,users}');");
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,structure,users}', "
+			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -85,9 +89,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $loginUser = 'user';
     $parFirstname = 'Paul';
     $parLastname = 'Napoléon';
-    self::$base->login->user_add($this->token, $loginUser, null, null);
     $parId = self::$base->organ->participant_add($this->token, $parFirstname, $parLastname);
-    self::$base->login->user_participant_set($this->token, $loginUser, $parId);
+    self::$base->login->user_add($this->token, $loginUser, null, $parId);
 
     self::$base->login->user_usergroup_set($this->token, $loginUser, $ugr);
     

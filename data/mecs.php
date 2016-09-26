@@ -191,10 +191,9 @@ $dosFamExt2 = $base->organ->dossier_add_grouped($token, 'Famille de Paul', true)
 $base->commit ();
 
 function create_user($base, $token, $login, $pwd, $firstname, $lastname) {
-  $base->login->user_add($token, $login, null, null);
-  $userInfo = $base->login->user_info($token, $login);
   $parId = $base->organ->participant_add($token, $firstname, $lastname);
-  $base->login->user_participant_set($token, $login, $parId);
+  $base->login->user_add($token, $login, null, $parId);
+  $userInfo = $base->login->user_info($token, $login);
   $user = $base->login->user_login($login, $userInfo['usr_temp_pwd'], null);
   $base->login->user_change_password($user['usr_token'], $pwd);
   return $parId;
