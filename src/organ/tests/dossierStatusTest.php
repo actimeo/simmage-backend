@@ -96,5 +96,23 @@ class dossierStatusTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($status4, $status);
   }
 
+  public function testDossierStatusList() {
+    $orgId1 = self::$base->organ->organization_add($this->token, 'an org 1', 'a desc 1', true);
+    $orgId2 = self::$base->organ->organization_add($this->token, 'an org 2', 'a desc 2', true);
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';    
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'first', 'last', '01/01/2000', 'male', false);    
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'preadmission', '01/12/2015');
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'admission', '01/01/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId2, 'present', '01/02/2016');
+    $list = self::$base->organ->dossier_status_list($this->token, $dosId, '01/04/2016');
+    $list2 = array_reduce($list, function($pot, $item) { 
+	$pot[$item['org_id']] = $item['dst_value'];
+	return $pot;
+	}, []);
+    ksort($list2);
+    $this->assertEquals(array($orgId1 => 'admission', $orgId2 => 'present'), $list2);
+  }
 }
 ?>
