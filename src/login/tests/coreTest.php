@@ -67,8 +67,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionWrongPwd() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd."X", null);
   }
@@ -80,8 +83,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionNoRight() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), null);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, '{structure}');
   }
@@ -93,9 +99,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionWrongRight() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}');");
-
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
     $res = self::$base->login->user_login($login, $pwd, '{structure}');
   }
 
