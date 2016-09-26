@@ -52,8 +52,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
-			     
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -111,7 +110,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			     
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -134,7 +133,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -166,12 +165,14 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
 			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}', "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
 
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test2', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginLost."', pgcrypto.crypt('".$pwdLost."', pgcrypto.gen_salt('bf', 8)), NULL, "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test2'));");			   
 
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
@@ -202,7 +203,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
 			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), NULL, "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			   
 
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
@@ -221,7 +222,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
 			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}', "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users'));
 
@@ -247,7 +248,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
 			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users, organization}', "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));"); 			  
 
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users', 'organization'));

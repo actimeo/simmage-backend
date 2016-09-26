@@ -40,7 +40,7 @@ class mainviewElementTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
 			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure}', "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  		   
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];

@@ -35,7 +35,7 @@ CREATE TABLE login."user" (
   usr_pwd text,
   usr_digest text,
   usr_rights login.user_right[],
-  par_id integer NOT NULL REFERENCES organ.participant,
+  par_id integer NOT NULL UNIQUE REFERENCES organ.participant,
   ugr_id integer REFERENCES login.usergroup,
   usr_token integer UNIQUE,
   usr_token_creation_date timestamp with time zone

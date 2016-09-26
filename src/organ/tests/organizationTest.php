@@ -39,8 +39,8 @@ class organizationTest extends PHPUnit_Framework_TestCase {
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
-			     ."(SELECT par_id FROM organ.participant ORDER BY par_id LIMIT 1));");
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}', "			
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
