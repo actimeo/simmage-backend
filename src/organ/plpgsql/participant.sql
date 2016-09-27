@@ -8,7 +8,7 @@ AS $$
 DECLARE
   ret integer;
 BEGIN
-  PERFORM login._token_assert(prm_token, '{organization}');
+  PERFORM login._token_assert_any(prm_token, '{organization, users}');
   INSERT INTO organ.participant (par_firstname, par_lastname) VALUES (prm_firstname, prm_lastname)
     RETURNING par_id INTO ret;
   RETURN ret;

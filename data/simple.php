@@ -24,26 +24,24 @@ $tPsycho = $base->organ->topic_add($token, 'Psychologist', 'Psychologist');
 
 // Create user foo1
 $userLogin1 = 'foo1';
-$base->login->user_add($token, $userLogin1, null, null);
-$fooInfo1 = $base->login->user_info($token, $userLogin1);
 $stfId1 = $base->organ->participant_add($token, 'Pierre', 'MARTIN');
-$base->login->user_participant_set($token, $userLogin1, $stfId1);
+$base->login->user_add($token, $userLogin1, null, $stfId1);
+$fooInfo1 = $base->login->user_info($token, $userLogin1);
 $foo1 = $base->login->user_login($userLogin1, $fooInfo1['usr_temp_pwd'], null);
 $base->login->user_change_password($foo1['usr_token'], 'bar');
 
 // Create user foo2
 $userLogin2 = 'foo2';
-$base->login->user_add($token, $userLogin2, null, null);
-$fooInfo2 = $base->login->user_info($token, $userLogin2);
 $stfId2 = $base->organ->participant_add($token, 'Paul', 'DURAND');
-$base->login->user_participant_set($token, $userLogin2, $stfId2);
+$base->login->user_add($token, $userLogin2, null, $stfId2);
+$fooInfo2 = $base->login->user_info($token, $userLogin2);
 $foo2 = $base->login->user_login($userLogin2, $fooInfo2['usr_temp_pwd'], null);
 $base->login->user_change_password($foo2['usr_token'], 'bar');
 
 // Create portals
-$porId1 = $base->portal->portal_add($token, 'portal 1');
-$porId2 = $base->portal->portal_add($token, 'portal 2');
-$porId3 = $base->portal->portal_add($token, 'portal 3');
+$porId1 = $base->portal->portal_add($token, 'portal 1', 'desc 1');
+$porId2 = $base->portal->portal_add($token, 'portal 2', 'desc 2');
+$porId3 = $base->portal->portal_add($token, 'portal 3', 'desc 3');
 
 $ug1 = $base->login->usergroup_add($token, 'Usergroup 1');
 $ug2 = $base->login->usergroup_add($token, 'Usergroup 2');

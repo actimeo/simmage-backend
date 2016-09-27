@@ -35,16 +35,27 @@ CREATE TABLE login."user" (
   usr_pwd text,
   usr_digest text,
   usr_rights login.user_right[],
-  par_id integer REFERENCES organ.participant,
-  ugr_id integer /*NOT NULL*/ REFERENCES login.usergroup,
+  par_id integer NOT NULL UNIQUE REFERENCES organ.participant,
+  ugr_id integer REFERENCES login.usergroup,
   usr_token integer UNIQUE,
   usr_token_creation_date timestamp with time zone
 );
 
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
-  VALUES ('variation', pgcrypto.crypt('variation', pgcrypto.gen_salt('bf', 8)), '{users,structure,organization}');
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
-  VALUES ('portaluser', pgcrypto.crypt('portal/user', pgcrypto.gen_salt('bf', 8)), '{structure}');
-INSERT INTO login.user(usr_login, usr_salt, usr_rights) 
-  VALUES ('organuser', pgcrypto.crypt('organ/user', pgcrypto.gen_salt('bf', 8)), '{organization}');
+INSERT INTO organ.participant (par_firstname, par_lastname) 
+VALUES ('Variation', 'User'), ('Portal', 'User'), ('Organ', 'user');
+
+INSERT INTO login.user(usr_login, usr_salt, usr_rights, par_id) 
+  VALUES ('variation', pgcrypto.crypt('variation', pgcrypto.gen_salt('bf', 8)), 
+  	  '{users,structure,organization}',
+	  (SELECT par_id FROM organ.participant WHERE par_firstname='Variation'));
+
+INSERT INTO login.user(usr_login, usr_salt, usr_rights, par_id) 
+  VALUES ('portaluser', pgcrypto.crypt('portal/user', pgcrypto.gen_salt('bf', 8)),
+   	  '{structure}',
+	  (SELECT par_id FROM organ.participant WHERE par_firstname='Portal'));
+
+INSERT INTO login.user(usr_login, usr_salt, usr_rights, par_id) 
+  VALUES ('organuser', pgcrypto.crypt('organ/user', pgcrypto.gen_salt('bf', 8)), 
+  	  '{organization}',
+	  (SELECT par_id FROM organ.participant WHERE par_firstname='Organ'));
 

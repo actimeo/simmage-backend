@@ -26,6 +26,28 @@ IS '[INTERNAL] Assert that a token is valid.
 Also assert that the user owns all the rights given in parameter.
 If some assertion fails, an ''insufficient_privilege'' exception is raised.';
 
+CREATE OR REPLACE FUNCTION _token_assert_any (
+  prm_token integer, 
+  prm_rights login.user_right[]) 
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  usr login."user";
+BEGIN
+  SELECT * INTO usr FROM login."user" WHERE 
+    usr_token = prm_token AND
+    (prm_rights ISNULL OR prm_rights && usr_rights); -- && 'overlap (have elements in common)'
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'insufficient_privilege';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION _token_assert (prm_token integer, prm_rights login.user_right[])
+IS '[INTERNAL] Assert that a token is valid.
+Also assert that the user owns all the rights given in parameter.
+If some assertion fails, an ''insufficient_privilege'' exception is raised.';
+
 CREATE OR REPLACE FUNCTION login._token_assert_other_login(
   prm_token integer, 
   prm_login varchar)

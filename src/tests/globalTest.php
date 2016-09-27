@@ -14,6 +14,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
 
   private $procs;
   private $skip = array (array('login', '_token_assert'),
+			 array('login', '_token_assert_any'),
 			 array('login', '_token_assert_other_login'),
 			 array('login', 'user_login'),
 			 array('login', '_user_token_create'),

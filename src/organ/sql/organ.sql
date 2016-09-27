@@ -59,6 +59,19 @@ ALTER TABLE organ.dossier_link
 ADD CONSTRAINT CC_Check_dossiers_linked_not_duplicate
 CHECK (dos_id != dos_id_related);
 
+-- DOSSIER STATUS
+CREATE TYPE organ.dossier_status_value
+  AS ENUM ('preadmission', 'admission', 'present', 'left');
+
+CREATE TABLE organ.dossier_status (
+  dst_id serial PRIMARY KEY,
+  dos_id integer NOT NULL REFERENCES organ.dossier,
+  org_id integer NOT NULL REFERENCES organ.organization,
+  dst_value organ.dossier_status_value NOT NULL,
+  dst_start date NOT NULL DEFAULT '-infinity',
+  dst_end date NOT NULL DEFAULT 'infinity'
+);
+
 CREATE TYPE organ.group_orientation as ENUM ('organization', 'participant');
 CREATE TABLE organ.group (
   grp_id serial PRIMARY KEY,
@@ -92,7 +105,7 @@ CREATE TABLE organ.dossier_assignment (
   doa_id serial PRIMARY KEY,
   dos_id integer NOT NULL REFERENCES organ.dossier,
   grp_id integer NOT NULL REFERENCES organ.group,
-  doa_visible boolean NOT NULL
+  doa_visible boolean NOT NULL DEFAULT TRUE
 );
 
 -- PARTICIPANTS

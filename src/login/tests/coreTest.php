@@ -48,8 +48,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginOk() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -64,8 +67,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionWrongPwd() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd."X", null);
   }
@@ -77,8 +83,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionNoRight() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), null);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, '{structure}');
   }
@@ -90,9 +99,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLoginExceptionWrongRight() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user(usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}');");
-
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
     $res = self::$base->login->user_login($login, $pwd, '{structure}');
   }
 
@@ -102,8 +113,12 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserLogoutOk() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			     
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -122,8 +137,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
     $newpwd = 'sdfjkgh';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL);");
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -150,12 +168,20 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $loginLost = 'toto';
     $pwdLost = 'tata';
 
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
-			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}');");
+			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
-			     .$loginLost."', pgcrypto.crypt('".$pwdLost."', pgcrypto.gen_salt('bf', 8)), NULL);");
+
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test2', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$loginLost."', pgcrypto.crypt('".$pwdLost."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test2'));");			   
+
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
     $this->assertGreaterThan(0, $admin['usr_token']);
@@ -180,9 +206,13 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $loginAdmin = 'admin';
     $pwdAdmin = 'ksfdjgsfdyubg';    
     
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
-			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), NULL);");
+			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			   
+
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
     $this->assertGreaterThan(0, $admin['usr_token']);
@@ -195,14 +225,20 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $loginAdmin = 'admin';
     $pwdAdmin = 'ksfdjgsfdyubg';    
     
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
-			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}');");
+			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users'));
 
     $loginUser = 'a user';
-    self::$base->login->user_add($admin['usr_token'], $loginUser, array('users'), null);
+    $parFirstname = 'Paul';
+    $parLastname = 'Napoléon';
+    $parId = self::$base->organ->participant_add($admin['usr_token'], $parFirstname, $parLastname);
+    self::$base->login->user_add($admin['usr_token'], $loginUser, array('users'), $parId);
     $user = self::$base->login->user_info($admin['usr_token'], $loginUser);
     $this->assertEquals($user['usr_login'], $loginUser);
     $this->assertEquals($user['usr_rights'], array('users'));			      
@@ -215,18 +251,21 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $loginAdmin = 'admin';
     $pwdAdmin = 'ksfdjgsfdyubg';    
     
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$loginAdmin."', pgcrypto.crypt('"
-			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users, organization}');");
+			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users, organization}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));"); 			  
+
 
     $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users', 'organization'));
 
     $loginUser = 'user';
     $parFirstname = 'Paul';
     $parLastname = 'Napoléon';
-    self::$base->login->user_add($admin['usr_token'], $loginUser, null, null);
     $parId = self::$base->organ->participant_add($admin['usr_token'], $parFirstname, $parLastname);
-    self::$base->login->user_participant_set($admin['usr_token'], $loginUser, $parId);
+    self::$base->login->user_add($admin['usr_token'], $loginUser, null, $parId);
     $user = self::$base->login->user_info($admin['usr_token'], $loginUser);
     $this->assertEquals($user['par_id'], $parId);
   }

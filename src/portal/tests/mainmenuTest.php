@@ -35,9 +35,12 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)),  '{structure}');");
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)),  '{structure}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  			 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -49,7 +52,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAdd() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -61,7 +65,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddTwice() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -79,7 +84,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
    */
   public function testMainmenuAddSameName() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -94,7 +100,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
    */
   public function testMainmenuAddSameNameOtherMainsection() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name1 = 'a first section';
     $mse_id1 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name1);
@@ -109,7 +116,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddAndList() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -122,7 +130,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddTwiceAndList() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -138,7 +147,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddDifferentMainsectionsAndList() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name1 = 'a first section';
     $mse_id1 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name1);
@@ -158,7 +168,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddAndCheckOrder() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -179,7 +190,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testMainmenuRename() {
-    $por_id = self::$base->portal->portal_add($this->token, 'a portal');
+    $por_id = self::$base->portal->portal_add($this->token, 'a portal', 'a desc');
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -203,7 +214,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
    public function testMainmenuRenameUnknown() {
     $name1 = 'a section';
     $name2 = 'another section';
-    $por_id = self::$base->portal->portal_add($this->token, 'a portal');
+    $por_id = self::$base->portal->portal_add($this->token, 'a portal', 'a desc');
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -213,7 +224,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testMainmenuDelete() {
-    $por_id = self::$base->portal->portal_add($this->token, 'a portal');
+    $por_id = self::$base->portal->portal_add($this->token, 'a portal', 'a desc');
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -232,7 +243,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
    */
   public function testMainmenuDeleteUnknown() {
     $name = 'a portal';
-    $por = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'a portal desc';
+    $por = self::$base->portal->portal_add($this->token, $name, $desc);
 
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por, $mse_name);
@@ -243,7 +255,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddAndMoveToMiddle() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -265,7 +278,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddAndMoveToStart() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
@@ -287,7 +301,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
   public function testMainmenuAddAndMoveToEnd() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);

@@ -34,9 +34,13 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'kfarinzaona';
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights) values ('"
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}');");
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  			  
+
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
   }
@@ -233,6 +237,34 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     self::$base->organ->dossier_set_external($this->token, $dosId, false);
     $dos = self::$base->organ->dossier_get($this->token, $dosId);
     $this->assertFalse($dos['dos_external']);
+  }
+
+  public function testDossierAssignment() {
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+    $this->assertGreaterThan(0, $dosId);
+    
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+    $this->assertGreaterThan(0, $orgId);
+
+    $grp_name1 = 'a group 1';
+    $grp_desc1 = 'a group 1 desc';
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc1);
+
+    $grp_name2 = 'a group 2';
+    $grp_desc2 = 'a group 2 desc';
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2);
+
+    $grp_name3 = 'a group 3';
+    $grp_desc3 = 'a group 3 desc';
+    $grpId3 = self::$base->organ->group_add($this->token, $orgId, $grp_name3, $grp_desc3);
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId3));
+    $grps = self::$base->organ->dossier_assignment_list($this->token, $dosId);
+    $this->assertEquals(array($grp_name1, $grp_name3), 
+			array_map(function ($r) { return $r['grp_name']; }, $grps));
   }
 }
 ?>
