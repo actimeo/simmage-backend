@@ -139,7 +139,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2);
     $this->assertGreaterThan(0, $grpId2);
     
-    $grps = self::$base->organ->group_list($this->token, $orgId);
+    $grps = self::$base->organ->group_list($this->token, $orgId, true);
     $this->assertEquals(2, count($grps));
   }
   
@@ -152,11 +152,11 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_desc = 'a group desc';
     $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc);
 
-    $grps = self::$base->organ->group_list($this->token, $orgId);
+    $grps = self::$base->organ->group_list($this->token, $orgId, true);
     $this->assertEquals(1, count($grps));
     
     self::$base->organ->group_delete($this->token, $grpId);
-    $grpsAfter = self::$base->organ->group_list($this->token, $orgId);
+    $grpsAfter = self::$base->organ->group_list($this->token, $orgId, true);
     $this->assertEquals(0, count($grpsAfter));
   }
 
