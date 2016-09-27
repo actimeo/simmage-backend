@@ -166,12 +166,15 @@ foreach ($assigns as $user => $groups) {
 // Create dossiers and affect to groups
 $dos1 = $base->organ->dossier_add_individual($token, 'Nom 1', 'prénom 1', '01/09/1998', 'male', false);
 $base->organ->dossier_assignment_add($token, $dos1, array ($gPavillon1, $gPsy, $gAdmin, $gCe2));
+$base->organ->dossier_status_change($token, $dos1, $oMecs, 'present', '01/01/2016');
 
 $dos2 = $base->organ->dossier_add_individual($token, 'Nom 2', 'prénom 2', '02/09/1998', 'male', false);
 $base->organ->dossier_assignment_add($token, $dos2, array ($gPavillon1, $gPsy, $gAdmin, $gCe1));
+$base->organ->dossier_status_change($token, $dos2, $oMecs, 'present', '01/02/2016');
 
 $dos3 = $base->organ->dossier_add_individual($token, 'Nom 3', 'prénom 3', '03/09/1998', 'female', false);
 $base->organ->dossier_assignment_add($token, $dos3, array ($gPavillon1, $gPsy, $gAdmin, $gCp));
+$base->organ->dossier_status_change($token, $dos3, $oMecs, 'preadmission', '01/03/2016');
 
 $dosExt1 = $base->organ->dossier_add_individual($token, 'NomExt 1', 'prénom 1', '01/09/1998', 'male', true);
 
@@ -179,9 +182,11 @@ $dosExt2 = $base->organ->dossier_add_individual($token, 'NomExt 2', 'prénom 2',
 
 $dosFam1 = $base->organ->dossier_add_grouped($token, 'Famille 1', false);
 $base->organ->dossier_assignment_add($token, $dosFam1, array ($gAppart1, $gAdmin));
+$base->organ->dossier_status_change($token, $dosFam1, $oMecs, 'admission', '01/03/2016');
 
 $dosFam2 = $base->organ->dossier_add_grouped($token, 'Famille 2', false);
 $base->organ->dossier_assignment_add($token, $dosFam2, array ($gAppart2, $gAdmin));
+$base->organ->dossier_status_change($token, $dosFam2, $oMecs, 'preadmission', '01/03/2016');
 
 $dosFamExt1 = $base->organ->dossier_add_grouped($token, 'Famille de Pierre', true);
 
