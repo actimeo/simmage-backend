@@ -39,9 +39,9 @@ $foo2 = $base->login->user_login($userLogin2, $fooInfo2['usr_temp_pwd'], null);
 $base->login->user_change_password($foo2['usr_token'], 'bar');
 
 // Create portals
-$porId1 = $base->portal->portal_add($token, 'portal 1');
-$porId2 = $base->portal->portal_add($token, 'portal 2');
-$porId3 = $base->portal->portal_add($token, 'portal 3');
+$porId1 = $base->portal->portal_add($token, 'portal 1', 'desc 1');
+$porId2 = $base->portal->portal_add($token, 'portal 2', 'desc 2');
+$porId3 = $base->portal->portal_add($token, 'portal 3', 'desc 3');
 
 $ug1 = $base->login->usergroup_add($token, 'Usergroup 1');
 $ug2 = $base->login->usergroup_add($token, 'Usergroup 2');

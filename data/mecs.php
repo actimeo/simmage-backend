@@ -54,8 +54,8 @@ $uPierre = create_user($base, $token, $loginPierre, 'pierre', 'Pierre', 'ÉDUC')
 $uSophie = create_user($base, $token, $loginSophie, 'sophie', 'Sophie', 'ÉDUC');
 
 // Create portals
-$pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement');
-$pEducateur = $base->portal->portal_add($token, 'Portail Éducateur');
+$pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement', 'Portail pour l\'encadrement');
+$pEducateur = $base->portal->portal_add($token, 'Portail Éducateur', 'Portail pour les éducateurs');
 
 $mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
 $base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1");

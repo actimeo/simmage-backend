@@ -4,7 +4,7 @@ SET search_path = portal;
 -- PORTAL --
 ------------
 
-CREATE OR REPLACE FUNCTION portal_add(prm_token integer, prm_name text)
+CREATE OR REPLACE FUNCTION portal_add(prm_token integer, prm_name text, prm_description text)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -12,12 +12,12 @@ DECLARE
   ret integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{structure}');
-  INSERT INTO portal.portal (por_name) VALUES(prm_name)
+  INSERT INTO portal.portal (por_name, por_description) VALUES(prm_name, prm_description)
     RETURNING por_id INTO ret;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION portal_add(prm_token integer, prm_name text) IS 'Add a new portal';
+COMMENT ON FUNCTION portal_add(prm_token integer, prm_name text, prm_description text) IS 'Add a new portal';
 
 CREATE OR REPLACE FUNCTION portal_list(prm_token integer)
 RETURNS SETOF portal.portal

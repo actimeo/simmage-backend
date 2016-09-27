@@ -47,7 +47,8 @@ CREATE TYPE portal.topics AS ENUM (
 */
 CREATE TABLE portal (
   por_id serial PRIMARY KEY,
-  por_name text NOT NULL UNIQUE
+  por_name text NOT NULL UNIQUE,
+  por_description text NOT NULL DEFAULT ''
 );
 
 CREATE TABLE mainsection (

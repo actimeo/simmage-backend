@@ -45,7 +45,8 @@ class personviewTest extends PHPUnit_Framework_TestCase {
     $this->token = $res['usr_token'];
 
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
 
     $pse_name = 'a person section';
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name);

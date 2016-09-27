@@ -52,7 +52,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAdd() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
 
     $pse_name = 'a main section';
     $id = self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name);
@@ -61,7 +62,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddTwice() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name1 = 'a first section';
     $pse_name2 = 'a second section';
@@ -76,7 +78,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
    */
   public function testPersonsectionAddSameName() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name = 'a first section';
     $id1 = self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name);
@@ -88,9 +91,11 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
    */
   public function testPersonsectionAddSameNameOtherPortal() {
     $por_name1 = 'a first portal';
-    $por_id1 = self::$base->portal->portal_add($this->token, $por_name1);
+    $por_desc1 = 'a portal desc';
+    $por_id1 = self::$base->portal->portal_add($this->token, $por_name1, $por_desc1);
     $por_name2 = 'a second portal';
-    $por_id2 = self::$base->portal->portal_add($this->token, $por_name2);
+    $por_desc2 = 'a portal desc';
+    $por_id2 = self::$base->portal->portal_add($this->token, $por_name2, $por_desc2);
     
     $pse_name = 'a section';
     $id1 = self::$base->portal->personsection_add($this->token, $por_id1, 'patient', $pse_name);
@@ -100,7 +105,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddAndList() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
 
     $pse_name = 'a main section';
     $id = self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name);
@@ -110,7 +116,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddTwiceAndList() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name1 = 'a first section';
     $pse_name2 = 'a second section';
@@ -123,9 +130,11 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddDifferentPortalsAndList() {
     $por_name1 = 'a first portal';
-    $por_id1 = self::$base->portal->portal_add($this->token, $por_name1);
+    $por_desc1 = 'a portal desc';
+    $por_id1 = self::$base->portal->portal_add($this->token, $por_name1, $por_desc1);
     $por_name2 = 'a second portal';
-    $por_id2 = self::$base->portal->portal_add($this->token, $por_name2);
+    $por_desc2 = 'a portal desc';
+    $por_id2 = self::$base->portal->portal_add($this->token, $por_name2, $por_desc2);
     
     $pse_name = 'a section';
     $id1 = self::$base->portal->personsection_add($this->token, $por_id1, 'patient', $pse_name);
@@ -140,7 +149,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddAndCheckOrder() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name[0] = 'a first section';
     $pse_name[1] = 'a second section';
@@ -160,7 +170,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
   public function testPersonsectionRename() {
     $name1 = 'a section';
     $name2 = 'another section';
-    $por = self::$base->portal->portal_add($this->token, 'a portal');
+    $por_desc = 'a portal desc';
+    $por = self::$base->portal->portal_add($this->token, 'a portal', $por_desc);
     
     $id = self::$base->portal->personsection_add($this->token, $por, 'patient', $name1);
     self::$base->portal->personsection_rename($this->token, $id, $name2);
@@ -178,14 +189,15 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
    public function testPersonsectionRenameUnknown() {
     $name1 = 'a section';
     $name2 = 'another section';
-    $por = self::$base->portal->portal_add($this->token, 'a portal');
+    $por_desc = 'a portal desc';
+    $por = self::$base->portal->portal_add($this->token, 'a portal', $por_desc);
     
     $id = self::$base->portal->personsection_add($this->token, $por, 'patient', $name1);
     self::$base->portal->personsection_rename($this->token, $id+1, $name2);
   }
 
   public function testPersonsectionDelete() {
-    $por = self::$base->portal->portal_add($this->token, 'a portal');
+    $por = self::$base->portal->portal_add($this->token, 'a portal', 'a desc');
     $id = self::$base->portal->personsection_add($this->token, $por, 'patient', 'a section');
     $personsections = self::$base->portal->personsection_list($this->token, $por, 'patient');
     $this->assertEquals(1, count($personsections));
@@ -200,14 +212,16 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
    */
   public function testPersonsectionDeleteUnknown() {
     $name = 'a portal';
-    $por = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'a portal desc';
+    $por = self::$base->portal->portal_add($this->token, $name, $desc);
     $id = self::$base->portal->personsection_add($this->token, $por, 'patient', 'a section');
     self::$base->portal->personsection_delete($this->token, $id+1);
   }
 
   public function testPersonsectionAddAndMoveToMiddle() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name[0] = '1';
     $pse_name[1] = '2';
@@ -226,7 +240,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddAndMoveToStart() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name[0] = '1';
     $pse_name[1] = '2';
@@ -245,7 +260,8 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
 
   public function testPersonsectionAddAndMoveToEnd() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'a portal desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name[0] = '1';
     $pse_name[1] = '2';

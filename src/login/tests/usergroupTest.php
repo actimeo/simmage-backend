@@ -103,9 +103,12 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $porName1 = 'portal 1';
     $porName2 = 'portal 2';
     $porName3 = 'portal 3';
-    $porId1 = self::$base->portal->portal_add($this->token, $porName1);
-    $porId2 = self::$base->portal->portal_add($this->token, $porName2);
-    $porId3 = self::$base->portal->portal_add($this->token, $porName3);
+    $porDesc1 = 'portal desc 1';
+    $porDesc2 = 'portal desc 2';
+    $porDesc3 = 'portal desc 3';
+    $porId1 = self::$base->portal->portal_add($this->token, $porName1, $porDesc1);
+    $porId2 = self::$base->portal->portal_add($this->token, $porName2, $porDesc2);
+    $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
     $this->assertGreaterThan($porId1, $porId2);
     $this->assertGreaterThan($porId2, $porId3);
 
@@ -114,21 +117,21 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
-			       array('por_id'=>$porId2, 'por_name'=>$porName2)), 
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1, 'por_description' => $porDesc1), 
+			       array('por_id'=>$porId2, 'por_name'=>$porName2, 'por_description' => $porDesc2)), 
 			$porIds);
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
-			       array('por_id'=>$porId2, 'por_name'=>$porName2), 
-			       array('por_id'=>$porId3, 'por_name'=>$porName3)), 
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1, 'por_description' => $porDesc1), 
+			       array('por_id'=>$porId2, 'por_name'=>$porName2, 'por_description' => $porDesc2), 
+			       array('por_id'=>$porId3, 'por_name'=>$porName3, 'por_description' => $porDesc3)),
 			$porIds);
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1));
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
-    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1), 
-			       array('por_id'=>$porId3, 'por_name'=>$porName3)), 
+    $this->assertEquals(array (array('por_id'=>$porId1, 'por_name'=>$porName1, 'por_description' => $porDesc1), 
+			       array('por_id'=>$porId3, 'por_name'=>$porName3, 'por_description' => $porDesc3)), 
 			$porIds);
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array());

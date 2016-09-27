@@ -66,7 +66,8 @@ class portalTest extends PHPUnit_Framework_TestCase {
 
   public function testPortalAdd() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'a desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     $this->assertGreaterThan(0, $id);
   }  
 
@@ -76,14 +77,16 @@ class portalTest extends PHPUnit_Framework_TestCase {
    */
   public function testPortalAddSameName() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'a desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     $this->assertGreaterThan(0, $id);
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
   }  
 
   public function testPortalList() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'a desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     $portals = self::$base->portal->portal_list($this->token);
     $this->assertGreaterThan(0, count($portals));
     $found = false;
@@ -99,7 +102,8 @@ class portalTest extends PHPUnit_Framework_TestCase {
   public function testPortalRename() {
     $name1 = 'a portal';
     $name2 = 'another portal';
-    $id = self::$base->portal->portal_add($this->token, $name1);
+    $desc1 = 'a desc';
+    $id = self::$base->portal->portal_add($this->token, $name1, $desc1);
     self::$base->portal->portal_rename($this->token, $id, $name2);
     $portals = self::$base->portal->portal_list($this->token);
     $this->assertGreaterThan(0, count($portals));
@@ -121,13 +125,15 @@ class portalTest extends PHPUnit_Framework_TestCase {
   public function testPortalRenameUnknown() {
     $name1 = 'a portal';
     $name2 = 'another portal';
-    $id = self::$base->portal->portal_add($this->token, $name1);
+    $desc = 'a desc';
+    $id = self::$base->portal->portal_add($this->token, $name1, $desc);
     self::$base->portal->portal_rename($this->token, $id+1, $name2);
   }
 
   public function testPortalDelete() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'another desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     $portals = self::$base->portal->portal_list($this->token);
     $nAfterAdd = count($portals);
     $this->assertGreaterThan(0, count($portals));   
@@ -142,7 +148,8 @@ class portalTest extends PHPUnit_Framework_TestCase {
    */
   public function testPortalDeleteUnknown() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'another desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     self::$base->portal->portal_delete($this->token, $id+1);
   }
 
@@ -152,13 +159,15 @@ class portalTest extends PHPUnit_Framework_TestCase {
    */
   public function testPortalDeleteNull() {
     $name = 'a portal';
-    $id = self::$base->portal->portal_add($this->token, $name);
+    $desc = 'another desc';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
     self::$base->portal->portal_delete($this->token, null);
   }
 
   public function testPortalClean() {
     $por_name = 'a portal';
-    $por_id = self::$base->portal->portal_add($this->token, $por_name);
+    $por_desc = 'another desc';
+    $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $mse_name1 = 'a first section';
     $mse_name2 = 'a second section';
