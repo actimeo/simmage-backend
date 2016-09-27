@@ -18,6 +18,33 @@ END;
 $$;
 COMMENT ON FUNCTION login.usergroup_add(prm_token integer, prm_name text) IS 'Add a new user group';
 
+CREATE OR REPLACE FUNCTION login.usergroup_rename(prm_token integer, prm_ugr_id integer, prm_name text)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  UPDATE login.usergroup SET ugr_name = prm_name WHERE ugr_id = prm_ugr_id;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_rename(prm_token integer, prm_ugr_id integer, prm_name text) IS 'Rename an usergroup';
+
+CREATE OR REPLACE FUNCTION login.usergroup_get(prm_token integer, prm_ugr_id integer)
+RETURNS login.usergroup
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE 
+  ugr login.usergroup;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT * INTO ugr FROM login.usergroup WHERE ugr_id = prm_ugr_id;
+  RETURN ugr;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_get(prm_token integer, prm_ugr_id integer) IS 'Return an usergroup';
+
 CREATE OR REPLACE FUNCTION login.usergroup_list(
   prm_token integer)
 RETURNS SETOF login.usergroup
@@ -129,10 +156,24 @@ AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT "group".* FROM organ.group
-    INNER JOIN login.usergroup_group USING(grp_id)
+    INNER JOIN login.usergroup_group USING (grp_id)
     WHERE ugr_id = prm_ugr_id
     ORDER BY grp_name;
 END;
 $$;
 COMMENT ON FUNCTION login.usergroup_group_list(prm_token integer, prm_ugr_id integer) 
 IS 'Returns the groups authorized for a user group';
+
+CREATE OR REPLACE FUNCTION login.usergroup_delete(prm_token integer, prm_ugr_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  DELETE FROM login.usergroup_group WHERE ugr_id = prm_ugr_id;
+  DELETE FROM login.usergroup_portal WHERE por_id = prm_ugr_id;
+  DELETE FROM login.usergroup WHERE ugr_id = prm_ugr_id;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_delete(prm_token integer, prm_ugr_id integer) IS 'Delete an usergroup and its links with groups and portals';

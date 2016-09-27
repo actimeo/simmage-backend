@@ -88,10 +88,12 @@ CREATE TYPE organ.group_list AS (
   grp_id integer,
   grp_name text,
   grp_description text,
-  grp_topics integer[]
+  grp_topics integer[],
+  org_id integer,
+  org_name text
 );
 
-CREATE FUNCTION organ.group_list(prm_token integer, prm_org_id integer)
+CREATE FUNCTION organ.group_list(prm_token integer, prm_org_id integer, prm_internal boolean)
 RETURNS SETOF organ.group_list
 LANGUAGE plpgsql
 STABLE
@@ -105,13 +107,17 @@ BEGIN
     grp_name, 
     grp_description, 
     ARRAY(SELECT top_id FROM organ.group_topic 
-            INNER JOIN organ.topic USING(top_id) WHERE grp_id = grp.grp_id ORDER BY top_name)
-    FROM organ.group grp
-    WHERE prm_org_id IS NULL OR org_id = prm_org_id
-    ORDER BY grp_name;
+            INNER JOIN organ.topic USING(top_id) WHERE grp_id = grp.grp_id ORDER BY top_name),
+    org.org_id,
+    org_name
+    FROM organ.group grp INNER JOIN organ.organization org
+	  USING (org_id)
+    WHERE (prm_org_id IS NULL OR grp.org_id = prm_org_id)
+      AND (prm_internal IS NULL OR org.org_internal = prm_internal)
+    ORDER BY org_name, grp_name;
 END;
 $$;
-COMMENT ON FUNCTION organ.group_list(prm_token integer, prm_org_id integer) 
+COMMENT ON FUNCTION organ.group_list(prm_token integer, prm_org_id integer, prm_internal boolean) 
 IS 'Return a list of groups of a particular service, optionally active at a certain date';
 
 CREATE OR REPLACE FUNCTION organ.group_delete(prm_token integer, prm_id integer)
