@@ -148,7 +148,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $orgNameA = 'Organization A';
     $orgNameB = 'Organization B';
     $orgIdA = self::$base->organ->organization_add($this->token, $orgNameA, 'desc A', true);
-    $orgIdB = self::$base->organ->organization_add($this->token, $orgNameB, 'desc B', false);
+    $orgIdB = self::$base->organ->organization_add($this->token, $orgNameB, 'desc B', true);
     $grpNameA1 = 'Group A1';
     $grpNameA2 = 'Group A2';
     $grpNameB1 = 'Group B1';
@@ -202,6 +202,30 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(null, $grpIds);
   }
+
+  public function testUsergroupExternalGroupSet() {
+    $orgNameA = 'Organization A';
+    $orgNameB = 'Organization B';
+    $orgIdA = self::$base->organ->organization_add($this->token, $orgNameA, 'desc A', true);
+    $orgIdB = self::$base->organ->organization_add($this->token, $orgNameB, 'desc B', false);
+    $grpNameA1 = 'Group A1';
+    $grpNameA2 = 'Group A2';
+    $grpNameB1 = 'Group B1';
+    $grpDescA1 = 'desc A1';
+    $grpDescA2 = 'desc A2';
+    $grpDescB1 = 'desc B1';
+    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1);
+    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2);
+    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1);
+    
+    $usergroupName = 'A user group';
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+    
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    self::$base->login->usergroup_set_groups($this->token, $ugr, 
+					     array($grpIdA2, $grpIdA1, $grpIdB1));
+  }
+
 
 }
 ?>

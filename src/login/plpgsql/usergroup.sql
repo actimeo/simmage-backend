@@ -105,6 +105,15 @@ DECLARE
   t integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
+  -- Raise an exception if some group belongs to an external organization
+  IF EXISTS (SELECT 1 FROM organ.organization
+               INNER JOIN organ.group USING(org_id)
+               WHERE grp_id = ANY (prm_grp_ids)
+               AND NOT org_internal) THEN
+    RAISE EXCEPTION 'Groups should belong to internal organizations' 
+      USING ERRCODE = 'data_exception';
+  END IF;
+
   -- Raise an exception if entity does not exist
   IF NOT EXISTS (SELECT 1 FROM login.usergroup WHERE ugr_id = prm_ugr_id) THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
