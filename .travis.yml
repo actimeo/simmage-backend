@@ -12,6 +12,7 @@ env:
   matrix:
   - SAMPLE=mecs
   - SAMPLE=simple
+  - SAMPLE=empty
 services:
 - postgresql
 addons:

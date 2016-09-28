@@ -56,4 +56,14 @@ class participantTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->organ->participant_add($this->token, $firstname, $lastname);
     $this->assertGreaterThan(0, $id);
   }  
+
+  public function testParticipantList() {
+    $firstname = 'Pierre';
+    $lastname = 'Dupont';
+    $id = self::$base->organ->participant_add($this->token, $firstname, $lastname);
+    $this->assertGreaterThan(0, $id);
+    $list = self::$base->organ->participant_list($this->token);
+    $back = array_filter($list, function($x) use($id) { return $x['par_id'] == $id; });
+    $this->assertEquals(1, count($back));
+  }  
 }
