@@ -31,19 +31,33 @@ END;
 $$;
 COMMENT ON FUNCTION portal_list(prm_token integer) IS 'List all the portals';
 
-CREATE OR REPLACE FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text)
+CREATE OR REPLACE FUNCTION portal_get(prm_token integer, prm_id integer)
+RETURNS portal.portal
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  ret portal.portal;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{structure}');
+  SELECT * INTO ret FROM portal.portal WHERE por_id = prm_id;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION portal_get(prm_token integer, prm_id integer) IS 'Returns a portal';
+
+CREATE OR REPLACE FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text, prm_description text)
 RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{structure}');
-  UPDATE portal.portal SET por_name = prm_name WHERE por_id = prm_id;
+  UPDATE portal.portal SET por_name = prm_name, por_description = prm_description WHERE por_id = prm_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text) 
+COMMENT ON FUNCTION portal_rename(prm_token integer, prm_id integer, prm_name text, prm_description text) 
 IS 'Rename a particular portal';
 
 CREATE OR REPLACE FUNCTION portal_delete(prm_token integer, prm_id integer)
