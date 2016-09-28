@@ -172,7 +172,7 @@ AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
   DELETE FROM login.usergroup_group WHERE ugr_id = prm_ugr_id;
-  DELETE FROM login.usergroup_portal WHERE por_id = prm_ugr_id;
+  DELETE FROM login.usergroup_portal WHERE ugr_id = prm_ugr_id;
   DELETE FROM login.usergroup WHERE ugr_id = prm_ugr_id;
 END;
 $$;
