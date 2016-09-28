@@ -308,7 +308,7 @@ CREATE TYPE login.user_details AS (
   ugr_name text
 );
 
-CREATE FUNCTION login.user_list(prm_token integer)
+CREATE FUNCTION login.user_list(prm_token integer, prm_ugr_id integer)
 RETURNS SETOF login.user_details
 LANGUAGE plpgsql
 STABLE
@@ -323,7 +323,9 @@ BEGIN
       FROM login.user 
       LEFT JOIN organ.participant USING(par_id)
       LEFT JOIN login.usergroup USING(ugr_id)
+      WHERE (prm_ugr_id ISNULL OR prm_ugr_id = usergroup.ugr_id)
       ORDER BY usr_login;
 END;
 $$;
-COMMENT ON FUNCTION login.user_list(prm_token integer) IS 'Return the list of users';
+COMMENT ON FUNCTION login.user_list(prm_token integer, prm_ugr_id integer) IS 'Return the list of users.
+if prm_ugr_id is not null, filter by usergroup.';
