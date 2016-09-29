@@ -58,23 +58,23 @@ $base->login->user_usergroup_set($token, $userLogin2, $ug2);
 $orgI = $base->organ->organization_add($token, "Organization I", "First organization", true);
 $orgII = $base->organ->organization_add($token, "Organization II", "Second organization", true);
 
-$grpI1 = $base->organ->group_add($token, $orgI, 'Group 1 institution I', 'Group I 1');
+$grpI1 = $base->organ->group_add($token, $orgI, 'Group 1 institution I', 'Group I 1', false, 'organization');
 $base->organ->group_set_topics($token, $grpI1, array($tSocial, $tJustice));
 
-$grpI2 = $base->organ->group_add($token, $orgI, 'Group 2 institution I', 'Group I 2');
+$grpI2 = $base->organ->group_add($token, $orgI, 'Group 2 institution I', 'Group I 2', false, 'organization');
 $base->organ->group_set_topics($token, $grpI2, array($tSocial, $tSport, $tCulture));
 
-$grpII1 = $base->organ->group_add($token, $orgII, 'Group 1 institution II', 'Group II 1');
+$grpII1 = $base->organ->group_add($token, $orgII, 'Group 1 institution II', 'Group II 1', false, 'organization');
 $base->organ->group_set_topics($token, $grpII1, array($tSport));
 
-$grpII2 = $base->organ->group_add($token, $orgII, 'Group 2 institution II', 'Group II 2');
+$grpII2 = $base->organ->group_add($token, $orgII, 'Group 2 institution II', 'Group II 2', false, 'organization');
 $base->organ->group_set_topics($token, $grpII2, array($tFinancer, $tSupport));
 
 // set exclusive Institution I groups 1 and 2
 $base->organ->group_exclusive_new($token, 'exclusive group', array($grpI1, $grpI2));
 
 // add a mandatory group
-$grpIMand = $base->organ->group_add($token, $orgI, 'Mandatory Group', 'Group mandarory on Org I');
+$grpIMand = $base->organ->group_add($token, $orgI, 'Mandatory Group', 'Group mandarory on Org I', false, 'organization');
 $base->organ->group_set_topics($token, $grpIMand, array($tPsycho));
 
 // update group orientation

@@ -89,10 +89,10 @@ $oMecs = $base->organ->organization_add($token, "MECS Sauvegarde", 'Description.
 $topicsPavillons = array($tLogement, $tRestauration, $tEducation, 
 			 $tProjet, $tVeture, $tEntretien, 
 			 $tBudget, $tTransport);
-$gPavillon1 = $base->organ->group_add($token, $oMecs, 'Pavillon 1', 'Pavillon Nord');
-$gPavillon2 = $base->organ->group_add($token, $oMecs, 'Pavillon 2', 'Pavillon Sud');
-$gAppart1 = $base->organ->group_add($token, $oMecs, 'Appartement 1', 'Appartement 1 pour famille');
-$gAppart2 = $base->organ->group_add($token, $oMecs, 'Appartement 2', 'Appartement 2 pour famille');
+$gPavillon1 = $base->organ->group_add($token, $oMecs, 'Pavillon 1', 'Pavillon Nord', false, 'organization');
+$gPavillon2 = $base->organ->group_add($token, $oMecs, 'Pavillon 2', 'Pavillon Sud', false, 'organization');
+$gAppart1 = $base->organ->group_add($token, $oMecs, 'Appartement 1', 'Appartement 1 pour famille', false, 'organization');
+$gAppart2 = $base->organ->group_add($token, $oMecs, 'Appartement 2', 'Appartement 2 pour famille', false, 'organization');
 
 $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
@@ -102,13 +102,13 @@ $base->login->usergroup_set_groups($token, $ugEncadrement, array($gPavillon1, $g
 $base->login->usergroup_set_groups($token, $ugEducateur, array($gPavillon1, $gPavillon2));
 
 // Group Suivi psychologique
-$gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY');
+$gPsy = $base->organ->group_add($token, $oMecs, 'Suivi psychologique', 'Suivi par Mme PSY', false, 'organization');
 $base->organ->group_set_mandatory($token, $gPsy, true);
 $base->organ->group_set_topics($token, $gPsy, array($tPsy, $tProjet));
 $base->organ->group_set_orientation($token, $gPsy, 'participant');
 
 // Group Suivi administratif
-$gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN'); 
+$gAdmin = $base->organ->group_add($token, $oMecs, 'Suivi administratif', 'Suivi par Mlle ADMIN', false, 'organization'); 
 $base->organ->group_set_mandatory($token, $gAdmin, true);
 $base->organ->group_set_topics($token, $gAdmin, array($tPriseEnCharge));
 
@@ -118,11 +118,11 @@ $base->login->usergroup_set_groups($token, $ugEncadrement, array($gAdmin));
 $oEcole = $base->organ->organization_add($token, "École Georges Brassens", 'Gare au Gorille !', false);
 $topicsEcole = array($tEducation);
 
-$gCp = $base->organ->group_add($token, $oEcole, 'CP', '1e année primaire');
-$gCe1 = $base->organ->group_add($token, $oEcole, 'CE1', '2e année primaire');
-$gCe2 = $base->organ->group_add($token, $oEcole, 'CE2', '3e année primaire');
-$gCm1 = $base->organ->group_add($token, $oEcole, 'CM1', '4e année primaire');
-$gCm2 = $base->organ->group_add($token, $oEcole, 'CM2', '5e année primaire');
+$gCp = $base->organ->group_add($token, $oEcole, 'CP', '1e année primaire', false, 'organization');
+$gCe1 = $base->organ->group_add($token, $oEcole, 'CE1', '2e année primaire', false, 'organization');
+$gCe2 = $base->organ->group_add($token, $oEcole, 'CE2', '3e année primaire', false, 'organization');
+$gCm1 = $base->organ->group_add($token, $oEcole, 'CM1', '4e année primaire', false, 'organization');
+$gCm2 = $base->organ->group_add($token, $oEcole, 'CM2', '5e année primaire', false, 'organization');
 $base->organ->group_exclusive_new($token, 'Classes', array($gCp, $gCe1, $gCe2, $gCm1, $gCm2));
 
 foreach (array($gCp, $gCe1, $gCe2, $gCm1, $gCm2) as $group) { 
@@ -134,19 +134,19 @@ $base->login->usergroup_set_groups($token, $ugEducateur, array($gPavillon1, $gPa
 $oTribunalBordeaux = $base->organ->organization_add($token, 
 						    "Tribunal pour enfants de Bordeaux", "Tribunal ...", 
 						    false);
-$gTribunalBordeaux = $base->organ->group_add($token, $oTribunalBordeaux, "Assistance éducative", 'desc ...');
+$gTribunalBordeaux = $base->organ->group_add($token, $oTribunalBordeaux, "Assistance éducative", 'desc ...', false, 'organization');
 $base->organ->group_set_topics($token, $gTribunalBordeaux, array($tPlacement));
 
 $oTribunalLangon = $base->organ->organization_add($token, 
 						  "Tribunal pour enfants de Langon", "Rue du Tribunal ...", 
 						  false);
-$gTribunalLangon = $base->organ->group_add($token, $oTribunalLangon, "Assistance éducative", "Porte 4");
+$gTribunalLangon = $base->organ->group_add($token, $oTribunalLangon, "Assistance éducative", "Porte 4", false, 'organization');
 $base->organ->group_set_topics($token, $gTribunalLangon, array($tPlacement));
 
 $oAse = $base->organ->organization_add($token, "ASE 33", "", false);
-$gAse1 = $base->organ->group_add($token, $oAse, "Accueil provisoire", "");
+$gAse1 = $base->organ->group_add($token, $oAse, "Accueil provisoire", "", false, 'organization');
 $base->organ->group_set_topics($token, $gAse1, array($tPlacement));
-$gAse2 = $base->organ->group_add($token, $oAse, "Accueil d'urgence", "");
+$gAse2 = $base->organ->group_add($token, $oAse, "Accueil d'urgence", "", false, 'organization');
 $base->organ->group_set_topics($token, $gAse2, array($tPlacement));
 
 

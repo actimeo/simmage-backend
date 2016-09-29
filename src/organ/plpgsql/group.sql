@@ -13,7 +13,7 @@ DECLARE
   ret integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  INSERT INTO organ.group (org_id, grp_name, grp_description, grp_mandatory, grp_orienation) 
+  INSERT INTO organ.group (org_id, grp_name, grp_description, grp_mandatory, grp_orientation) 
     VALUES (prm_org_id, prm_name, prm_description, prm_mandatory, prm_orientation)
     RETURNING grp_id INTO ret;
   RETURN ret;    
@@ -71,7 +71,7 @@ BEGIN
   END IF;
 END;
 $$;
-COMMENT ON FUNCTION organ.group_update(prm_token integer, prm_id integer, prm_name text, prm_description text, prm_mandatory boolean, prm_orientation organ.group_orienation, prm_org_id integer) 
+COMMENT ON FUNCTION organ.group_update(prm_token integer, prm_id integer, prm_name text, prm_description text, prm_mandatory boolean, prm_orientation organ.group_orientation, prm_org_id integer) 
 IS 'Update all informations about a group';
 
 CREATE OR REPLACE FUNCTION organ.group_set(prm_token integer, prm_id integer, prm_description text)
