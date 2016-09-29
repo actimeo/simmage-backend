@@ -3,7 +3,7 @@ Each user has a login and a password.
 
 Adding a user
 -------------
-A first user is created during installation, with the login ''variation'' and a password provided during 
+A first user is created during installation, with the login 'variation' and a password provided during 
 installation.
 
 Users with "users" privileges can add users.
@@ -36,35 +36,33 @@ Portals
 A user can have access to patients data through one or several portals.
 ';
 
+COMMENT ON TYPE login.user_details IS '';
+
+COMMENT ON TYPE login.user_info IS '';
+
+COMMENT ON TYPE login.user_login IS 'Type returned by user_login function';
+
 COMMENT ON TABLE login.user IS 'Webservice users';
-
-COMMENT ON TABLE login.usergroup_portal IS 'Permissions for users from group to use portals';
-
 COMMENT ON COLUMN login.user.usr_login IS 'User login';
-
 COMMENT ON COLUMN login.user.usr_salt IS 'Encrypted password';
-
 COMMENT ON COLUMN login.user.usr_pwd IS 'Clear temporary password';
-
 COMMENT ON COLUMN login.user.usr_digest IS 'Encrypted password for webdav';
-
 COMMENT ON COLUMN login.user.usr_rights IS 'Array of special rights for this user';
-
 COMMENT ON COLUMN login.user.par_id IS 'Participant attached to the user';
-
 COMMENT ON COLUMN login.user.ugr_id IS 'Usergroup of the user, or null for an admin-only user';
-
 COMMENT ON COLUMN login.user.usr_token IS 'Token id returned after authentication';
-
 COMMENT ON COLUMN login.user.usr_token_creation_date IS 'Token creation date for validity';
 
+COMMENT ON TABLE login.usergroup IS '';
+COMMENT ON COLUMN login.usergroup.ugr_id IS '';
+COMMENT ON COLUMN login.usergroup.ugr_name IS '';
+
+COMMENT ON TABLE login.usergroup_group IS '';
+COMMENT ON COLUMN login.usergroup_group.ugg_id IS '';
+COMMENT ON COLUMN login.usergroup_group.ugr_id IS '';
+COMMENT ON COLUMN login.usergroup_group.grp_id IS '';
+
+COMMENT ON TABLE login.usergroup_portal IS 'Permissions for users from group to use portals';
 COMMENT ON COLUMN login.usergroup_portal.ugp_id IS 'Unique identifier';
-
 COMMENT ON COLUMN login.usergroup_portal.ugr_id IS 'User group identifier';
-
 COMMENT ON COLUMN login.usergroup_portal.por_id IS 'A portal the user can use';
-
-COMMENT ON TYPE login.user_right IS 'Specific rights for users:
--- structure: can edit portals structure,
--- organization: can edit organization,
--- users: can manage users.';
