@@ -41,6 +41,20 @@ $$;
 COMMENT ON FUNCTION organ.group_get(prm_token integer, prm_id integer) 
 IS 'Get basic information about a service group';
 
+CREATE OR REPLACE FUNCTION organ.group_get_topics(prm_token integer, prm_id integer)
+RETURNS SETOF organ.topic
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RETURN QUERY SELECT "topic".* FROM organ.topic 
+    INNER JOIN organ.group_topic USING (top_id)
+    WHERE grp_id = prm_id;
+END;
+$$;
+COMMENT ON FUNCTION organ.group_get_topics(prm_token integer, prm_id integer) IS 'Get all topics integrated in a group';
+
 CREATE OR REPLACE FUNCTION organ.group_update(
   prm_token integer,
   prm_id integer,

@@ -463,4 +463,36 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp = self::$base->organ->group_get($this->token, $grpId);
     $this->assertEquals('organization', $grp['grp_orientation']);
   }
+
+  // get the list of group topics
+  public function testGroupGetTopics() {
+    $name = 'an organization';
+    $desc = 'an organization description';
+    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name = 'group';
+    $grp_desc = 'group desc';
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
+
+    $top_name = 'topic 1';
+    $top_desc = 'topic description 1';
+    $top_icon = 'topic icon 1';
+    $top_color = 'topic color 1';
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic description 2';
+    $top_icon2 = 'topic icon 2';
+    $top_color2 = 'topic color 2';
+    $top_name3 = 'topic 3';
+    $top_desc3 = 'topic description 3';
+    $top_icon3 = 'topic icon 3';
+    $top_color3 = 'topic color 3';
+    $topId1 = self::$base->organ->topic_add($this->token, $top_name, $top_desc, $top_icon, $top_color);
+    $topId2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+    $topId3 = self::$base->organ->topic_add($this->token, $top_name3, $top_desc3, $top_icon3, $top_color3);
+
+    self::$base->organ->group_set_topics($this->token, $grpId, array($topId1, $topId2, $topId3));
+
+    $topics = self::$base->organ->group_get_topics($this->token, $grpId);
+    $this->assertEquals(3, count($topics));
+  }
 }
