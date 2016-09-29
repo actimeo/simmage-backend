@@ -251,15 +251,15 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'a group 1';
     $grp_desc1 = 'a group 1 desc';
-    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc1, false, 'organization');
 
     $grp_name2 = 'a group 2';
     $grp_desc2 = 'a group 2 desc';
-    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2, false, 'organization');
 
     $grp_name3 = 'a group 3';
     $grp_desc3 = 'a group 3 desc';
-    $grpId3 = self::$base->organ->group_add($this->token, $orgId, $grp_name3, $grp_desc3);
+    $grpId3 = self::$base->organ->group_add($this->token, $orgId, $grp_name3, $grp_desc3, false, 'organization');
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId3));
     $grps = self::$base->organ->dossier_assignment_list($this->token, $dosId);

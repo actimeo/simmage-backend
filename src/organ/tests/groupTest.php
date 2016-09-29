@@ -58,7 +58,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc, false, 'organization');
     $this->assertGreaterThan(0, $grpId);
   }  
 
@@ -70,7 +70,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc, false, 'organization');
     $this->assertGreaterThan(0, $grpId);
 
     $grp = self::$base->organ->group_get($this->token, $grpId);
@@ -90,8 +90,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grpName = 'a same group name';
     $grp_desc = 'a same group desc';
-    $grpId1 = self::$base->organ->group_add($this->token, $orgId1, $grpName, $grp_desc);
-    $grpId2 = self::$base->organ->group_add($this->token, $orgId2, $grpName, $grp_desc);
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId1, $grpName, $grp_desc, false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId2, $grpName, $grp_desc, false, 'organization');
   }  
 
   /**
@@ -105,8 +105,8 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grpName = 'a same group';
     $grp_desc = 'a same group desc';
-    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc);
-    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc);
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc, false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc, false, 'organization');
   } 
 
   public function testGroupSet() {
@@ -116,7 +116,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
     
     $grpName = 'a group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grpName, $grp_desc, false, 'organization');
     $this->assertGreaterThan(0, $grpId);
     
     $grpNotes = 'a note';
@@ -131,12 +131,12 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'a group 1 desc';
-    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc1, false, 'organization');
     $this->assertGreaterThan(0, $grpId1);
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'a group 2 desc';
-    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, $grp_name2, $grp_desc2, false, 'organization');
     $this->assertGreaterThan(0, $grpId2);
     
     $grps = self::$base->organ->group_list($this->token, $orgId, true);
@@ -150,7 +150,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc, false, 'organization');
 
     $grps = self::$base->organ->group_list($this->token, $orgId, true);
     $this->assertEquals(1, count($grps));
@@ -168,7 +168,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_name1 = 'a group';
     $grp_desc = 'a group desc';
     $grp_name2 = 'another group';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc, false, 'organization');
     self::$base->organ->group_rename($this->token, $grpId, $grp_name2);
     $grp = self::$base->organ->group_get($this->token, $grpId);
     $this->assertEquals($grp_name2, $grp['grp_name']);
@@ -186,7 +186,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $grp_name1 = 'a group';
     $grp_desc = 'a group desc';
     $grp_name2 = 'another group';
-    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $orgId, $grp_name1, $grp_desc, false, 'organization');
     self::$base->organ->group_rename($this->token, $grpId+1, $grp_name2);
   }
 
@@ -201,7 +201,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a service group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     self::$base->organ->group_delete($this->token, $grpId+1);
   }
@@ -221,7 +221,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a service group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     $grp = self::$base->organ->group_get($this->token, $grpId);
     $this->assertFalse($grp['grp_mandatory']);
@@ -234,7 +234,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a service group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     self::$base->organ->group_set_mandatory($this->token, $grpId, true);
     $grp = self::$base->organ->group_get($this->token, $grpId);
@@ -248,7 +248,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'a service group';
     $grp_desc = 'a group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     self::$base->organ->group_set_mandatory($this->token, $grpId, true);
     $grp = self::$base->organ->group_get($this->token, $grpId);
@@ -266,19 +266,19 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $grp_name3 = 'group 3';
     $grp_desc3 = 'group desc 3';
-    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3, false, 'organization');
 
     $grp_name4 = 'group 4';
     $grp_desc4 = 'group desc 4';
-    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4, false, 'organization');
 
     self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
 					    array($grpId1, $grpId2, $grpId3));
@@ -297,19 +297,19 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $grp_name3 = 'group 3';
     $grp_desc3 = 'group desc 3';
-    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3, false, 'organization');
 
     $grp_name4 = 'group 4';
     $grp_desc4 = 'group desc 4';
-    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4, false, 'organization');
 
     self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', array($grpId1, $grpId2, $grpId3));
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
@@ -323,19 +323,19 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $grp_name3 = 'group 3';
     $grp_desc3 = 'group desc 3';
-    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3, false, 'organization');
 
     $grp_name4 = 'group 4';
     $grp_desc4 = 'group desc 4';
-    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4, false, 'organization');
 
     self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
 					    array($grpId1, $grpId2, $grpId3));
@@ -350,19 +350,19 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $grp_name3 = 'group 3';
     $grp_desc3 = 'group desc 3';
-    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3);
+    $grpId3 = self::$base->organ->group_add($this->token, $id, $grp_name3, $grp_desc3, false, 'organization');
 
     $grp_name4 = 'group 4';
     $grp_desc4 = 'group desc 4';
-    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4);
+    $grpId4 = self::$base->organ->group_add($this->token, $id, $grp_name4, $grp_desc4, false, 'organization');
 
     $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
 						   array($grpId1, $grpId2, $grpId3));
@@ -380,12 +380,12 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     self::$base->organ->group_set_mandatory($this->token, $grpId1, true);
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
@@ -400,11 +400,11 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name1 = 'group 1';
     $grp_desc1 = 'group desc 1';
-    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1);
+    $grpId1 = self::$base->organ->group_add($this->token, $id, $grp_name1, $grp_desc1, false, 'organization');
     
     $grp_name2 = 'group 2';
     $grp_desc2 = 'group desc 2';
-    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2);
+    $grpId2 = self::$base->organ->group_add($this->token, $id, $grp_name2, $grp_desc2, false, 'organization');
     
     $gre = self::$base->organ->group_exclusive_new($this->token, 'some exclusive groups', 
 						   array($grpId1, $grpId2));
@@ -421,7 +421,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'group';
     $grp_desc = 'group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     $grp = self::$base->organ->group_get($this->token, $grpId);
     $this->assertEquals('organization', $grp['grp_orientation']);
@@ -435,7 +435,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'group';
     $grp_desc = 'group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     self::$base->organ->group_set_orientation($this->token, $grpId, 'participant');
 
@@ -451,7 +451,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
 
     $grp_name = 'group';
     $grp_desc = 'group desc';
-    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc);
+    $grpId = self::$base->organ->group_add($this->token, $id, $grp_name, $grp_desc, false, 'organization');
 
     self::$base->organ->group_set_orientation($this->token, $grpId, 'participant');
 

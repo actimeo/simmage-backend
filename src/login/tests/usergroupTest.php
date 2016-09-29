@@ -155,9 +155,9 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpDescA1 = 'desc A1';
     $grpDescA2 = 'desc A2';
     $grpDescB1 = 'desc B1';
-    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1);
-    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2);
-    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1);
+    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1, false, 'organization');
+    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2, false, 'organization');
+    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
     $this->assertGreaterThan($grpIdA1, $grpIdA2);
     $this->assertGreaterThan($grpIdA2, $grpIdB1);
     
@@ -214,9 +214,9 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpDescA1 = 'desc A1';
     $grpDescA2 = 'desc A2';
     $grpDescB1 = 'desc B1';
-    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1);
-    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2);
-    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1);
+    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1, false, 'organization');
+    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2, false, 'organization');
+    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
     
     $usergroupName = 'A user group';
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
