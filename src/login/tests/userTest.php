@@ -69,5 +69,55 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0, $this->token);
   }
 
+  public function testUserList() {
+    $parId = self::$base->organ->participant_add($this->token, 'Super', 'Admin');
+    $loginAdmin = 'admin';
+    $pwdAdmin = 'ksfdjgsfdyubg';    
+
+    $listBefore = self::$base->login->user_list($this->token, null);
+    
+    $loginUser = 'a user';
+    self::$base->login->user_add($this->token, $loginUser, array('users'), $parId);
+    $user = self::$base->login->user_info($this->token, $loginUser);
+    $this->assertEquals($user['usr_login'], $loginUser);
+    $this->assertEquals($user['usr_rights'], array('users'));			      
+
+    $res = self::$base->login->user_login($loginUser, $user['usr_temp_pwd'], array('users'));
+    $this->assertGreaterThan(0, $this->token);
+
+    $list = self::$base->login->user_list($this->token, null);
+    $this->assertEquals(count($listBefore) + 1, count($list));
+  }
+
+  public function testUserListFilteredByUsergroup() {
+    $parId1 = self::$base->organ->participant_add($this->token, 'Super', 'Admin');
+    $parId2 = self::$base->organ->participant_add($this->token, 'Lower', 'Admin');
+
+    $listBefore = self::$base->login->user_list($this->token, null);
+    
+    $loginUser1 = 'a user';
+    self::$base->login->user_add($this->token, $loginUser1, array('users'), $parId1);
+
+    $loginUser2 = 'another user';
+    self::$base->login->user_add($this->token, $loginUser2, array('users'), $parId2);
+
+    $usergroupName1 = 'A user group';
+    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1);
+
+    $usergroupName2 = 'Another user group';
+    $ugr2 = self::$base->login->usergroup_add($this->token, $usergroupName2);
+    
+    self::$base->login->user_usergroup_set($this->token, $loginUser1, $ugr1);
+
+    $list1 = self::$base->login->user_list($this->token, $ugr1);
+    $this->assertEquals(1, count($list1));
+
+    $list2 = self::$base->login->user_list($this->token, $ugr2);
+    $this->assertEquals(0, count($list2));
+
+    $listAll = self::$base->login->user_list($this->token, null);
+    $this->assertEquals(count($listBefore) + 2, count($listAll));
+  }
+
 }
 ?>

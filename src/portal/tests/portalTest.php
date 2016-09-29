@@ -104,7 +104,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
     $name2 = 'another portal';
     $desc1 = 'a desc';
     $id = self::$base->portal->portal_add($this->token, $name1, $desc1);
-    self::$base->portal->portal_rename($this->token, $id, $name2);
+    self::$base->portal->portal_rename($this->token, $id, $name2, $desc1);
     $portals = self::$base->portal->portal_list($this->token);
     $this->assertGreaterThan(0, count($portals));
     $portal = $portals[0];
@@ -127,7 +127,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
     $name2 = 'another portal';
     $desc = 'a desc';
     $id = self::$base->portal->portal_add($this->token, $name1, $desc);
-    self::$base->portal->portal_rename($this->token, $id+1, $name2);
+    self::$base->portal->portal_rename($this->token, $id+1, $name2, $desc);
   }
 
   public function testPortalDelete() {
@@ -179,7 +179,7 @@ class portalTest extends PHPUnit_Framework_TestCase {
     self::$base->portal->personsection_add($this->token, $por_id, 'staff', $pse_name2);
     self::$base->portal->portal_clean($this->token, $por_id);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->portal->portal_rename($this->token, $por_id, 'new name');
+    self::$base->portal->portal_rename($this->token, $por_id, 'new name', 'new desc');
   }
 
 }

@@ -14,13 +14,13 @@ $variationUser = $base->login->user_login('variation', 'variation', '{users,orga
 $token = $variationUser['usr_token'];
 
 // Create topics
-$tSocial = $base->organ->topic_add($token, 'Social', 'Social');
-$tJustice = $base->organ->topic_add($token, 'Justice', 'Justice');
-$tSport = $base->organ->topic_add($token, 'Sport', 'Sport');
-$tCulture = $base->organ->topic_add($token, 'Culture', 'Culture');
-$tFinancer = $base->organ->topic_add($token, 'Financer', 'Financer');
-$tSupport = $base->organ->topic_add($token, 'Support', 'Support');
-$tPsycho = $base->organ->topic_add($token, 'Psychologist', 'Psychologist');
+$tSocial = $base->organ->topic_add($token, 'Social', 'Social', 'support', '#F44336');
+$tJustice = $base->organ->topic_add($token, 'Justice', 'Justice', 'justice', '#E91E63');
+$tSport = $base->organ->topic_add($token, 'Sport', 'Sport', 'sport', '#9C27B0');
+$tCulture = $base->organ->topic_add($token, 'Culture', 'Culture', 'culture', '#673AB7');
+$tFinancer = $base->organ->topic_add($token, 'Financer', 'Financer', 'financer', '#3F51B5');
+$tSupport = $base->organ->topic_add($token, 'Support', 'Support', 'support', '#2196F3');
+$tPsycho = $base->organ->topic_add($token, 'Psychologist', 'Psychologist', 'psychology', '#009688');
 
 // Create user foo1
 $userLogin1 = 'foo1';

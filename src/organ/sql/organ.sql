@@ -5,7 +5,9 @@ SET search_path = organ;
 CREATE TABLE organ.topic (
   top_id serial PRIMARY KEY,
   top_name text NOT NULL UNIQUE,
-  top_description text NOT NULL DEFAULT ''
+  top_description text NOT NULL DEFAULT '',
+  top_icon text NOT NULL DEFAULT 'health',
+  top_color text NOT NULL DEFAULT '#000000'
 );
 
 CREATE TABLE organ.organization (

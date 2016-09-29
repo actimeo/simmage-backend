@@ -53,7 +53,9 @@ class topicTest extends PHPUnit_Framework_TestCase {
   public function testTopicAdd() {
     $name = 'topic 1';
     $desc = 'topic 1 description';
-    $id = self::$base->organ->topic_add($this->token, $name, $desc);
+    $icon = 'health';
+    $color = '#000000';
+    $id = self::$base->organ->topic_add($this->token, $name, $desc, $icon, $color);
     $this->assertGreaterThan(0, $id);
   }  
 
@@ -65,20 +67,26 @@ class topicTest extends PHPUnit_Framework_TestCase {
     $name = 'topic 1';
     $desc1 = 'topic 1 desc';
     $desc2 = 'topic 2 desc';
-    $id = self::$base->organ->topic_add($this->token, $name, $desc1);
+    $icon = 'health';
+    $color = '#000000';
+    $id = self::$base->organ->topic_add($this->token, $name, $desc1, $icon, $color);
     $this->assertGreaterThan(0, $id);
-    self::$base->organ->topic_add($this->token, $name, $desc2);
+    self::$base->organ->topic_add($this->token, $name, $desc2, $icon, $color);
   }  
 
   public function testTopicList() {
     $name1 = 'topic 1';
     $desc1 = 'topic 1 description';
-    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1);
+    $icon1 = 'health';
+    $color1 = '#000000';
+    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1, $icon1, $color1);
     $this->assertGreaterThan(0, $id1);
 
     $name2 = 'topic 2';
     $desc2 = 'topic 2 description';
-    $id2 = self::$base->organ->topic_add($this->token, $name2, $desc2);
+    $icon2 = 'health';
+    $color2 = '#000000';
+    $id2 = self::$base->organ->topic_add($this->token, $name2, $desc2, $icon2, $color2);
     $this->assertGreaterThan($id1, $id2);
 
     $topics = self::$base->organ->topics_list($this->token);
@@ -93,12 +101,16 @@ class topicTest extends PHPUnit_Framework_TestCase {
   public function testTopicGet() {
     $name1 = 'topic 1';
     $desc1 = 'topic 1 description';
-    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1);
+    $icon1 = 'health';
+    $color1 = '#000000';
+    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1, $icon1, $color1);
     $this->assertGreaterThan(0, $id1);
 
     $name2 = 'topic 2';
     $desc2 = 'topic 2 description';
-    $id2 = self::$base->organ->topic_add($this->token, $name2, $desc2);
+    $icon2 = 'health';
+    $color2 = '#000000';
+    $id2 = self::$base->organ->topic_add($this->token, $name2, $desc2, $icon2, $color2);
     $this->assertGreaterThan($id1, $id2);
 
     $topic = self::$base->organ->topic_get($this->token, $id1);
@@ -110,12 +122,16 @@ class topicTest extends PHPUnit_Framework_TestCase {
   public function testTopicUpdate() {
     $name1 = 'topic 1';
     $desc1 = 'topic 1 description';
-    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1);
+    $icon1 = 'health';
+    $color1 = '#000000';
+    $id1 = self::$base->organ->topic_add($this->token, $name1, $desc1, $icon1, $color1);
     $this->assertGreaterThan(0, $id1);
 
     $name2 = 'topic 2';
     $desc2 = 'topic 2 description';
-    self::$base->organ->topic_update($this->token, $id1, $name2, $desc2);
+    $icon2 = 'health';
+    $color2 = '#000000';
+    self::$base->organ->topic_update($this->token, $id1, $name2, $desc2, $icon2, $color2);
     
     $topic = self::$base->organ->topic_get($this->token, $id1);
     $this->assertEquals($id1, $topic['top_id']);
