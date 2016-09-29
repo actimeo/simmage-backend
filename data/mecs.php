@@ -14,25 +14,25 @@ $variationUser = $base->login->user_login('variation', 'variation', '{users,orga
 $token = $variationUser['usr_token'];
 
 // Create topics
-$tHygiene = $base->organ->topic_add($token, 'Hygiène', 'Hygiène corporelle');
-$tBudget = $base->organ->topic_add($token, 'Budget', 'Argent de poche et gestion du budget');
-$tPlacement = $base->organ->topic_add($token, 'Placement', 'Mesures placement (ASE, PJJ, TE)');
-$tEtatCivil = $base->organ->topic_add($token, 'Droit de séjour', 'État civil et droits de séjour');
-$tEducation = $base->organ->topic_add($token, 'Éducation', 'Accompagnement éducatif');
-$tStage = $base->organ->topic_add($token, 'Emploi', 'Stages et apprentissage');
-$tEntretien = $base->organ->topic_add($token, 'Entretien', 'Entretien et participation aux services');
-$tVeture = $base->organ->topic_add($token, 'Vêture', 'Vêture et autres fournitures');
-$tFamille = $base->organ->topic_add($token, 'Famille', 'Famille, tuteur et parrainage');
-$tLogement = $base->organ->topic_add($token, 'Logement', 'Logement collectif ou individuel');
-$tScolarite = $base->organ->topic_add($token, 'Scolarité', 'Scolarité');
+$tHygiene = $base->organ->topic_add($token, 'Hygiène', 'Hygiène corporelle', 'medical_care', '#F44336');
+$tBudget = $base->organ->topic_add($token, 'Budget', 'Argent de poche et gestion du budget', 'financial_assistance', '#F44336');
+$tPlacement = $base->organ->topic_add($token, 'Placement', 'Mesures placement (ASE, PJJ, TE)', 'decisionmaker', '#E91E63');
+$tEtatCivil = $base->organ->topic_add($token, 'Droit de séjour', 'État civil et droits de séjour', 'residence_right', '#9C27B0');
+$tEducation = $base->organ->topic_add($token, 'Éducation', 'Accompagnement éducatif', 'pedagogy', '#673AB7');
+$tStage = $base->organ->topic_add($token, 'Emploi', 'Stages et apprentissage', 'employment', '#3F51B5');
+$tEntretien = $base->organ->topic_add($token, 'Entretien', 'Entretien et participation aux services', 'housekeeping', '#2196F3');
+$tVeture = $base->organ->topic_add($token, 'Vêture', 'Vêture et autres fournitures', 'equipment', '#03A9F4');
+$tFamille = $base->organ->topic_add($token, 'Famille', 'Famille, tuteur et parrainage', 'family', '#00BCD4');
+$tLogement = $base->organ->topic_add($token, 'Logement', 'Logement collectif ou individuel', 'lodging', '#009688');
+$tScolarite = $base->organ->topic_add($token, 'Scolarité', 'Scolarité', 'education', '#4CAF50');
 $tPriseEnCharge = $base->organ->topic_add($token, 
-					  'Prises en charge', 'Prises en charge, admission et autorisations');
-$tProjet = $base->organ->topic_add($token, 'Projet individuel', 'Projet individuel');
-$tPsy = $base->organ->topic_add($token, 'Psychologie', 'Accompagnement psychologique');
-$tRestauration = $base->organ->topic_add($token, 'Restauration', 'Restauration et alimentation');
-$tSante = $base->organ->topic_add($token, 'Santé', 'Suivi médical');
-$tSocial = $base->organ->topic_add($token, 'Loisirs', 'Vie sociale, loisirs et séjours');
-$tTransport = $base->organ->topic_add($token, 'Transport', 'Transport');
+					  'Prises en charge', 'Prises en charge, admission et autorisations', 'support', '#8BC34A');
+$tProjet = $base->organ->topic_add($token, 'Projet individuel', 'Projet individuel', 'project', '#CDDC39');
+$tPsy = $base->organ->topic_add($token, 'Psychologie', 'Accompagnement psychologique', 'psychology', '#FFEB3B');
+$tRestauration = $base->organ->topic_add($token, 'Restauration', 'Restauration et alimentation', 'catering', '#FFC107');
+$tSante = $base->organ->topic_add($token, 'Santé', 'Suivi médical', 'health', '#FF9800');
+$tSocial = $base->organ->topic_add($token, 'Loisirs', 'Vie sociale, loisirs et séjours', 'entertainment', '#FF5722');
+$tTransport = $base->organ->topic_add($token, 'Transport', 'Transport', 'transport', '#795548');
 
 
 // Create user marie, Secrétaire
