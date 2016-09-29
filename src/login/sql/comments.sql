@@ -3,7 +3,7 @@ Each user has a login and a password.
 
 Adding a user
 -------------
-A first user is created during installation, with the login 'variation' and a password provided during 
+A first user is created during installation, with the login ''variation'' and a password provided during 
 installation.
 
 Users with "users" privileges can add users.

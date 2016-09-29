@@ -8,7 +8,7 @@ A portal contains:
 
 Each navigation is composed of sections containing menu entries.
 
-All functions from this module require the 'structure' user right.';
+All functions from this module require the ''structure'' user right.';
 
 COMMENT ON TYPE portal.mainview_get_details IS '';
 

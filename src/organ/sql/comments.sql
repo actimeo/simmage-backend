@@ -22,10 +22,10 @@ Group
 A group belongs to an organization. One or several participants are attached to this group, and have access 
 to one or several dossiers.
 
-A group can be mandatory: all new dossiers will be added to this group and it won't be possible 
+A group can be mandatory: all new dossiers will be added to this group and it won''t be possible 
 to remove dossiers from this group.
 
-A set of groups can be exclusive: it won't be allowed to add a dossier to several groups in a same set 
+A set of groups can be exclusive: it won''t be allowed to add a dossier to several groups in a same set 
 of exclusive groups.
 
 A mandatory group cannot be in an exclusive set.
