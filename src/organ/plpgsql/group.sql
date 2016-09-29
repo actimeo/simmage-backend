@@ -2,7 +2,9 @@ CREATE OR REPLACE FUNCTION organ.group_add(
   prm_token integer, 
   prm_org_id integer, 
   prm_name text, 
-  prm_description text)
+  prm_description text,
+  prm_mandatory boolean,
+  prm_orientation organ.group_orientation)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -11,13 +13,13 @@ DECLARE
   ret integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  INSERT INTO organ.group (org_id, grp_name, grp_description) 
-    VALUES (prm_org_id, prm_name, prm_description)
+  INSERT INTO organ.group (org_id, grp_name, grp_description, grp_mandatory, grp_orienation) 
+    VALUES (prm_org_id, prm_name, prm_description, prm_mandatory, prm_orientation)
     RETURNING grp_id INTO ret;
   RETURN ret;    
 END;
 $$;
-COMMENT ON FUNCTION organ.group_add(prm_token integer, prm_org_id integer, prm_name text, prm_description text) 
+COMMENT ON FUNCTION organ.group_add(prm_token integer, prm_org_id integer, prm_name text, prm_description text, prm_mandatory boolean, prm_orientation organ.group_orientation) 
 IS 'Add a new group providing a particular service to an institution';
 
 CREATE OR REPLACE FUNCTION organ.group_get(prm_token integer, prm_id integer)
@@ -38,6 +40,39 @@ END;
 $$;
 COMMENT ON FUNCTION organ.group_get(prm_token integer, prm_id integer) 
 IS 'Get basic information about a service group';
+
+CREATE OR REPLACE FUNCTION organ.group_update(
+  prm_token integer,
+  prm_id integer,
+  prm_name text,
+  prm_description text,
+  prm_mandatory boolean,
+  prm_orientation organ.group_orientation,
+  prm_org_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  IF EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
+    RAISE EXCEPTION 'The group with id=% is in an exclusive set and cannot be set as mandatory', prm_id
+    USING ERRCODE = 'data_exception';
+  END IF;
+  UPDATE organ.group SET 
+    grp_name = prm_name,
+    grp_description = prm_description,
+    grp_mandatory = prm_mandatory,
+    grp_orientation = prm_orientation,
+    org_id = prm_org_id
+    WHERE grp_id = prm_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION organ.group_update(prm_token integer, prm_id integer, prm_name text, prm_description text, prm_mandatory boolean, prm_orientation organ.group_orienation, prm_org_id integer) 
+IS 'Update all informations about a group';
 
 CREATE OR REPLACE FUNCTION organ.group_set(prm_token integer, prm_id integer, prm_description text)
 RETURNS VOID

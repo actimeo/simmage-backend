@@ -65,7 +65,7 @@ AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT * FROM organ.organization 
-    WHERE (prm_internal ISNULL OR org_internal = prm_internal)
+    WHERE (prm_internal IS NULL OR org_internal = prm_internal)
     ORDER BY org_name;
 END;
 $$;
