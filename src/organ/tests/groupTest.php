@@ -495,4 +495,29 @@ class groupTest extends PHPUnit_Framework_TestCase {
     $topics = self::$base->organ->group_get_topics($this->token, $grpId);
     $this->assertEquals(3, count($topics));
   }
+
+  public function testGroupUpdate() {
+    $name = 'an organization';
+    $desc = 'an organization description';
+    $orgId = self::$base->organ->organization_add($this->token, $name, $desc, true);
+
+    $grp_name = 'group';
+    $grp_desc = 'group desc';
+    $id = self::$base->organ->group_add($this->token, $orgId, $grp_name, $grp_desc, false, 'organization');
+
+    $grp = self::$base->organ->group_get($this->token, $id);
+
+    $this->assertEquals(array('grp_id'=>$id,'grp_name'=>$grp_name,'grp_description'=>$grp_desc,
+			      'grp_mandatory'=>false,'grp_orientation'=>'organization','org_id'=>$orgId), $grp);
+
+    $grpN = 'renamed group';
+    $grpD = 'renamed description';
+    self::$base->organ->group_update($this->token, $id, $grpN, $grpD, true, 'participant', $orgId);
+
+    $grp = self::$base->organ->group_get($this->token, $id);
+
+    $this->assertEquals(array('grp_id'=>$id,'grp_name'=>$grpN,'grp_description'=>$grpD,
+			      'grp_mandatory'=>true,'grp_orientation'=>'participant','org_id'=>$orgId), $grp);
+
+  }
 }

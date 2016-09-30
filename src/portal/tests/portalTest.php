@@ -99,6 +99,17 @@ class portalTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($found);
   }
 
+  public function testPortalGet() {
+    $name = 'a portal';
+    $desc = 'a portal description';
+    $id = self::$base->portal->portal_add($this->token, $name, $desc);
+
+    $por = self::$base->portal->portal_get($this->token, $id);
+
+    $this->assertEquals('a portal', $por['por_name']);
+    $this->assertEquals('a portal description', $por['por_description']);
+  }
+
   public function testPortalRename() {
     $name1 = 'a portal';
     $name2 = 'another portal';

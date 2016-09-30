@@ -81,6 +81,30 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     }
     $this->assertEquals(2, $found);
   }
+
+  public function testUsergroupGet() {
+    $name = 'usergroup';
+    $ugrId = self::$base->login->usergroup_add($this->token, $name);
+
+    $this->assertGreaterThan(0, $ugrId);
+
+    $ugr = self::$base->login->usergroup_get($this->token, $ugrId);
+
+    $this->assertEquals('usergroup', $ugr['ugr_name']);
+  }
+
+  public function testUsergroupRename() {
+    $name = 'Usergroup';
+    $ugrId = self::$base->login->usergroup_add($this->token, $name);
+
+    $this->assertGreaterThan(0, $ugrId);
+
+    self::$base->login->usergroup_rename($this->token, $ugrId, 'Renamed usergroup');
+
+    $ugr = self::$base->login->usergroup_get($this->token, $ugrId);
+
+    $this->assertEquals('Renamed usergroup', $ugr['ugr_name']);
+  }
   
   public function testUserUsergroupSet() {
     $ugrName = 'Usergroup name';
@@ -217,13 +241,52 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1, false, 'organization');
     $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2, false, 'organization');
     $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
-    
+
     $usergroupName = 'A user group';
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->login->usergroup_set_groups($this->token, $ugr, 
 					     array($grpIdA2, $grpIdA1, $grpIdB1));
+  }
+
+  public function testUsergroupDelete() {
+    $porName1 = 'portal 1';
+    $porName2 = 'portal 2';
+    $porName3 = 'portal 3';
+    $porDesc1 = 'portal desc 1';
+    $porDesc2 = 'portal desc 2';
+    $porDesc3 = 'portal desc 3';
+    $porId1 = self::$base->portal->portal_add($this->token, $porName1, $porDesc1);
+    $porId2 = self::$base->portal->portal_add($this->token, $porName2, $porDesc2);
+    $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
+    $this->assertGreaterThan($porId1, $porId2);
+    $this->assertGreaterThan($porId2, $porId3);
+
+    $orgNameA = 'Organization A';
+    $orgNameB = 'Organization B';
+    $orgIdA = self::$base->organ->organization_add($this->token, $orgNameA, 'desc A', true);
+    $orgIdB = self::$base->organ->organization_add($this->token, $orgNameB, 'desc B', true);
+    $grpNameA1 = 'Group A1';
+    $grpNameA2 = 'Group A2';
+    $grpNameB1 = 'Group B1';
+    $grpDescA1 = 'desc A1';
+    $grpDescA2 = 'desc A2';
+    $grpDescB1 = 'desc B1';
+    $grpIdA1 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA1, $grpDescA1, false, 'organization');
+    $grpIdA2 = self::$base->organ->group_add($this->token, $orgIdA, $grpNameA2, $grpDescA2, false, 'organization');
+    $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
+    $this->assertGreaterThan($grpIdA1, $grpIdA2);
+    $this->assertGreaterThan($grpIdA2, $grpIdB1);
+
+    $usergroupName = 'A user group';
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
+
+    self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
+
+    self::$base->login->usergroup_delete($this->token, $ugr);
   }
 
 
