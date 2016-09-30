@@ -1,4 +1,13 @@
-COMMENT ON SCHEMA events IS 'Events';
+COMMENT ON SCHEMA events IS 'This moduls is about events, events types and events views.
+
+Events
+------
+Events are classified into categories and can have an optional type.
+
+Events Types
+------------
+Events types are defined for each category and in relation with one or more topics. Each organization can 
+choose to use an event type.';
 
 COMMENT ON TABLE events.event_type IS 'Events types';
 COMMENT ON COLUMN events.event_type.ety_id IS 'Unique identifier';
