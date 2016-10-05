@@ -86,6 +86,7 @@ LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT * FROM events.event_type
     WHERE (prm_category IS NULL OR prm_category = ety_category) ORDER BY ety_name;
 END;
