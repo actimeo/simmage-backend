@@ -202,32 +202,31 @@ END;
 $$;
 COMMENT ON FUNCTION user_regenerate_password(prm_token integer, prm_login varchar) IS
 'Regenerate a temporary password for the user given in parameter.
-The user given in parameter cannot be the current user.
-';
+The user given in parameter cannot be the current user.';
 
 CREATE OR REPLACE FUNCTION user_add(
   prm_token integer, 
   prm_login text, 
   prm_rights login.user_right[], 
-  prm_par_id integer) 
+  prm_par_id integer,
+  prm_ugr_id integer) 
 RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
   PERFORM login._token_assert (prm_token, '{users}');
-  INSERT INTO login."user" (usr_login, usr_rights, par_id) VALUES (prm_login, prm_rights, prm_par_id);  
+  INSERT INTO login."user" (usr_login, usr_rights, par_id, ugr_id) VALUES (prm_login, prm_rights, prm_par_id, prm_ugr_id);  
   PERFORM login.user_regenerate_password(prm_token, prm_login);
 END;
 $$;
 COMMENT ON FUNCTION user_add(prm_token integer, prm_login text, prm_rights login.user_right[], prm_par_id integer) 
-IS 'Create a new user aith the specified rights, and link him to a participant. If prm_par_id is null, 
+IS 'Create a new user aith the specified rights, and link him to a participant. If prm_par_id is null,
 this user will have access to all patients. A new temporary password is generated.';
 
 DROP FUNCTION IF EXISTS login.user_info(prm_token integer, prm_login text);
 DROP TYPE IF EXISTS login.user_info;
 CREATE TYPE login.user_info AS (
   usr_login text,
-  usr_temp_pwd text,
   usr_rights login.user_right[],
   par_id integer,
   ugr_id integer,
@@ -246,7 +245,7 @@ DECLARE
   ret login.user_info;
 BEGIN
   PERFORM login._token_assert (prm_token, '{users}');
-  SELECT usr_login, usr_pwd, usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO ret 
+  SELECT usr_login, usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO ret 
     FROM login."user" 
     LEFT JOIN organ.participant USING(par_id)
     WHERE usr_login = prm_login;
@@ -257,6 +256,38 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION login.user_info(prm_token integer, prm_login text) IS 'Return information about a user';
+
+CREATE OR REPLACE FUNCTION login.user_get_temporary_pwd(prm_token integer, prm_login text)
+RETURNS text
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  ret text DEFAULT NULL;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  SELECT usr_pwd INTO ret
+    FROM user
+    WHERE usr_login = prm_login;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION login.user_get_temporary_pwd(prm_token integer, prm_login text) IS 'Return the temporary password of an user if there is one';
+
+CREATE OR REPLACE FUNCTION login.user_update(prm_token integer, prm_login text, prm_par_id integer, prm_ugr_id integer, prm_rights login.user_right[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  UPDATE login.user SET par_id = prm_par_id, ugr_id = prm_ugr_id, usr_rights = prm_rights WHERE usr_login = prm_login;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION login.user_update(prm_token integer, prm_login text, prm_par_id integer, prm_ugr_id integer, prm_rights login.user_right[]) IS 'Update an user informations';
 
 CREATE OR REPLACE FUNCTION login.user_participant_set(
   prm_token integer, 
@@ -329,3 +360,18 @@ END;
 $$;
 COMMENT ON FUNCTION login.user_list(prm_token integer, prm_ugr_id integer) IS 'Return the list of users.
 if prm_ugr_id is not null, filter by usergroup.';
+
+CREATE OR REPLACE FUNCTION login.user_delete(prm_token integer, prm_login text)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  DELETE FROM login.user WHERE usr_login = prm_login;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION login.user_delete(prm_token integer, prm_login text) IS 'Delete an user';
