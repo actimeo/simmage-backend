@@ -36,9 +36,9 @@ Portals
 A user can have access to patients data through one or several portals.
 ';
 
-COMMENT ON TYPE login.user_details IS '';
+COMMENT ON TYPE login.user_details IS 'Details of a user, returned by user_list call';
 
-COMMENT ON TYPE login.user_info IS '';
+COMMENT ON TYPE login.user_info IS 'User information, returned by user_info call';
 
 COMMENT ON TYPE login.user_login IS 'Type returned by user_login function';
 
@@ -53,14 +53,14 @@ COMMENT ON COLUMN login.user.ugr_id IS 'Usergroup of the user, or null for an ad
 COMMENT ON COLUMN login.user.usr_token IS 'Token id returned after authentication';
 COMMENT ON COLUMN login.user.usr_token_creation_date IS 'Token creation date for validity';
 
-COMMENT ON TABLE login.usergroup IS '';
-COMMENT ON COLUMN login.usergroup.ugr_id IS '';
-COMMENT ON COLUMN login.usergroup.ugr_name IS '';
+COMMENT ON TABLE login.usergroup IS 'Usergroup, defining rights for users';
+COMMENT ON COLUMN login.usergroup.ugr_id IS 'Unique identifier';
+COMMENT ON COLUMN login.usergroup.ugr_name IS 'Usergroup name';
 
-COMMENT ON TABLE login.usergroup_group IS '';
-COMMENT ON COLUMN login.usergroup_group.ugg_id IS '';
-COMMENT ON COLUMN login.usergroup_group.ugr_id IS '';
-COMMENT ON COLUMN login.usergroup_group.grp_id IS '';
+COMMENT ON TABLE login.usergroup_group IS 'Groups that users from a usergroup can view';
+COMMENT ON COLUMN login.usergroup_group.ugg_id IS 'Unique identifier';
+COMMENT ON COLUMN login.usergroup_group.ugr_id IS 'Usergroup identifier';
+COMMENT ON COLUMN login.usergroup_group.grp_id IS 'Group identifier';
 
 COMMENT ON TABLE login.usergroup_portal IS 'Permissions for users from group to use portals';
 COMMENT ON COLUMN login.usergroup_portal.ugp_id IS 'Unique identifier';

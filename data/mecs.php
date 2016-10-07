@@ -192,6 +192,16 @@ $dosFamExt1 = $base->organ->dossier_add_grouped($token, 'Famille de Pierre', tru
 
 $dosFamExt2 = $base->organ->dossier_add_grouped($token, 'Famille de Paul', true);
 
+// 
+// Events Types
+//
+$etyAbs1 = $base->events->event_type_add($token, 'absence', 'Absentéisme', false);
+$etyAbs2 = $base->events->event_type_add($token, 'absence', 'Accident du travail', false);
+$etyAbs3 = $base->events->event_type_add($token, 'absence', 'Arrêt maladie', false);
+$etyAbs4 = $base->events->event_type_add($token, 'absence', 'Autre', true);
+$etyDep1 = $base->events->event_type_add($token, 'expense', 'Ameublement et décoration', false);
+$etyDep2 = $base->events->event_type_add($token, 'expense', 'Coiffeur', false);
+$etyDep3 = $base->events->event_type_add($token, 'expense', 'Autre', true);
 
 $base->commit ();
 
