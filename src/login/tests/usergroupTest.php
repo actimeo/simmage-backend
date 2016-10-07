@@ -114,7 +114,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $parFirstname = 'Paul';
     $parLastname = 'Napoléon';
     $parId = self::$base->organ->participant_add($this->token, $parFirstname, $parLastname);
-    self::$base->login->user_add($this->token, $loginUser, null, $parId);
+    self::$base->login->user_add($this->token, $loginUser, null, $parId, null);
 
     self::$base->login->user_usergroup_set($this->token, $loginUser, $ugr);
     

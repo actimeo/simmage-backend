@@ -51,13 +51,14 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
-    $this->assertFalse($res['usr_temp_pwd']);
-    $this->assertNull($res['usr_rights']);
+    $tempPwd = self::$base->login->user_get_temporary_pwd($res['usr_token'], $login);    
+    $this->assertNull($tempPwd);
+    $this->assertEquals(array('users'), $res['usr_rights']);
   }
   
   /**
@@ -140,7 +141,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
-			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
     $res = self::$base->login->user_login($login, $pwd, null);
@@ -151,7 +152,8 @@ class coreTest extends PHPUnit_Framework_TestCase {
 
     $res = self::$base->login->user_login($login, $newpwd, null);
     $this->assertGreaterThan(0, $res['usr_token']);
-    $this->assertFalse($res['usr_temp_pwd']);
+    $tempPwd = self::$base->login->user_get_temporary_pwd($res['usr_token'], $login);
+    $this->assertNull($tempPwd);
     
     self::$base->login->user_logout($res['usr_token']);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
@@ -194,7 +196,8 @@ class coreTest extends PHPUnit_Framework_TestCase {
 
     $toto2 = self::$base->login->user_login($loginLost, $tmppwd, null);
     $this->assertGreaterThan(0, $toto2['usr_token']);
-    $this->assertTrue($toto2['usr_temp_pwd']);
+    $tempPwd = self::$base->login->user_get_temporary_pwd($admin['usr_token'], $loginLost);
+    $this->assertNotNull($tempPwd);
     self::$base->login->user_logout($toto2['usr_token']);
     
   }
@@ -238,12 +241,13 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $parFirstname = 'Paul';
     $parLastname = 'Napoléon';
     $parId = self::$base->organ->participant_add($admin['usr_token'], $parFirstname, $parLastname);
-    self::$base->login->user_add($admin['usr_token'], $loginUser, array('users'), $parId);
+    self::$base->login->user_add($admin['usr_token'], $loginUser, array('users'), $parId, null);
     $user = self::$base->login->user_info($admin['usr_token'], $loginUser);
+    $tempPwd = self::$base->login->user_get_temporary_pwd($admin['usr_token'], $loginUser);
     $this->assertEquals($user['usr_login'], $loginUser);
     $this->assertEquals($user['usr_rights'], array('users'));			      
 
-    $res = self::$base->login->user_login($loginUser, $user['usr_temp_pwd'], array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
     $this->assertGreaterThan(0, $res['usr_token']);
   }
 
@@ -265,7 +269,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $parFirstname = 'Paul';
     $parLastname = 'Napoléon';
     $parId = self::$base->organ->participant_add($admin['usr_token'], $parFirstname, $parLastname);
-    self::$base->login->user_add($admin['usr_token'], $loginUser, null, $parId);
+    self::$base->login->user_add($admin['usr_token'], $loginUser, null, $parId, null);
     $user = self::$base->login->user_info($admin['usr_token'], $loginUser);
     $this->assertEquals($user['par_id'], $parId);
   }

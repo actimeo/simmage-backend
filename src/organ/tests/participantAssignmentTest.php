@@ -47,7 +47,7 @@ class participantAssignmentTest extends PHPUnit_Framework_TestCase {
     // Create a user
     $this->userLogin = 'a user';
     $this->parId = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
-    self::$base->login->user_add($this->token, $this->userLogin, null, $this->parId);
+    self::$base->login->user_add($this->token, $this->userLogin, null, $this->parId, null);
 
     // Create an organization, service and group
     $org = self::$base->organ->organization_add($this->token, "An organization", "a desc", true);

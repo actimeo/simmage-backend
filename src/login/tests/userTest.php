@@ -60,12 +60,13 @@ class userTest extends PHPUnit_Framework_TestCase {
     $pwdAdmin = 'ksfdjgsfdyubg';    
     
     $loginUser = 'a user';
-    self::$base->login->user_add($this->token, $loginUser, array('users'), $parId);
+    self::$base->login->user_add($this->token, $loginUser, array('users'), $parId, null);
     $user = self::$base->login->user_info($this->token, $loginUser);
     $this->assertEquals($user['usr_login'], $loginUser);
     $this->assertEquals($user['usr_rights'], array('users'));			      
+    $tempPwd = self::$base->login->user_get_temporary_pwd($this->token, $loginUser);    
 
-    $res = self::$base->login->user_login($loginUser, $user['usr_temp_pwd'], array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
     $this->assertGreaterThan(0, $this->token);
   }
 
@@ -77,12 +78,13 @@ class userTest extends PHPUnit_Framework_TestCase {
     $listBefore = self::$base->login->user_list($this->token, null);
     
     $loginUser = 'a user';
-    self::$base->login->user_add($this->token, $loginUser, array('users'), $parId);
+    self::$base->login->user_add($this->token, $loginUser, array('users'), $parId, null);
     $user = self::$base->login->user_info($this->token, $loginUser);
     $this->assertEquals($user['usr_login'], $loginUser);
     $this->assertEquals($user['usr_rights'], array('users'));			      
+    $tempPwd = self::$base->login->user_get_temporary_pwd($this->token, $loginUser);    
 
-    $res = self::$base->login->user_login($loginUser, $user['usr_temp_pwd'], array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
     $this->assertGreaterThan(0, $this->token);
 
     $list = self::$base->login->user_list($this->token, null);
@@ -96,10 +98,10 @@ class userTest extends PHPUnit_Framework_TestCase {
     $listBefore = self::$base->login->user_list($this->token, null);
     
     $loginUser1 = 'a user';
-    self::$base->login->user_add($this->token, $loginUser1, array('users'), $parId1);
+    self::$base->login->user_add($this->token, $loginUser1, array('users'), $parId1, null);
 
     $loginUser2 = 'another user';
-    self::$base->login->user_add($this->token, $loginUser2, array('users'), $parId2);
+    self::$base->login->user_add($this->token, $loginUser2, array('users'), $parId2, null);
 
     $usergroupName1 = 'A user group';
     $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1);
