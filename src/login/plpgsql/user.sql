@@ -215,12 +215,12 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
   PERFORM login._token_assert (prm_token, '{users}');
-  INSERT INTO login."user" (usr_login, usr_rights, par_id, ugr_id) VALUES (prm_login, prm_rights, prm_par_id, prm_ugr_id);  
+  INSERT INTO login."user" (usr_login, usr_rights, par_id, ugr_id) VALUES (prm_login, prm_rights, prm_par_id, prm_ugr_id);
   PERFORM login.user_regenerate_password(prm_token, prm_login);
 END;
 $$;
-COMMENT ON FUNCTION user_add(prm_token integer, prm_login text, prm_rights login.user_right[], prm_par_id integer) 
-IS 'Create a new user aith the specified rights, and link him to a participant. If prm_par_id is null,
+COMMENT ON FUNCTION user_add(prm_token integer, prm_login text, prm_rights login.user_right[], prm_par_id integer, prm_ugr_id integer) 
+IS 'Create a new user with the specified rights, and link him to a participant. If prm_par_id is null,
 this user will have access to all patients. A new temporary password is generated.';
 
 DROP FUNCTION IF EXISTS login.user_info(prm_token integer, prm_login text);
@@ -267,7 +267,7 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
   SELECT usr_pwd INTO ret
-    FROM user
+    FROM login.user
     WHERE usr_login = prm_login;
   RETURN ret;
 END;
@@ -354,7 +354,14 @@ BEGIN
       FROM login.user 
       LEFT JOIN organ.participant USING(par_id)
       LEFT JOIN login.usergroup USING(ugr_id)
-      WHERE (prm_ugr_id ISNULL OR prm_ugr_id = usergroup.ugr_id)
+      WHERE
+      (
+	CASE
+	  WHEN prm_ugr_id = -1 THEN login.user.ugr_id IS NULL
+	  WHEN prm_ugr_id ISNULL THEN prm_ugr_id ISNULL
+	  ELSE prm_ugr_id = usergroup.ugr_id
+	END
+      )
       ORDER BY usr_login;
 END;
 $$;

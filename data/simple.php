@@ -25,17 +25,19 @@ $tPsycho = $base->organ->topic_add($token, 'Psychologist', 'Psychologist', 'psyc
 // Create user foo1
 $userLogin1 = 'foo1';
 $stfId1 = $base->organ->participant_add($token, 'Pierre', 'MARTIN');
-$base->login->user_add($token, $userLogin1, null, $stfId1);
+$base->login->user_add($token, $userLogin1, null, $stfId1, null);
 $fooInfo1 = $base->login->user_info($token, $userLogin1);
-$foo1 = $base->login->user_login($userLogin1, $fooInfo1['usr_temp_pwd'], null);
+$fooTempPwd1 = $base->login->user_get_temporary_pwd($token, $userLogin1);
+$foo1 = $base->login->user_login($userLogin1, $fooTempPwd1, null);
 $base->login->user_change_password($foo1['usr_token'], 'bar');
 
 // Create user foo2
 $userLogin2 = 'foo2';
 $stfId2 = $base->organ->participant_add($token, 'Paul', 'DURAND');
-$base->login->user_add($token, $userLogin2, null, $stfId2);
+$base->login->user_add($token, $userLogin2, null, $stfId2, null);
 $fooInfo2 = $base->login->user_info($token, $userLogin2);
-$foo2 = $base->login->user_login($userLogin2, $fooInfo2['usr_temp_pwd'], null);
+$fooTempPwd2 = $base->login->user_get_temporary_pwd($token, $userLogin2);
+$foo2 = $base->login->user_login($userLogin2, $fooTempPwd2, null);
 $base->login->user_change_password($foo2['usr_token'], 'bar');
 
 // Create portals

@@ -197,9 +197,10 @@ $base->commit ();
 
 function create_user($base, $token, $login, $pwd, $firstname, $lastname) {
   $parId = $base->organ->participant_add($token, $firstname, $lastname);
-  $base->login->user_add($token, $login, null, $parId);
+  $base->login->user_add($token, $login, null, $parId, null);
   $userInfo = $base->login->user_info($token, $login);
-  $user = $base->login->user_login($login, $userInfo['usr_temp_pwd'], null);
+  $userTempPwd = $base->login->user_get_temporary_pwd($token, $login);
+  $user = $base->login->user_login($login, $userTempPwd, null);
   $base->login->user_change_password($user['usr_token'], $pwd);
   return $parId;
 }
