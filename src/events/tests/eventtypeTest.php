@@ -50,6 +50,11 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     self::$base->rollback();
   }
 
+  public function testEventCategoryList() {
+    $vals = self::$base->events->event_category_list();
+    $this->assertGreaterThan(0, count($vals));
+  }
+
   public function testEventTypeAdd() {
     $cat = 'incident';
     $name = 'an event type';

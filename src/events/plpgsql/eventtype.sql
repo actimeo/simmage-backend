@@ -1,3 +1,14 @@
+CREATE OR REPLACE FUNCTION events.event_category_list()
+RETURNS SETOF events.event_category
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::events.event_category));
+END;
+$$;
+COMMENT ON FUNCTION events.event_category_list() IS 'Returns the list of event categories';
+
 CREATE OR REPLACE FUNCTION events.event_type_add(
   prm_token integer, 
   prm_category events.event_category, 
@@ -193,3 +204,4 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION events.event_type_organizations_list(prm_token integer, prm_ety_id integer) IS 'Returns the organizations using an event type';
+
