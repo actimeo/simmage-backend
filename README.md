@@ -51,3 +51,4 @@ $ sudo su postgres -c ./scripts/update.sh
 ```sh
 ./vendor/bin/phpunit src/
 ```
+
