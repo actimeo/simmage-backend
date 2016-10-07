@@ -22,7 +22,8 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('portal', 'mainview_element_type_list'),
 			 array('portal', 'param_list'),
 			 array('portal', 'personview_element_type_list'),
-			 array('organ', '_dossier_link_get_inverted_relationship')
+			 array('organ', '_dossier_link_get_inverted_relationship'),
+			 array('events', 'event_category_list')
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {
