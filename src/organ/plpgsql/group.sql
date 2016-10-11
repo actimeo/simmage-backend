@@ -69,7 +69,7 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  IF EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
+  IF prm_mandatory AND EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
     RAISE EXCEPTION 'The group with id=% is in an exclusive set and cannot be set as mandatory', prm_id
     USING ERRCODE = 'data_exception';
   END IF;
@@ -234,7 +234,7 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
-  IF EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
+  IF prm_mandatory AND EXISTS (SELECT 1 FROM organ.group_exclusive_group WHERE grp_id = prm_id) THEN
     RAISE EXCEPTION 'The group with id=% is in an exclusive set and cannot be set as mandatory', prm_id 
       USING ERRCODE = 'data_exception';
   END IF;
