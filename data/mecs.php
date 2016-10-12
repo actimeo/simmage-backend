@@ -196,12 +196,32 @@ $dosFamExt2 = $base->organ->dossier_add_grouped($token, 'Famille de Paul', true)
 // Events Types
 //
 $etyAbs1 = $base->events->event_type_add($token, 'absence', 'Absentéisme', false);
+$base->events->event_type_set_organizations($token, $etyAbs1, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs1, array($tStage));
+
 $etyAbs2 = $base->events->event_type_add($token, 'absence', 'Accident du travail', false);
+$base->events->event_type_set_organizations($token, $etyAbs2, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs2, array($tStage));
+
 $etyAbs3 = $base->events->event_type_add($token, 'absence', 'Arrêt maladie', false);
+$base->events->event_type_set_organizations($token, $etyAbs3, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs3, array($tStage));
+
 $etyAbs4 = $base->events->event_type_add($token, 'absence', 'Autre', true);
+$base->events->event_type_set_organizations($token, $etyAbs4, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs4, array($tStage));
+
 $etyDep1 = $base->events->event_type_add($token, 'expense', 'Ameublement et décoration', false);
+$base->events->event_type_set_organizations($token, $etyDep1, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep1, array($tVeture, $tLogement));
+
 $etyDep2 = $base->events->event_type_add($token, 'expense', 'Coiffeur', false);
+$base->events->event_type_set_organizations($token, $etyDep2, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep2, array($tHygiene));
+
 $etyDep3 = $base->events->event_type_add($token, 'expense', 'Autre', true);
+$base->events->event_type_set_organizations($token, $etyDep3, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep3, array($tBudget));
 
 $base->commit ();
 

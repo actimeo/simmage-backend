@@ -31,6 +31,31 @@ $$;
 COMMENT ON FUNCTION events.event_type_add(prm_token integer, prm_category events.event_category, 
   prm_name text, prm_individual_name boolean) IS 'Add a new event type';
 
+CREATE OR REPLACE FUNCTION events.event_type_add_details(
+  prm_token integer, 
+  prm_category events.event_category, 
+  prm_name text, 
+  prm_individual_name boolean,
+  prm_topics integer[],
+  prm_organizations integer[])
+RETURNS integer
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  ret integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  SELECT events.event_type_add(prm_token, prm_category, prm_name, prm_individual_name) INTO ret;
+  PERFORM events.event_type_set_topics(prm_token, ret, prm_topics);
+  PERFORM events.event_type_set_organizations(prm_token, ret, prm_organizations);
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION events.event_type_add_details(prm_token integer, prm_category events.event_category, 
+  prm_name text, prm_individual_name boolean, prm_topics integer[], prm_organizations integer[])
+  IS 'Add a new event type with topics and organizations';
+
 CREATE OR REPLACE FUNCTION events.event_type_update(
   prm_token integer, 
   prm_ety_id integer, 
@@ -51,6 +76,30 @@ BEGIN
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
   END IF;
+END;
+$$;
+COMMENT ON FUNCTION events.event_type_update(prm_token integer, prm_ety_id integer, 
+  prm_category events.event_category, prm_name text, prm_individual_name boolean)
+  IS 'Update an event type';
+
+CREATE OR REPLACE FUNCTION events.event_type_update_details(
+  prm_token integer, 
+  prm_ety_id integer, 
+  prm_category events.event_category,
+  prm_name text, 
+  prm_individual_name boolean,
+  prm_topics integer[],
+  prm_organizations integer[])
+
+RETURNS void
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{organization}');
+  PERFORM events.event_type_update(prm_token, prm_ety_id, prm_category, prm_name, prm_individual_name);
+  PERFORM events.event_type_set_topics(prm_token, prm_ety_id, prm_topics);
+  PERFORM events.event_type_set_organizations(prm_token, prm_ety_id, prm_organizations);
 END;
 $$;
 COMMENT ON FUNCTION events.event_type_update(prm_token integer, prm_ety_id integer, 

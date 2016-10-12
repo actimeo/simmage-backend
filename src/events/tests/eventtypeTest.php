@@ -224,4 +224,68 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->events->event_type_set_organizations($this->token, $id, array($org1, $org3));
   }  
+
+  public function testEventTypeAddDetails() {
+    $cat = 'incident';
+    $name = 'an event type';
+    $indiv = true;
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
+    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
+    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
+    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
+    $id = self::$base->events->event_type_add_details($this->token, $cat, $name, $indiv, array($top1, $top3), array($org1, $org2));
+    $this->assertGreaterThan(0, $id);
+
+    $ety = self::$base->events->event_type_get($this->token, $id);
+    $this->assertEquals($cat, $ety['ety_category']);
+    $this->assertEquals($name, $ety['ety_name']);
+    $this->assertEquals($indiv, $ety['ety_individual_name']);
+
+    $tops = self::$base->events->event_type_topics_list($this->token, $id);
+    $this->assertEquals(array($top1, $top3), 
+			array_map(function ($m) { return $m['top_id']; }, $tops));
+
+    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
+    $this->assertEquals(array($org1, $org2), 
+			array_map(function ($m) { return $m['org_id']; }, $orgs));    
+  }
+
+  public function testEventTypeUpdateDetails() {
+    $cat1 = 'incident';
+    $name1 = 'an event type';
+    $indiv1 = true;
+    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
+    $tops = self::$base->events->event_type_topics_list($this->token, $id);
+    $this->assertEquals(0, count($tops));
+    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
+    $this->assertEquals(0, count($orgs));
+    $cat2 = 'expense';
+    $name2 = 'another event type';
+    $indiv2 = false;
+
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
+    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
+    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
+    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
+
+    self::$base->events->event_type_update_details($this->token, $id, $cat2, $name2, $indiv2, array($top1, $top2), array($org1, $org3));
+
+    $ety = self::$base->events->event_type_get($this->token, $id);
+    $this->assertEquals($cat2, $ety['ety_category']);
+    $this->assertEquals($name2, $ety['ety_name']);
+    $this->assertEquals($indiv2, $ety['ety_individual_name']);
+
+    $tops = self::$base->events->event_type_topics_list($this->token, $id);
+    $this->assertEquals(array($top1, $top2), 
+			array_map(function ($m) { return $m['top_id']; }, $tops));
+
+    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
+    $this->assertEquals(array($org1, $org3), 
+			array_map(function ($m) { return $m['org_id']; }, $orgs));    
+  }  
+
 }
