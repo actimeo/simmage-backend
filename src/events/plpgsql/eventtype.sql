@@ -113,6 +113,8 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{organization}');
+  DELETE FROM events.event_type_topic WHERE ety_id = prm_ety_id;
+  DELETE FROM events.event_type_organization WHERE ety_id = prm_ety_id;
   DELETE FROM events.event_type WHERE ety_id = prm_ety_id;
   IF NOT FOUND THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
