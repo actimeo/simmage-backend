@@ -142,14 +142,29 @@ END;
 $$;
 COMMENT ON FUNCTION events.event_type_get(prm_token integer, prm_ety_id integer) IS 'Returns information about an event type';
 
+DROP FUNCTION IF EXISTS events.event_type_list(prm_token integer, prm_category events.event_category);
+DROP TYPE IF EXISTS events.event_type_list;
+CREATE TYPE events.event_type_list AS (
+  ety_id integer,
+  ety_category events.event_category,
+  ety_name text,
+  ety_individual_name boolean,
+  top_ids integer[],
+  org_ids integer[]
+);
+
 CREATE OR REPLACE FUNCTION events.event_type_list(prm_token integer, prm_category events.event_category)
-RETURNS SETOF events.event_type
+RETURNS SETOF events.event_type_list
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RETURN QUERY SELECT * FROM events.event_type
+  RETURN QUERY SELECT
+    ety_id, ety_category, ety_name, ety_individual_name,
+    ARRAY(SELECT DISTINCT top_id FROM events.event_type_topic sub WHERE sub.ety_id = top.ety_id),
+    ARRAY(SELECT DISTINCT org_id FROM events.event_type_organization sub WHERE sub.ety_id = top.ety_id)
+    FROM events.event_type top
     WHERE (prm_category IS NULL OR prm_category = ety_category) ORDER BY ety_name;
 END;
 $$;
