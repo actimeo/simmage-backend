@@ -223,6 +223,15 @@ $etyDep3 = $base->events->event_type_add($token, 'expense', 'Autre', true);
 $base->events->event_type_set_organizations($token, $etyDep3, array($oMecs));
 $base->events->event_type_set_topics($token, $etyDep3, array($tBudget));
 
+// Documents types
+$dty1 = $base->documents->document_type_add($token, 'Assurance responsabilité civile', false);
+$base->documents->document_type_set_organizations($token, $dty1, array($oMecs));
+$base->documents->document_type_set_topics($token, $dty1, array($tLogement, $tPriseEnCharge, $tVeture));
+
+$dty2 = $base->documents->document_type_add($token, 'Attestation de sécurité sociale', false);
+$base->documents->document_type_set_organizations($token, $dty2, array($oMecs));
+$base->documents->document_type_set_topics($token, $dty2, array($tPriseEnCharge, $tSante));
+
 $base->commit ();
 
 function create_user($base, $token, $login, $pwd, $firstname, $lastname) {
