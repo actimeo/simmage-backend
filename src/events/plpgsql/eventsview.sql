@@ -19,7 +19,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT
     evv_id, evv_name, evv_categories, ety_id, 
-    ARRAY(SELECT DISTINCT top_id FROM events.eventsview_topic sub WHERE sub.evv_id = top.evv_id)
+    ARRAY(SELECT DISTINCT top_id FROM events.eventsview_topic sub WHERE sub.evv_id = top.evv_id ORDER BY top_id)
     FROM events.eventsview top
     ORDER BY evv_name;
 END;
@@ -117,7 +117,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT
     evv_id, evv_name, evv_categories, ety_id, 
-    ARRAY(SELECT DISTINCT top_id FROM events.eventsview_topic sub WHERE sub.evv_id = top.evv_id)
+    ARRAY(SELECT DISTINCT top_id FROM events.eventsview_topic sub WHERE sub.evv_id = top.evv_id ORDER BY top_id)
     INTO ret
     FROM events.eventsview top WHERE evv_id = prm_id;
   IF NOT FOUND THEN

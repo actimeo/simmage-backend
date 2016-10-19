@@ -56,236 +56,88 @@ class documentsviewTest extends PHPUnit_Framework_TestCase {
     $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
     $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
     $nameDty = 'a document type';
-    $indivEty = true;
-    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivEty);
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
 
     $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [ $top1, $top2 ]);
     $this->assertGreaterThan(0, $id);
   }  
-  /*
-  public function testEventTypeGet() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $ety = self::$base->events->event_type_get($this->token, $id);
-    $this->assertEquals($cat, $ety['ety_category']);
-    $this->assertEquals($name, $ety['ety_name']);
-    $this->assertEquals($indiv, $ety['ety_individual_name']);
-  }  
 
-  public function testEventTypeGetUnknown() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    $ety = self::$base->events->event_type_get($this->token, $id + 1);
-  }  
-
-  public function testEventTypeUpdate() {
-    $cat1 = 'incident';
-    $name1 = 'an event type';
-    $indiv1 = true;
-    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-
-    $cat2 = 'expense';
-    $name2 = 'another event type';
-    $indiv2 = false;
-
-    self::$base->events->event_type_update($this->token, $id, $cat2, $name2, $indiv2);
-    $ety = self::$base->events->event_type_get($this->token, $id);
-    $this->assertEquals($cat2, $ety['ety_category']);
-    $this->assertEquals($name2, $ety['ety_name']);
-    $this->assertEquals($indiv2, $ety['ety_individual_name']);
-  }  
-
-  public function testEventTypeUpdateUnknown() {
-    $cat1 = 'incident';
-    $name1 = 'an event type';
-    $indiv1 = true;
-    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-
-    $cat2 = 'expense';
-    $name2 = 'another event type';
-    $indiv2 = false;
-
-    $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->events->event_type_update($this->token, $id + 1, $cat2, $name2, $indiv2);
-  }  
-
-  public function testEventTypeDelete() {
-    $cat1 = 'incident';
-    $name1 = 'an event type';
-    $indiv1 = true;
-    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-    $this->assertGreaterThan(0, $id);
-    self::$base->events->event_type_delete($this->token, $id);
-    $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->events->event_type_get($this->token, $id);
-  }  
-
-  public function testEventTypeDeleteUnknown() {
-    $cat1 = 'incident';
-    $name1 = 'an event type';
-    $indiv1 = true;
-    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-    $this->assertGreaterThan(0, $id);
-    $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->events->event_type_delete($this->token, $id + 1);
-  }  
-  
-
-  public function testEventTypeList() {
-    $cat1 = 'incident';
-    $name1 = 'event type 1';
-    $indiv1 = true;
-    $id1 = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-    $cat2 = 'expense';
-    $name2 = 'event type 2';
-    $indiv2 = false;
-    $id2 = self::$base->events->event_type_add($this->token, $cat2, $name2, $indiv2);
-
-    $etys = self::$base->events->event_type_list($this->token, NULL);
-    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['ety_id']; }, $etys));
-
-    $etys = self::$base->events->event_type_list($this->token, 'expense');
-    $this->assertEquals(array($id2), array_map(function($x) { return $x['ety_id']; }, $etys));
-
-    $etys = self::$base->events->event_type_list($this->token, 'incident');
-    $this->assertEquals(array($id1), array_map(function($x) { return $x['ety_id']; }, $etys));
-  }  
-
-
-  public function testEventTypeSetTopics() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->assertGreaterThan(0, $id);
+  public function testDocumentsViewGet() {
+    $name = 'an documents view';
     $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
     $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
-    self::$base->events->event_type_set_topics($this->token, $id, array($top1, $top3));
+    $nameDty = 'an document type';
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
+
+    $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [ $top1, $top2 ]);
+    $this->assertGreaterThan(0, $id);
+
+    $evv = self::$base->documents->documentsview_get($this->token, $id);
+    $this->assertEquals($name, $evv['dov_name']);
+    $this->assertEquals($idDty, $evv['dty_id']);
+    $this->assertEquals([$top1, $top2], $evv['top_ids']);
   }  
 
-  public function testEventTypeTopicsList() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->assertGreaterThan(0, $id);
+  public function testDocumentsViewList() {
+    $name = 'an documents view';
     $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
     $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
-    self::$base->events->event_type_set_topics($this->token, $id, array($top1, $top3));
-    $tops = self::$base->events->event_type_topics_list($this->token, $id);
-    $this->assertEquals(array($top1, $top3), 
-			array_map(function ($m) { return $m['top_id']; }, $tops));
-  }  
+    $nameDty = 'an document type';
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
 
-  public function testEventTypeSetOrganizations() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->assertGreaterThan(0, $id);
-    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
-    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
-    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
-    self::$base->events->event_type_set_organizations($this->token, $id, array($org1, $org3));
-  }  
+    $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [ $top1, $top2 ]);
 
-  public function testEventTypeOrganizationsList() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->assertGreaterThan(0, $id);
-
-    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
-    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
-    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
-    self::$base->events->event_type_set_organizations($this->token, $id, array($org1, $org3));
-    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
-    $this->assertEquals(array($org1, $org3), 
-			array_map(function ($m) { return $m['org_id']; }, $orgs));
-  }  
-
-  public function testEventTypeSetOrganizationsExternal() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
-    $this->assertGreaterThan(0, $id);
-    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', false);
-    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
-    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
-    $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->events->event_type_set_organizations($this->token, $id, array($org1, $org3));
-  }  
-
-  public function testEventTypeAddDetails() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
-    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
-    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
-    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
-    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
-    $id = self::$base->events->event_type_add_details($this->token, $cat, $name, $indiv, array($top1, $top3), array($org1, $org2));
-    $this->assertGreaterThan(0, $id);
-
-    $ety = self::$base->events->event_type_get($this->token, $id);
-    $this->assertEquals($cat, $ety['ety_category']);
-    $this->assertEquals($name, $ety['ety_name']);
-    $this->assertEquals($indiv, $ety['ety_individual_name']);
-
-    $tops = self::$base->events->event_type_topics_list($this->token, $id);
-    $this->assertEquals(array($top1, $top3), 
-			array_map(function ($m) { return $m['top_id']; }, $tops));
-
-    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
-    $this->assertEquals(array($org1, $org2), 
-			array_map(function ($m) { return $m['org_id']; }, $orgs));    
+    $evvs = self::$base->documents->documentsview_list($this->token);
+    $this->assertEquals(1, count($evvs));
+    $evv = $evvs[0];
+    $this->assertEquals($name, $evv['dov_name']);
+    $this->assertEquals($idDty, $evv['dty_id']);
+    $this->assertEquals([$top1, $top2], $evv['top_ids']);
   }
 
-  public function testEventTypeUpdateDetails() {
-    $cat1 = 'incident';
-    $name1 = 'an event type';
-    $indiv1 = true;
-    $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-    $tops = self::$base->events->event_type_topics_list($this->token, $id);
-    $this->assertEquals(0, count($tops));
-    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
-    $this->assertEquals(0, count($orgs));
-    $cat2 = 'expense';
-    $name2 = 'another event type';
-    $indiv2 = false;
-
+  public function testDocumentsViewUpdate() {
+    $name = 'an documents view';
     $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
     $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
-    $org1 = self::$base->organ->organization_add($this->token, 'org 1', 'desc 1', true);
-    $org2 = self::$base->organ->organization_add($this->token, 'org 2', 'desc 2', true);
-    $org3 = self::$base->organ->organization_add($this->token, 'org 3', 'desc 3', true);
+    $nameDty = 'an document type';
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
 
-    self::$base->events->event_type_update_details($this->token, $id, $cat2, $name2, $indiv2, array($top1, $top2), array($org1, $org3));
+    $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [ $top1, $top2 ]);
 
-    $ety = self::$base->events->event_type_get($this->token, $id);
-    $this->assertEquals($cat2, $ety['ety_category']);
-    $this->assertEquals($name2, $ety['ety_name']);
-    $this->assertEquals($indiv2, $ety['ety_individual_name']);
+    $nameAfter = 'another documents view';
+    $top1After = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 1', 'health', '#000000');
+    $top2After = self::$base->organ->topic_add($this->token, 'topic 4', 'desc 2', 'health', '#000000');
+    $nameDtyAfter = 'another document type';
+    $indivDtyAfter = true;
+    $idDtyAfter = self::$base->documents->document_type_add($this->token, $nameDtyAfter, $indivDtyAfter);
+    self::$base->documents->documentsview_update($this->token, $id, $nameAfter, $idDtyAfter, [ $top1After, $top2After ]);
 
-    $tops = self::$base->events->event_type_topics_list($this->token, $id);
-    $this->assertEquals(array($top1, $top2), 
-			array_map(function ($m) { return $m['top_id']; }, $tops));
+    $evvs = self::$base->documents->documentsview_list($this->token);
+    $this->assertEquals(1, count($evvs));
+    $evv = $evvs[0];
+    $this->assertEquals($nameAfter, $evv['dov_name']);
+    $this->assertEquals($idDtyAfter, $evv['dty_id']);
+    $this->assertEquals([$top1After, $top2After], $evv['top_ids']);
+  }
 
-    $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
-    $this->assertEquals(array($org1, $org3), 
-			array_map(function ($m) { return $m['org_id']; }, $orgs));    
+  public function testDocumentsViewDelete() {
+    $name = 'an documents view';
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $nameDty = 'an document type';
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
+
+    $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [ $top1, $top2 ]);
+    $this->assertGreaterThan(0, $id);
+
+    self::$base->documents->documentsview_delete($this->token, $id);
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    $evv = self::$base->documents->documentsview_get($this->token, $id);
   }  
-  */
+
 }
