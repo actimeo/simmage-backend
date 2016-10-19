@@ -29,7 +29,7 @@ FILES="$FILES $BASE/portal/sql/portal.sql $BASE/portal/sql/mainview_*.sql $BASE/
 FILES="$FILES $BASE/organ/sql/organ.sql $BASE/organ/plpgsql/*.sql $BASE/organ/sql/comments.sql"
 FILES="$FILES $BASE/login/sql/auth.sql $BASE/login/plpgsql/*.sql $BASE/login/sql/comments.sql"
 FILES="$FILES $BASE/events/sql/eventtype.sql $BASE/events/sql/eventsviews.sql $BASE/events/plpgsql/*.sql $BASE/events/sql/comments.sql"
-FILES="$FILES $BASE/documents/sql/documenttype.sql $BASE/documents/plpgsql/*.sql $BASE/documents/sql/comments.sql"
+FILES="$FILES $BASE/documents/sql/documenttype.sql $BASE/documents/sql/documentsviews.sql $BASE/documents/plpgsql/*.sql $BASE/documents/sql/comments.sql"
 FILES="$FILES $BASE/pgdoc/sql/schema.sql $BASE/pgdoc/plpgsql/*.sql"
 
 echo 'Installing SQL from files:'
