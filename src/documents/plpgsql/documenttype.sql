@@ -153,6 +153,27 @@ END;
 $$;
 COMMENT ON FUNCTION documents.document_type_list(prm_token integer) IS 'Returns the list of documents types';
 
+CREATE OR REPLACE FUNCTION documents.document_type_filter(
+  prm_token integer, 
+  prm_top_ids integer[])
+RETURNS SETOF documents.document_type_list
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+    RETURN QUERY SELECT DISTINCT
+    dty_id, dty_name, dty_individual_name,
+    ARRAY(SELECT DISTINCT top_id FROM documents.document_type_topic sub WHERE sub.dty_id = top.dty_id),
+    ARRAY(SELECT DISTINCT org_id FROM documents.document_type_organization sub WHERE sub.dty_id = top.dty_id)
+    FROM documents.document_type top
+    INNER JOIN documents.document_type_topic USING(dty_id)
+    WHERE (prm_top_ids IS NULL OR document_type_topic.top_id = ANY (prm_top_ids))
+    ORDER BY dty_name;
+END;
+$$;
+COMMENT ON FUNCTION documents.document_type_filter(prm_token integer, prm_top_ids integer[]) IS 'Returns the list of documents types filtered by categories and topics ';
+
 CREATE OR REPLACE FUNCTION documents.document_type_set_topics(prm_token integer, prm_dty_id integer, prm_top_ids integer[])
 RETURNS void
 LANGUAGE plpgsql

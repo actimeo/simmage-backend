@@ -191,7 +191,8 @@ BEGIN
     ORDER BY ety_name;
 END;
 $$;
-COMMENT ON FUNCTION events.event_type_list(prm_token integer, prm_category events.event_category) IS 'Returns the list of events types for one or all categories of events ';
+COMMENT ON FUNCTION events.event_type_filter(prm_token integer, prm_categories events.event_category[], prm_top_ids integer[])
+ IS 'Returns the list of events types filtered by categories and topics ';
 
 CREATE OR REPLACE FUNCTION events.event_type_set_topics(prm_token integer, prm_ety_id integer, prm_top_ids integer[])
 RETURNS void

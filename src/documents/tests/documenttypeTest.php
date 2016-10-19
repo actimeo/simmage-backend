@@ -132,6 +132,29 @@ class documenttypeTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
   }  
 
+  public function testDocumentTypeFilter() {
+    $name1 = 'document type 1';
+    $indiv1 = true;
+    $id1 = self::$base->documents->document_type_add($this->token, $name1, $indiv1);
+    $name2 = 'document type 2';
+    $indiv2 = false;
+    $id2 = self::$base->documents->document_type_add($this->token, $name2, $indiv2);
+
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
+    self::$base->documents->document_type_set_topics($this->token, $id1, [ $top1, $top2 ]);
+    self::$base->documents->document_type_set_topics($this->token, $id2, [ $top1, $top3 ]);
+
+    $dtys = self::$base->documents->document_type_filter($this->token, NULL);
+    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
+
+    $dtys = self::$base->documents->document_type_filter($this->token, [$top2]);
+    $this->assertEquals(array($id1), array_map(function($x) { return $x['dty_id']; }, $dtys));
+
+    $dtys = self::$base->documents->document_type_filter($this->token, [$top1]);
+    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
+  }  
 
   public function testDocumentTypeSetTopics() {
     $name = 'a document type';

@@ -18,7 +18,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT
     dov_id, dov_name, dty_id, 
-    ARRAY(SELECT DISTINCT top_id FROM documents.documentsview_topic sub WHERE sub.dov_id = top.dov_id)
+    ARRAY(SELECT DISTINCT top_id FROM documents.documentsview_topic sub WHERE sub.dov_id = top.dov_id ORDER BY top_id)
     FROM documents.documentsview top
     ORDER BY dov_name;
 END;
@@ -114,7 +114,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT
     dov_id, dov_name, dty_id, 
-    ARRAY(SELECT DISTINCT top_id FROM documents.documentsview_topic sub WHERE sub.dov_id = top.dov_id)
+    ARRAY(SELECT DISTINCT top_id FROM documents.documentsview_topic sub WHERE sub.dov_id = top.dov_id ORDER BY top_id)
     INTO ret
     FROM documents.documentsview top WHERE dov_id = prm_id;
   IF NOT FOUND THEN
