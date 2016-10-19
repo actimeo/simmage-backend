@@ -235,6 +235,9 @@ $base->documents->document_type_set_topics($token, $dty2, array($tPriseEnCharge,
 // Events views
 $evv1 = $base->events->eventsview_add($token, 'Absences, Emploi', array('absence'), $etyAbs1, array($tStage));
 
+// Documents views
+$dov1 = $base->documents->documentsview_add($token, 'Docs Attestation', $dty2, array($tPriseEnCharge));
+
 $base->commit ();
 
 function create_user($base, $token, $login, $pwd, $firstname, $lastname) {
