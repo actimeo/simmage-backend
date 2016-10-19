@@ -232,6 +232,9 @@ $dty2 = $base->documents->document_type_add($token, 'Attestation de sécurité s
 $base->documents->document_type_set_organizations($token, $dty2, array($oMecs));
 $base->documents->document_type_set_topics($token, $dty2, array($tPriseEnCharge, $tSante));
 
+// Events views
+$evv1 = $base->events->eventsview_add($token, 'Absences, Emploi', array('absence'), $etyAbs1, array($tStage));
+
 $base->commit ();
 
 function create_user($base, $token, $login, $pwd, $firstname, $lastname) {

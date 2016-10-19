@@ -170,6 +170,29 @@ END;
 $$;
 COMMENT ON FUNCTION events.event_type_list(prm_token integer, prm_category events.event_category) IS 'Returns the list of events types for one or all categories of events ';
 
+CREATE OR REPLACE FUNCTION events.event_type_filter(
+  prm_token integer, 
+  prm_categories events.event_category[],
+  prm_top_ids integer[])
+RETURNS SETOF events.event_type_list
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+    RETURN QUERY SELECT DISTINCT
+    ety_id, ety_category, ety_name, ety_individual_name,
+    ARRAY(SELECT DISTINCT top_id FROM events.event_type_topic sub WHERE sub.ety_id = top.ety_id),
+    ARRAY(SELECT DISTINCT org_id FROM events.event_type_organization sub WHERE sub.ety_id = top.ety_id)
+    FROM events.event_type top
+    INNER JOIN events.event_type_topic USING(ety_id)
+    WHERE (prm_categories IS NULL OR ety_category = ANY (prm_categories)) 
+    AND (prm_top_ids IS NULL OR event_type_topic.top_id = ANY (prm_top_ids))
+    ORDER BY ety_name;
+END;
+$$;
+COMMENT ON FUNCTION events.event_type_list(prm_token integer, prm_category events.event_category) IS 'Returns the list of events types for one or all categories of events ';
+
 CREATE OR REPLACE FUNCTION events.event_type_set_topics(prm_token integer, prm_ety_id integer, prm_top_ids integer[])
 RETURNS void
 LANGUAGE plpgsql

@@ -5,7 +5,7 @@ require_once 'config.inc.php';
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
-class eventtypeTest extends PHPUnit_Framework_TestCase {
+class eventsviewTest extends PHPUnit_Framework_TestCase {
   private static $base;
   private static $pgHost;
   private static $pgUser;
@@ -50,19 +50,21 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     self::$base->rollback();
   }
 
-  public function testEventCategoryList() {
-    $vals = self::$base->events->event_category_list();
-    $this->assertGreaterThan(0, count($vals));
-  }
 
-  public function testEventTypeAdd() {
-    $cat = 'incident';
-    $name = 'an event type';
-    $indiv = true;
-    $id = self::$base->events->event_type_add($this->token, $cat, $name, $indiv);
+  public function testEventsViewAdd() {
+    $name = 'an events view';
+    $cats = [ 'incident', 'absence' ];
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $catEty = 'incident';
+    $nameEty = 'an event type';
+    $indivEty = true;
+    $idEty = self::$base->events->event_type_add($this->token, $catEty, $nameEty, $indivEty);
+
+    $id = self::$base->events->eventsview_add($this->token, $name, $cats, $idEty, [ $top1, $top2 ]);
     $this->assertGreaterThan(0, $id);
   }  
-
+  /*
   public function testEventTypeGet() {
     $cat = 'incident';
     $name = 'an event type';
@@ -154,35 +156,6 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
 
     $etys = self::$base->events->event_type_list($this->token, 'incident');
     $this->assertEquals(array($id1), array_map(function($x) { return $x['ety_id']; }, $etys));
-  }  
-
-  public function testEventTypeFilter() {
-    $cat1 = 'incident';
-    $name1 = 'event type 1';
-    $indiv1 = true;
-    $id1 = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
-    $cat2 = 'expense';
-    $name2 = 'event type 2';
-    $indiv2 = false;
-    $id2 = self::$base->events->event_type_add($this->token, $cat2, $name2, $indiv2);
-
-    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
-    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $top3 = self::$base->organ->topic_add($this->token, 'topic 3', 'desc 3', 'health', '#000000');
-    self::$base->events->event_type_set_topics($this->token, $id1, [ $top1, $top2 ]);
-    self::$base->events->event_type_set_topics($this->token, $id2, [ $top1, $top3 ]);
-
-    $etys = self::$base->events->event_type_filter($this->token, NULL, NULL);
-    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['ety_id']; }, $etys));
-
-    $etys = self::$base->events->event_type_filter($this->token, ['expense'], NULL);
-    $this->assertEquals(array($id2), array_map(function($x) { return $x['ety_id']; }, $etys));
-
-    $etys = self::$base->events->event_type_filter($this->token, NULL, [$top2]);
-    $this->assertEquals(array($id1), array_map(function($x) { return $x['ety_id']; }, $etys));
-
-    $etys = self::$base->events->event_type_filter($this->token, NULL, [$top1]);
-    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['ety_id']; }, $etys));
   }  
 
 
@@ -316,5 +289,5 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(array($org1, $org3), 
 			array_map(function ($m) { return $m['org_id']; }, $orgs));    
   }  
-
+  */
 }
