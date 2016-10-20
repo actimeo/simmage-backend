@@ -9,10 +9,6 @@ env:
   - DBNAME='variation'
   - DBUSER='deploy'
   - DBPASS='variation'
-  matrix:
-  - SAMPLE=mecs
-  - SAMPLE=simple
-  - SAMPLE=empty
 services:
 - postgresql
 addons:
@@ -26,16 +22,15 @@ install:
 - ./scripts/install.sh
 script: ./vendor/bin/phpunit --stop-on-error src/
 before_deploy:
-- php data/$SAMPLE.php && pg_dump -U postgres -w $DBNAME | gzip > $SAMPLE.sql.gz
-  && ls -l $SAMPLE.sql.gz
+- pg_dump -U postgres -w $DBNAME | gzip > simmage.sql.gz
+  && ls -l simmage.sql.gz
 - eval "$(ssh-agent -s)"
 - chmod 600 $TRAVIS_BUILD_DIR/deploy/deploy_rsa
 - ssh-add $TRAVIS_BUILD_DIR/deploy/deploy_rsa
 deploy:
   provider: script
   skip_cleanup: true
-  script: scp $SAMPLE.sql.gz "deploy@maya.elol.fr:" && ssh deploy@maya.elol.fr ./deploy-db.sh
-    $SAMPLE
+  script: scp simmage.sql.gz "deploy@maya.elol.fr:" && ssh deploy@maya.elol.fr ./deploy-db.sh
   on:
     branch: master
     php: 5.6
