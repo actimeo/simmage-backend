@@ -5,6 +5,10 @@ function import_events_types($file, $base, $token, $delimiter = "\t", $topics_ma
     return -1;
   
   $topics = null;
+
+  $orgs = $base->organ->organization_list($token, true);
+  $org_ids = array_map(function($o) { return $o['org_id']; }, $orgs);
+
   while ( ($line = fgetcsv($f, 0, $delimiter)) !== FALSE) {
     if ($line[0][0] == '#') {
       if ($topics === null) {
@@ -25,6 +29,9 @@ function import_events_types($file, $base, $token, $delimiter = "\t", $topics_ma
     }
     if (count($top_ids)) {
       $base->events->event_type_set_topics($token, $id, $top_ids);
+    }
+    if (count($org_ids)) {
+      $base->events->event_type_set_organizations($token, $id, $org_ids);
     }
   }
   fclose($f);
