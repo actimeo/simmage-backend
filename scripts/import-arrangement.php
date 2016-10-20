@@ -7,6 +7,7 @@ require 'import-arrangement-sub/topics.php';
 require 'import-arrangement-sub/portals.php';
 require 'import-arrangement-sub/organs.php';
 require 'import-arrangement-sub/events-types.php';
+require 'import-arrangement-sub/documents-types.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -32,4 +33,5 @@ $topics_map = import_topics($dir . DIRECTORY_SEPARATOR . 'topics.csv', $base, $t
 import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', $base, $token, CSV_SEPARATOR);
 import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', $base, $token, CSV_SEPARATOR);
 import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', $base, $token, CSV_SEPARATOR, $topics_map);
+import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', $base, $token, CSV_SEPARATOR, $topics_map);
 $base->commit ();
