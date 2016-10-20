@@ -11,7 +11,7 @@ require 'import-arrangement-sub/events-types.php';
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
-define ('CSV_SEPARATOR', "\t");
+define ('CSV_SEPARATOR', ",");
 
 if ($argc < 2) {
   echo "Usage: $argv[0] directory\n";
