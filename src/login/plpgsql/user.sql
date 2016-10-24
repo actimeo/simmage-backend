@@ -382,3 +382,15 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION login.user_delete(prm_token integer, prm_login text) IS 'Delete an user';
+
+CREATE OR REPLACE FUNCTION login.user_list_demo()
+RETURNS SETOF login.user
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  -- TODO : check if demo state or not
+  RETURN QUERY SELECT usr_login FROM login.user ORDER BY usr_login;
+END;
+$$;
+COMMENT ON FUNCTION login.user_list_demo() IS 'Return a list of users login to show on login page (ONLY FOR DEMO)';
