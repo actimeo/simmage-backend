@@ -57,17 +57,17 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
   public function testUsergroupAdd() {
     $name1 = 'Usergroup 1';
     $name2 = 'Usergroup 2';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $name1);
-    $this->assertGreaterThan(0, $ugr1);    
-    $ugr2 = self::$base->login->usergroup_add($this->token, $name2);
+    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, '{preadmission, admission, present, left}');
+    $this->assertGreaterThan(0, $ugr1);
+    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, '{preadmission, admission, present, left}');
     $this->assertGreaterThan($ugr1, $ugr2);    
   }
 
   public function testUsergroupList() {
     $name1 = 'Usergroup 1';
     $name2 = 'Usergroup 2';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $name1);
-    $ugr2 = self::$base->login->usergroup_add($this->token, $name2);
+    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, '{preadmission, admission, present, left}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, '{preadmission, admission, present, left}');
     $ugrs = self::$base->login->usergroup_list($this->token);
     $found = 0;
     foreach ($ugrs as $ugr) {
@@ -84,7 +84,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 
   public function testUsergroupGet() {
     $name = 'usergroup';
-    $ugrId = self::$base->login->usergroup_add($this->token, $name);
+    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, '{preadmission, admission, present, left}');
 
     $this->assertGreaterThan(0, $ugrId);
 
@@ -93,13 +93,13 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('usergroup', $ugr['ugr_name']);
   }
 
-  public function testUsergroupRename() {
+  public function testUsergroupUpdate() {
     $name = 'Usergroup';
-    $ugrId = self::$base->login->usergroup_add($this->token, $name);
+    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, '{preadmission, admission, present, left}');
 
     $this->assertGreaterThan(0, $ugrId);
 
-    self::$base->login->usergroup_rename($this->token, $ugrId, 'Renamed usergroup');
+    self::$base->login->usergroup_update($this->token, $ugrId, 'Renamed usergroup', null, '{preadmission, admission, present, left}');
 
     $ugr = self::$base->login->usergroup_get($this->token, $ugrId);
 
@@ -108,7 +108,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
   
   public function testUserUsergroupSet() {
     $ugrName = 'Usergroup name';
-    $ugr = self::$base->login->usergroup_add($this->token, $ugrName);
+    $ugr = self::$base->login->usergroup_add($this->token, $ugrName, null, '{preadmission, admission, present, left}');
 
     $loginUser = 'user';
     $parFirstname = 'Paul';
@@ -137,7 +137,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($porId2, $porId3);
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
@@ -186,7 +186,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($grpIdA2, $grpIdB1);
     
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA2, $grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
@@ -227,6 +227,56 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(null, $grpIds);
   }
 
+  public function testUsergroupTopicSet() {
+    $topName1 = 'topic 1';
+    $topDesc1 = 'description 1';
+    $icon1 = 'health';
+    $color1 = '#ffffff';
+    $topId1 = self::$base->organ->topic_add($this->token, $topName1, $topDesc1, $icon1, $color1);
+    $topName2 = 'topic 2';
+    $topDesc2 = 'description 2';
+    $icon2 = 'health';
+    $color2 = '#ffffff';
+    $topId2 = self::$base->organ->topic_add($this->token, $topName2, $topDesc2, $icon2, $color2);
+    $topName3 = 'topic 3';
+    $topDesc3 = 'description 3';
+    $icon3 = 'health';
+    $color3 = '#ffffff';
+    $topId3 = self::$base->organ->topic_add($this->token, $topName3, $topDesc3, $icon3, $color3);
+    $this->assertGreaterThan($topId1, $topId2);
+    $this->assertGreaterThan($topId2, $topId3);
+
+    $usergroupName = 'An usergroup';
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1), null);
+
+    $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
+    $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
+			       array('top_id'=>$topId2, 'top_name'=>$topName2, 'top_description'=>$topDesc2, 'top_icon'=>$icon2, 'top_color'=>$color2)),
+			$topIds);
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId3, $topId1), null);
+    $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
+    $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
+                               array('top_id'=>$topId2, 'top_name'=>$topName2, 'top_description'=>$topDesc2, 'top_icon'=>$icon2, 'top_color'=>$color2),
+			       array('top_id'=>$topId3, 'top_name'=>$topName3, 'top_description'=>$topDesc3, 'top_icon'=>$icon3, 'top_color'=>$color3)),
+                        $topIds);
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId3, $topId1), null);
+    $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
+    $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
+                               array('top_id'=>$topId3, 'top_name'=>$topName3, 'top_description'=>$topDesc3, 'top_icon'=>$icon3, 'top_color'=>$color3)),
+                        $topIds);
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array(), null);
+    $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
+    $this->assertEquals(null, $topIds);
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, null, null);
+    $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
+    $this->assertEquals(null, $topIds);
+  }
+
   public function testUsergroupExternalGroupSet() {
     $orgNameA = 'Organization A';
     $orgNameB = 'Organization B';
@@ -243,7 +293,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->login->usergroup_set_groups($this->token, $ugr, 
@@ -279,12 +329,27 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($grpIdA1, $grpIdA2);
     $this->assertGreaterThan($grpIdA2, $grpIdB1);
 
+    $topName1 = 'topic 1';
+    $topDesc1 = 'description 1';
+    $icon1 = 'health';
+    $color1 = '#ffffff';
+    $topId1 = self::$base->organ->topic_add($this->token, $topName1, $topDesc1, $icon1, $color1);
+    $topName2 = 'topic 2';
+    $topDesc2 = 'description 2';
+    $icon2 = 'health';
+    $color2 = '#ffffff';
+    $topId2 = self::$base->organ->topic_add($this->token, $topName2, $topDesc2, $icon2, $color2);
+    $this->assertGreaterThan(0, $topId1);
+    $this->assertGreaterThan($topId1, $topId2);
+
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName);
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
 
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId1, $topId2), null);
 
     self::$base->login->usergroup_delete($this->token, $ugr);
   }

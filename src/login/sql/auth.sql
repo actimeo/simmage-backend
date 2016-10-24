@@ -2,9 +2,24 @@ CREATE SCHEMA login;
 SET search_path = login;
 
 -- User groups
+-- Specific rights for usergroups
+CREATE TYPE login.usergroup_right AS ENUM (
+  'internal_dossier_add',
+  'external_dossier_add'
+);
+
+-- Specific rights for usergroups on topics
+CREATE TYPE login.usergroup_topic_right AS ENUM (
+  'event_read',	  -- can view events ?
+  'event_add',	  -- can add an event
+  'event_update'  -- can modify an event ?
+);
+
 CREATE TABLE login.usergroup (
   ugr_id serial PRIMARY KEY,
-  ugr_name text NOT NULL UNIQUE
+  ugr_name text NOT NULL UNIQUE,
+  ugr_rights login.usergroup_right[],
+  ugr_statuses organ.dossier_status_value[]
 );
 
 CREATE TABLE login.usergroup_portal (
@@ -19,6 +34,14 @@ CREATE TABLE login.usergroup_group (
   ugr_id integer NOT NULL REFERENCES login.usergroup,
   grp_id integer NOT NULL REFERENCES organ.group,
   UNIQUE (ugr_id, grp_id)
+);
+
+CREATE TABLE login.usergroup_topic (
+  ugt_id serial PRIMARY KEY,
+  ugr_id integer NOT NULL REFERENCES login.usergroup,
+  top_id integer NOT NULL REFERENCES organ.topic,
+  ugt_rights login.usergroup_topic_right[],
+  UNIQUE (ugr_id, top_id)
 );
 
 -- Users

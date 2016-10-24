@@ -66,8 +66,8 @@ $base->portal->mainmenu_add($token, $mseEducateur, "Menu 1");
 $base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
 
 // Create user groups
-$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement');
-$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur');
+$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', null, '{preadmission, admission, present, left}');
+$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', null, '{preadmission, admission, present, left}');
 
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));
@@ -97,6 +97,8 @@ $gAppart2 = $base->organ->group_add($token, $oMecs, 'Appartement 2', 'Appartemen
 $base->organ->group_set_topics($token, $gPavillon1, $topicsPavillons);
 $base->organ->group_set_topics($token, $gPavillon2, $topicsPavillons);
 $base->organ->group_exclusive_new($token, 'Pavillons', array($gPavillon1, $gPavillon2));
+
+// TODO : add some topics to usergroups
 
 $base->login->usergroup_set_groups($token, $ugEncadrement, array($gPavillon1, $gPavillon2));
 $base->login->usergroup_set_groups($token, $ugEducateur, array($gPavillon1, $gPavillon2));

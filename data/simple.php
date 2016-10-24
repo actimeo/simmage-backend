@@ -45,8 +45,8 @@ $porId1 = $base->portal->portal_add($token, 'portal 1', 'desc 1');
 $porId2 = $base->portal->portal_add($token, 'portal 2', 'desc 2');
 $porId3 = $base->portal->portal_add($token, 'portal 3', 'desc 3');
 
-$ug1 = $base->login->usergroup_add($token, 'Usergroup 1');
-$ug2 = $base->login->usergroup_add($token, 'Usergroup 2');
+$ug1 = $base->login->usergroup_add($token, 'Usergroup 1', null, '{preadmission, admission, present, left}');
+$ug2 = $base->login->usergroup_add($token, 'Usergroup 2', null, '{preadmission, admission, present, left}');
 
 // Give user1 access to 1 portal
 $base->login->usergroup_set_portals($token, $ug1, array($porId3));
@@ -89,6 +89,12 @@ $base->organ->participant_assignment_add($token, $grpI1, $stfId1);
 $base->organ->participant_assignment_add($token, $grpI1, $stfId2);
 $base->organ->participant_assignment_add($token, $grpI2, $stfId2);
 $base->organ->participant_assignment_add($token, $grpII2, $stfId2);
+
+// give user1 access to 3 specific topics
+$base->login->usergroup_set_topics($token, $ug1, array($tSocial, $tJustice, $tCulture), null);
+
+// give user2 access to 3 other specific topics
+$base->login->usergroup_set_topics($token, $ug2, array($tSport, $tFinancer, $tSupport), null);
 
 // Give user1 access to 1 group
 $base->login->usergroup_set_groups($token, $ug1, array($grpI1));
