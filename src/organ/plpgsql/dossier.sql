@@ -9,7 +9,10 @@ BEGIN
     INNER JOIN organ.dossier_assignment USING(dos_id)
     INNER JOIN login.usergroup_group USING(grp_id)
     INNER JOIN login.user USING(ugr_id)
-    WHERE usr_token = prm_token;
+    INNER JOIN login.usergroup USING(ugr_id)
+    INNER JOIN organ.dossier_status USING(dos_id)
+    WHERE usr_token = prm_token
+    AND dst_value = ANY(ugr_statuses);
 END;
 $$;
 COMMENT ON FUNCTION organ.dossiers_authorized_for_user(prm_token integer) IS 'Returns the list of dossiers authorized for a given user (token)';
