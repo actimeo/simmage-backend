@@ -92,6 +92,12 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(count($listBefore) + 1, count($list));
   }
 
+  public function testUserListDemo() {
+    $list = self::$base->login->user_list_demo();
+    $res = array_filter($list, function($x) { return $x === 'variation'; });
+    $this->assertEquals(1, count($res));
+  }
+
   public function testUserListFilteredByUsergroup() {
     $parId1 = self::$base->organ->participant_add($this->token, 'Super', 'Admin');
     $parId2 = self::$base->organ->participant_add($this->token, 'Lower', 'Admin');
