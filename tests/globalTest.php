@@ -11,20 +11,13 @@ class globalTest extends PHPUnit_Framework_TestCase {
   private $pgUser;
   private $pgPass;
   private $pgDatabase;
-
+  
   private $procs;
   private $skip = array (array('login', '_token_assert'),
 			 array('login', '_token_assert_any'),
 			 array('login', '_token_assert_other_login'),
-			 array('login', 'user_login'),
 			 array('login', '_user_token_create'),
-			 array('portal', 'entity_list'),
-			 array('portal', 'mainview_element_type_list'),
-			 array('portal', 'param_list'),
-			 array('portal', 'personview_element_type_list'),
 			 array('organ', '_dossier_link_get_inverted_relationship'),
-			 array('events', 'event_category_list'),
-			 array('login', 'user_list_demo')
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {
@@ -35,33 +28,14 @@ class globalTest extends PHPUnit_Framework_TestCase {
     $this->pgDatabase = $pg_database;
     
     // Create object
-    $this->base = new PgProcedures ($this->pgHost, $this->pgUser, $this->pgPass, $this->pgDatabase, '5432', '.traces');
+    $this->base = new PgProcedures ($this->pgHost, $this->pgUser, $this->pgPass, $this->pgDatabase);
 
     $this->getProcs();
     parent::__construct($name, $data, $dataName);
   }
-  /*
-  public static function setUpBeforeClass() {
-    // Get connection params
-    global $pg_host, $pg_user, $pg_pass, $pg_database;
-    self::$pgHost = $pg_host;
-    self::$pgUser = $pg_user;
-    self::$pgPass = $pg_pass;
-    self::$pgDatabase = $pg_database;
-    self::assertNotNull(self::$pgHost);
-    self::assertNotNull(self::$pgUser);
-    self::assertNotNull(self::$pgPass);
-    self::assertNotNull(self::$pgDatabase);
-    
-    // Create object
-    self::$base = new PgProcedures (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase);
-    self::assertNotNull(self::$base);    
 
-    //    self::getProcs();
-  }
-  */
   private function getProcs() {
-    $q = "SELECT nspname, proname, pronargs
+    $q = "SELECT nspname, proname
 FROM pg_proc
 INNER JOIN pg_namespace ON pg_namespace.oid = pronamespace
 WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'pgcrypto', 'pgprocedures', 'pgdoc')
@@ -71,7 +45,7 @@ order by nspname, proname";
     foreach ($res as $proc) {
       if ($this->skip_proc($proc))
 	continue;
-      $this->procs[] = [ $proc['nspname'], $proc['proname'], $proc['pronargs'] ];
+      $this->procs[] = [ $proc['nspname'], $proc['proname'] ];
     }    
   }
 
@@ -90,13 +64,10 @@ order by nspname, proname";
 
   /**
    * @dataProvider proceduresList
-   * @expectedException \actimeo\pgproc\PgProcException
-   * @expectedExceptionMessage insufficient_privilege
    */
-  public function testAssertTokenInProcedure($schema, $proc, $nargs) {
-    $args = array_fill(0, $nargs, NULL);
-    $args[0] = '123456'; // wrong token
-    $this->base->$schema->__call($proc, $args);
+  public function testAssertTokenInProcedure($schema, $proc) {
+    $path = getcwd() . DIRECTORY_SEPARATOR . '.traces' . DIRECTORY_SEPARATOR . $schema . DIRECTORY_SEPARATOR . $proc;
+    $this->assertTrue(file_exists($path), 'procedure '. $schema.'->'.$proc.' should have been tested');
   }
 
   

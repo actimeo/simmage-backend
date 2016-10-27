@@ -26,7 +26,8 @@ class documentsviewTest extends PHPUnit_Framework_TestCase {
     self::assertNotNull(self::$pgDatabase);
     
     // Create object
-    self::$base = new PgProcedures (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase);
+    self::$base = new PgProcedures (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase,
+				    '5432', '.traces');
     self::assertNotNull(self::$base);    
   }
 

@@ -2,3 +2,4 @@ vendor/
 config.inc.php
 config.sh
 
+.traces

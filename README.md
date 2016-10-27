@@ -49,6 +49,6 @@ $ sudo su postgres -c ./scripts/update.sh
 ## Run tests
 
 ```sh
-./vendor/bin/phpunit src/
+./vendor/bin/phpunit --stop-on-error src/
 ```
 
