@@ -192,7 +192,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 			    'por_description' => true ] ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertEquals($ugr1, $res[0]['ugr_id']);
     $this->assertEquals($usergroupName1, $res[0]['ugr_name']);
     $this->assertNotNull($res[0]['groups']);
@@ -207,7 +206,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 			    'por_description' => true ] ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertEquals($ugr1, $res[0]['ugr_id']);
     $this->assertEquals($usergroupName1, $res[0]['ugr_name']);
     $this->assertNotNull($res[0]['groups']);
@@ -219,7 +217,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertEquals($ugr1, $res[0]['ugr_id']);
     $this->assertNull($res[0]['ugr_name']);
     $this->assertNull($res[0]['groups']);
@@ -231,7 +228,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertNull($res[0]['ugr_id']);
     $this->assertEquals($usergroupName1, $res[0]['ugr_name']);
     $this->assertNull($res[0]['groups']);
@@ -244,7 +240,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertNull($res[0]['ugr_id']);
     $this->assertNull($res[0]['ugr_name']);
     $this->assertNotNull($res[0]['groups']);
@@ -258,7 +253,6 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 			    'por_description' => true ] ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode($json, true);
-    print_r($res);
     $this->assertNull($res[0]['ugr_id']);
     $this->assertNull($res[0]['ugr_name']);
     $this->assertNull($res[0]['groups']);
