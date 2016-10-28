@@ -128,5 +128,9 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(count($listBefore) + 2, count($listAll));
   }
 
+  public function testUserRightList() {
+    $list = self::$base->login->user_right_list();
+    $this->assertEquals('structure', $list[0]);
+  }
 }
 ?>

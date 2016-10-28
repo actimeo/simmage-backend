@@ -394,3 +394,15 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION login.user_list_demo() IS 'Return a list of users login to show on login page (ONLY FOR DEMO)';
+
+CREATE OR REPLACE FUNCTION login.user_right_list()
+RETURNS SETOF login.user_right
+LANGUAGE plpgsql
+STABLE 
+AS $$
+BEGIN
+ RETURN QUERY SELECT unnest(enum_range(null::login.user_right));
+END;
+$$;
+COMMENT ON FUNCTION login.user_right_list() IS 'Returns the list of user rights';
+
