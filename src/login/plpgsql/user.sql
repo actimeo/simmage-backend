@@ -383,14 +383,25 @@ END;
 $$;
 COMMENT ON FUNCTION login.user_delete(prm_token integer, prm_login text) IS 'Delete an user';
 
+DROP TYPE IF EXISTS login.user_usergroup_type;
+CREATE TYPE login.user_usergroup_type AS (
+  ugr_name text,
+  usr_login text[]
+);
+
 CREATE OR REPLACE FUNCTION login.user_list_demo()
-RETURNS SETOF text
+RETURNS	SETOF login.user_usergroup_type
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   -- TODO : check if demo state or not
-  RETURN QUERY SELECT usr_login FROM login.user ORDER BY usr_login;
+  RETURN QUERY
+    SELECT ugr_name, array_agg(usr_login) as usr_login
+    FROM login.usergroup
+    RIGHT JOIN login.user USING(ugr_id)
+    GROUP BY ugr_name
+    ORDER BY ugr_name;
 END;
 $$;
 COMMENT ON FUNCTION login.user_list_demo() IS 'Return a list of users login to show on login page (ONLY FOR DEMO)';
