@@ -94,7 +94,8 @@ class userTest extends PHPUnit_Framework_TestCase {
 
   public function testUserListDemo() {
     $list = self::$base->login->user_list_demo();
-    $res = array_filter($list, function($x) { return $x === 'variation'; });
+    $ugr = array_filter($list, function($x) { return $x['ugr_name'] === null; });
+    $res = array_filter($ugr[0]['usr_login'], function($y) { return $y === 'variation'; });
     $this->assertEquals(1, count($res));
   }
 
