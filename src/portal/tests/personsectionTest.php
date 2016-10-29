@@ -10,6 +10,7 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
   private static $pgHost;
   private static $pgUser;
   private static $pgPass;
+  private static $pgPort;
   private static $pgDatabase;
 
   public static function setUpBeforeClass() {
