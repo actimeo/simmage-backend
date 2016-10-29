@@ -11,12 +11,12 @@ function err {
 
 [ -e config.sh ] && . config.sh || err 'config.sh not found';
 
-psql <<EOF
+psql -p $DBPORT <<EOF
 DROP DATABASE IF EXISTS $DBNAME;
 CREATE DATABASE $DBNAME WITH ENCODING='UTF8' OWNER=$DBUSER;
 EOF
 
-PGPASSWORD=$DBPASS psql $DBNAME <<EOF
+PGPASSWORD=$DBPASS psql -p $DBPORT $DBNAME <<EOF
 CREATE SCHEMA pgcrypto AUTHORIZATION $DBUSER;
 CREATE EXTENSION pgcrypto WITH SCHEMA pgcrypto;
 EOF
@@ -36,5 +36,5 @@ echo 'Installing SQL from files:'
 for i in $FILES; do 
     echo " - $i";
 done
-(echo 'BEGIN TRANSACTION; ' && cat $FILES && echo 'COMMIT; ' ) |  PGPASSWORD=$DBPASS PGOPTIONS="--client-min-messages=warning" psql -v ON_ERROR_STOP=1 -q -h localhost -U $DBUSER $DBNAME
+(echo 'BEGIN TRANSACTION; ' && cat $FILES && echo 'COMMIT; ' ) |  PGPASSWORD=$DBPASS PGOPTIONS="--client-min-messages=warning" psql -p $DBPORT -v ON_ERROR_STOP=1 -q -h localhost -U $DBUSER $DBNAME
 
