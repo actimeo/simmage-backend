@@ -29,14 +29,15 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {
-    global $pg_host, $pg_user, $pg_pass, $pg_database;
+    global $pg_host, $pg_user, $pg_pass, $pg_database, $pg_port;
     $this->pgHost = $pg_host;
     $this->pgUser = $pg_user;
     $this->pgPass = $pg_pass;
+    $this->pgPort = $pg_port;
     $this->pgDatabase = $pg_database;
     
     // Create object
-    $this->base = new PgProcedures ($this->pgHost, $this->pgUser, $this->pgPass, $this->pgDatabase, '5432', '.traces');
+    $this->base = new PgProcedures ($this->pgHost, $this->pgUser, $this->pgPass, $this->pgDatabase, $this->pgPort, '.traces');
 
     $this->getProcs();
     parent::__construct($name, $data, $dataName);

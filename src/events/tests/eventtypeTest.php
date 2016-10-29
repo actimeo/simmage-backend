@@ -12,13 +12,14 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
   private static $pgPass;
   private static $pgDatabase;
 
-  public static function setUpBeforeClass() {
-    
+  public static function setUpBeforeClass() {    
+
     // Get connection params
-    global $pg_host, $pg_user, $pg_pass, $pg_database;
+    global $pg_host, $pg_user, $pg_pass, $pg_database, $pg_port;
     self::$pgHost = $pg_host;
     self::$pgUser = $pg_user;
     self::$pgPass = $pg_pass;
+    self::$pgPort = $pg_port;
     self::$pgDatabase = $pg_database;
     self::assertNotNull(self::$pgHost);
     self::assertNotNull(self::$pgUser);
@@ -27,7 +28,7 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     
     // Create object
     self::$base = new PgProcedures (self::$pgHost, self::$pgUser, self::$pgPass, self::$pgDatabase,
-				    '5432', '.traces');
+				    self::$pgPort, '.traces');
     self::assertNotNull(self::$base);    
   }
 
