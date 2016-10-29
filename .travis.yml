@@ -9,7 +9,7 @@ env:
   - DBNAME='variation'
   - DBUSER='deploy'
   - DBPASS='variation'
-  - PGPORT='5432'
+  - DBPORT='5432'
 services:
 - postgresql
 addons:
@@ -23,7 +23,7 @@ install:
 - ./scripts/install.sh
 script: ./scripts/runtests.sh
 before_deploy:
-- pg_dump -U postgres -w $DBNAME | gzip > simmage.sql.gz
+- pg_dump -p $DBPORT -U postgres -w $DBNAME | gzip > simmage.sql.gz
   && ls -l simmage.sql.gz
 - eval "$(ssh-agent -s)"
 - chmod 600 $TRAVIS_BUILD_DIR/deploy/deploy_rsa
