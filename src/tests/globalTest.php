@@ -10,6 +10,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
   private $pgHost;
   private $pgUser;
   private $pgPass;
+  private $pgPort;
   private $pgDatabase;
 
   private $procs;
