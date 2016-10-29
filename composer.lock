@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/actimeo/pgproc.git",
-                "reference": "21b908e363142bdf7cc4010e72e22905577953c9"
+                "reference": "6cc44ced1eb1c1165a423d810748e7759bd75ee9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/actimeo/pgproc/zipball/21b908e363142bdf7cc4010e72e22905577953c9",
-                "reference": "21b908e363142bdf7cc4010e72e22905577953c9",
+                "url": "https://api.github.com/repos/actimeo/pgproc/zipball/6cc44ced1eb1c1165a423d810748e7759bd75ee9",
+                "reference": "6cc44ced1eb1c1165a423d810748e7759bd75ee9",
                 "shasum": ""
             },
             "require": {
@@ -39,7 +39,7 @@
                 "source": "https://github.com/actimeo/pgproc/tree/master",
                 "issues": "https://github.com/actimeo/pgproc/issues"
             },
-            "time": "2016-10-27 13:18:52"
+            "time": "2016-10-29 07:20:39"
         },
         {
             "name": "doctrine/instantiator",
