@@ -21,7 +21,7 @@ if ($argc < 2) {
 
 $dir = $argv[1];
 
-$base = new PgProcedures ($pg_host, $pg_user, $pg_pass, $pg_database);
+$base = new PgProcedures ($pg_host, $pg_user, $pg_pass, $pg_database, $pg_port);
 
 $base->startTransaction();
 
