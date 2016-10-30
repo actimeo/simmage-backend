@@ -15,14 +15,13 @@ services:
 addons:
   ssh_known_hosts: maya.elol.fr
   postgresql: '9.3'
-before_install:
-- openssl aes-256-cbc -K $encrypted_7194d2db567b_key -iv $encrypted_7194d2db567b_iv
-  -in deploy/deploy_rsa.enc -out deploy/deploy_rsa -d
 install:
 - composer install
 - ./scripts/install.sh
 script: ./scripts/runtests.sh
 before_deploy:
+- openssl aes-256-cbc -K $encrypted_7194d2db567b_key -iv $encrypted_7194d2db567b_iv
+  -in deploy/deploy_rsa.enc -out deploy/deploy_rsa -d
 - pg_dump -p $DBPORT -U postgres -w $DBNAME | gzip > simmage.sql.gz
   && ls -l simmage.sql.gz
 - eval "$(ssh-agent -s)"
