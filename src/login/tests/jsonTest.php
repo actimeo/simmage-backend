@@ -5,7 +5,7 @@ require_once 'config.inc.php';
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
-class jsonTest extends PHPUnit_Framework_TestCase {
+class loginJsonTest extends PHPUnit_Framework_TestCase {
   private static $base;
   private static $pgHost;
   private static $pgUser;
@@ -82,7 +82,12 @@ class jsonTest extends PHPUnit_Framework_TestCase {
 
     $grp1 = self::$base->organ->group_get($this->token, $grpId1);
     $grp2 = self::$base->organ->group_get($this->token, $grpId2);
-    //    $this->assertEquals([$grp1, $grp2], $res);
+    $this->assertEquals($grp1['grp_id'], $res[0]->grp_id);
+    $this->assertEquals($grp1['grp_name'], $res[0]->grp_name);
+    $this->assertEquals($grp1['grp_description'], $res[0]->grp_description);
+    $this->assertEquals($grp2['grp_id'], $res[1]->grp_id);
+    $this->assertEquals($grp2['grp_name'], $res[1]->grp_name);
+    $this->assertEquals($grp2['grp_description'], $res[1]->grp_description);
   }
 
   public function testUsergroupPortalJson() {
