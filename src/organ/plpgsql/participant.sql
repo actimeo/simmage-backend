@@ -29,3 +29,26 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.participant_list(prm_token integer) IS 'Return the list or participants';
+
+CREATE OR REPLACE FUNCTION organ.participant_json(prm_token integer, prm_par_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT row_to_json(d) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'par_id') IS NULL THEN NULL ELSE par_id END as par_id, 
+      CASE WHEN (req->>'par_firstname') IS NULL THEN NULL ELSE  par_firstname END as par_firstname, 
+      CASE WHEN (req->>'par_lastname') IS NULL THEN NULL ELSE  par_lastname END as par_lastname, 
+      CASE WHEN (req->>'par_email') IS NULL THEN NULL ELSE par_email END as par_email
+      FROM organ.participant 
+      WHERE par_id = prm_par_id) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION organ.participant_json(prm_token integer, prm_par_id integer, req json) 
+ IS 'Returns the indormation about a participant as json';

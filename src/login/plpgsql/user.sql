@@ -152,6 +152,57 @@ If authorization is ok, returns:
 If authorization fails, an exception is raised with code invalid_authorization_specification
 ';
 
+CREATE OR REPLACE FUNCTION user_login_json(
+  prm_login character varying, 
+  prm_pwd character varying, 
+  prm_rights login.user_right[],
+  req json) 
+RETURNS json
+  LANGUAGE plpgsql
+  AS $$
+DECLARE
+  ret json;
+  usr varchar;
+  tok integer DEFAULT NULL;
+BEGIN
+  SELECT usr_login INTO usr FROM login."user"
+    WHERE usr_login = prm_login AND 
+    pgcrypto.crypt (prm_pwd, usr_salt) = usr_salt AND
+    (prm_rights ISNULL OR prm_rights <@ usr_rights); -- <@: 'is contained by'
+  IF NOT FOUND THEN 
+    RAISE EXCEPTION USING ERRCODE = 'invalid_authorization_specification';
+  END IF;
+  SELECT usr_token INTO tok FROM login."user" WHERE usr_token NOTNULL AND usr_login = usr;
+  IF NOT FOUND THEN
+    SELECT * INTO tok FROM login._user_token_create (usr);
+  END IF;
+  SELECT row_to_json(d) INTO ret 
+    FROM (SELECT
+      CASE WHEN (req->>'usr_token') IS NULL THEN NULL ELSE usr_token END AS usr_token,
+      CASE WHEN (req->>'usr_temp_pwd') IS NULL THEN NULL ELSE (usr_pwd NOTNULL) END AS usr_temp_pwd,
+      CASE WHEN (req->>'usr_rights') IS NULL THEN NULL ELSE usr_rights END AS usr_rights,
+      CASE WHEN (req->>'usergroup') IS NULL THEN NULL 
+           WHEN ugr_id IS NULL THEN NULL
+	   ELSE login.usergroup_json(tok, ugr_id, req->'usergroup') END AS usergroup,
+      CASE WHEN (req->>'participant') IS NULL THEN NULL 
+           WHEN par_id IS NULL THEN NULL
+	   ELSE organ.participant_json(tok, par_id, req->'participant') END AS participant
+      FROM login."user"
+      LEFT JOIN organ.participant USING(par_id)
+      WHERE usr_login = usr) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION login.user_login_json(character varying, character varying, prm_rights login.user_right[], req json) IS 
+'Authenticate a user from its login and password.
+If prm_rights is not null, also verify that user owns all the specified rights.
+If authorization is ok, returns:
+ - usr_token: a new token to be used for the following operations
+ - usr_temp_pwd: true if the user is using a temporary password
+ - usr_rights: the list of rights owned by the user.
+If authorization fails, an exception is raised with code invalid_authorization_specification
+';
+
 CREATE OR REPLACE FUNCTION user_logout (
   prm_token integer)
 RETURNS VOID

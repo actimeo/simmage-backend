@@ -63,6 +63,31 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $this->assertNull($tempPwd);
     $this->assertEquals(array('users'), $res['usr_rights']);
   }
+
+  public function testUserLoginJsonOk() {
+    $login = 'testdejfhcqcsdfkhn';
+    $pwd = 'ksfdjgsfdyubg';    
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users, structure}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
+
+    $req = [ 
+	    'usr_token' => true,
+	    'usr_temp_pwd' => true,
+	    'usr_rights' => true,
+	    'usergroup' => [
+			    'ugr_id' => true,
+			    'ugr_name' => true
+			    ]
+	     ];
+    $res = self::$base->login->user_login_json($login, $pwd, null, json_encode($req));
+    $this->assertGreaterThan(0, $res->usr_token);
+    $tempPwd = self::$base->login->user_get_temporary_pwd($res->usr_token, $login);    
+    $this->assertNull($tempPwd);
+    $this->assertEquals(array('users', 'structure'), $res->usr_rights);
+  }
   
   /**
    * Login exception with wrong password
