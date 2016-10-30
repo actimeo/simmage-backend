@@ -53,7 +53,11 @@ DECLARE
   ret json;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+  SELECT 
+    CASE WHEN prm_ugr_id IS NULL THEN
+      array_to_json(array_agg(row_to_json(d))) 
+    ELSE unnest(array_agg(row_to_json(d))) END
+  INTO ret
   FROM (SELECT 
     CASE WHEN (req->>'ugr_id') IS NULL THEN NULL ELSE ugr_id END as ugr_id, 
     CASE WHEN (req->>'ugr_name') IS NULL THEN NULL ELSE ugr_name END as ugr_name, 

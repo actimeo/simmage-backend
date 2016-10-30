@@ -69,4 +69,22 @@ class participantTest extends PHPUnit_Framework_TestCase {
     $back = array_filter($list, function($x) use($id) { return $x['par_id'] == $id; });
     $this->assertEquals(1, count($back));
   }  
+
+  public function testParticipantJson() {
+    $firstname = 'Pierre';
+    $lastname = 'Dupont';
+    $id = self::$base->organ->participant_add($this->token, $firstname, $lastname);
+    $this->assertGreaterThan(0, $id);
+    $req = [ 'par_id' => true ];
+    $json = self::$base->organ->participant_json($this->token, $id, json_encode($req));
+    $this->assertNotNull($json->par_id);
+    $this->assertNull($json->par_firstname);
+    $this->assertNull($json->par_lastname);
+
+    $req = [ 'par_firstname' => true, 'par_lastname' => true, 'par_email' => true ];
+    $json = self::$base->organ->participant_json($this->token, $id, json_encode($req));
+    $this->assertNull($json->par_id);
+    $this->assertNotNull($json->par_firstname);
+    $this->assertNotNull($json->par_lastname);
+  }  
 }
