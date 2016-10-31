@@ -255,3 +255,25 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION login.usergroup_delete(prm_token integer, prm_ugr_id integer) IS 'Delete an usergroup and its links with groups and portals';
+
+CREATE OR REPLACE FUNCTION login.usergroup_right_list()
+RETURNS SETOF login.usergroup_right
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::login.usergroup_right));
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_right_list() IS 'Returns the list of usergroup rights';
+
+CREATE OR REPLACE FUNCTION login.usergroup_topic_right_list()
+RETURNS SETOF login.usergroup_topic_right
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::login.usergroup_topic_right));
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_topic_right_list() IS 'Returns the list of usergroup topic rights';

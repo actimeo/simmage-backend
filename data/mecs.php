@@ -69,6 +69,9 @@ $base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', null, '{preadmission, admission, present, left}');
 $ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', null, '{present}');
 
+//$base->login->usergroup_set_topics($token, $ugEncadrement, array($tBudget, $tPlacement, $tEtatCivil, $tVeture, $tPriseEnCharge, $tProjet));
+//$base->login->usergroup_set_topics($token, $ugEducateur, array($tHygiene, $tEducation, $tStage, $tLogement, $tScolarite, $Restauration));
+
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));
 
