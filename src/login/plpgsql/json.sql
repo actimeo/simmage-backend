@@ -59,7 +59,8 @@ BEGIN
       CASE WHEN (req->>'top_name') IS NULL THEN NULL ELSE  top_name END as top_name, 
       CASE WHEN (req->>'top_description') IS NULL THEN NULL ELSE top_description END as top_description,
       CASE WHEN (req->>'top_icon') IS NULL THEN NULL ELSE top_icon END as top_icon,
-      CASE WHEN (req->>'top_color') IS NULL THEN NULL ELSE top_color END as top_color
+      CASE WHEN (req->>'top_color') IS NULL THEN NULL ELSE top_color END as top_color,
+      CASE WHEN (req->>'ugt_rights') IS NULL THEN NULL ELSE ugt_rights END AS ugt_rights
       FROM organ.topic 
       INNER JOIN login.usergroup_topic USING (top_id) 
       WHERE ugr_id = prm_ugr_id) d;
