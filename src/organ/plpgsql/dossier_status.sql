@@ -63,3 +63,14 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_status_list(prm_token integer, prm_dos_id integer, prm_when date) IS 'Returns the list of statuses of a dossier in the different organizations';
+
+CREATE OR REPLACE FUNCTION organ.dossier_status_value_list()
+RETURNS SETOF organ.dossier_status_value
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::organ.dossier_status_value));
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_status_value_list() IS 'Returns the list of dossier statuses';

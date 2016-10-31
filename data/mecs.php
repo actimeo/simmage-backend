@@ -67,7 +67,7 @@ $base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
 
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', null, '{preadmission, admission, present, left}');
-$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', null, '{preadmission, admission, present, left}');
+$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', null, '{present}');
 
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));

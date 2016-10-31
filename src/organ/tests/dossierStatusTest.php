@@ -117,5 +117,10 @@ class dossierStatusTest extends PHPUnit_Framework_TestCase {
     ksort($list2);
     $this->assertEquals(array($orgId1 => 'admission', $orgId2 => 'present'), $list2);
   }
+
+  public function testDossierStatusValueList() {
+    $list = self::$base->organ->dossier_status_value_list();
+    $this->assertEquals($list[0], 'preadmission');
+  }
 }
 ?>
