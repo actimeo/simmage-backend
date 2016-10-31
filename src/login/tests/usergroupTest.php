@@ -357,6 +357,15 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     self::$base->login->usergroup_delete($this->token, $ugr);
   }
 
+  public function testUsergroupRightList() {
+    $list = self::$base->login->usergroup_right_list();
+    $this->assertEquals($list[0], 'internal_dossier_add');
+  }
+
+  public function testUsergroupTopicRightList() {
+    $list = self::$base->login->usergroup_topic_right_list();
+    $this->assertEquals($list[0], 'event_read');
+  }
 
 }
 ?>
