@@ -251,31 +251,31 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 
     $usergroupName = 'An usergroup';
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
-    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1), null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1));
 
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
     $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
 			       array('top_id'=>$topId2, 'top_name'=>$topName2, 'top_description'=>$topDesc2, 'top_icon'=>$icon2, 'top_color'=>$color2)),
 			$topIds);
 
-    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId3, $topId1), null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId3, $topId1));
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
     $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
                                array('top_id'=>$topId2, 'top_name'=>$topName2, 'top_description'=>$topDesc2, 'top_icon'=>$icon2, 'top_color'=>$color2),
 			       array('top_id'=>$topId3, 'top_name'=>$topName3, 'top_description'=>$topDesc3, 'top_icon'=>$icon3, 'top_color'=>$color3)),
                         $topIds);
 
-    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId3, $topId1), null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId3, $topId1));
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
     $this->assertEquals(array (array('top_id'=>$topId1, 'top_name'=>$topName1, 'top_description'=>$topDesc1, 'top_icon'=>$icon1, 'top_color'=>$color1),
                                array('top_id'=>$topId3, 'top_name'=>$topName3, 'top_description'=>$topDesc3, 'top_icon'=>$icon3, 'top_color'=>$color3)),
                         $topIds);
 
-    self::$base->login->usergroup_set_topics($this->token, $ugr, array(), null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array());
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
     $this->assertEquals(null, $topIds);
 
-    self::$base->login->usergroup_set_topics($this->token, $ugr, null, null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, null);
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
     $this->assertEquals(null, $topIds);
   }
@@ -352,7 +352,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
 
-    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId1, $topId2), null);
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId1, $topId2));
 
     self::$base->login->usergroup_delete($this->token, $ugr);
   }

@@ -66,11 +66,11 @@ $base->portal->mainmenu_add($token, $mseEducateur, "Menu 1");
 $base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
 
 // Create user groups
-$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', null, '{preadmission, admission, present, left}');
-$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', null, '{present}');
+$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');
+$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', '{external_dossier_add}', '{present}');
 
-//$base->login->usergroup_set_topics($token, $ugEncadrement, array($tBudget, $tPlacement, $tEtatCivil, $tVeture, $tPriseEnCharge, $tProjet));
-//$base->login->usergroup_set_topics($token, $ugEducateur, array($tHygiene, $tEducation, $tStage, $tLogement, $tScolarite, $Restauration));
+$base->login->usergroup_set_topics($token, $ugEncadrement, array($tBudget, $tPlacement, $tEtatCivil, $tVeture, $tPriseEnCharge, $tProjet));
+$base->login->usergroup_set_topics($token, $ugEducateur, array($tHygiene, $tEducation, $tStage, $tLogement, $tScolarite, $tRestauration));
 
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));

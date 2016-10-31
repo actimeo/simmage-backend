@@ -155,8 +155,7 @@ IS 'Set authorized groups for a user group';
 CREATE OR REPLACE FUNCTION login.usergroup_set_topics(
   prm_token integer,
   prm_ugr_id integer,
-  prm_top_ids integer[],
-  prm_ugt_rights login.usergroup_topic_right[])
+  prm_top_ids integer[])
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -179,12 +178,12 @@ BEGIN
   FOREACH t IN ARRAY prm_top_ids
   LOOP
     IF NOT EXISTS (SELECT 1 FROM login.usergroup_topic WHERE ugr_id = prm_ugr_id AND top_id = t) THEN
-      INSERT INTO login.usergroup_topic (ugr_id, top_id, ugt_rights) VALUES (prm_ugr_id, t, prm_ugt_rights);
+      INSERT INTO login.usergroup_topic (ugr_id, top_id) VALUES (prm_ugr_id, t);
     END IF;
   END LOOP;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_set_topics(prm_token integer, prm_ugr_id integer, prm_top_ids integer[], prm_ugt_rights login.usergroup_topic_right[])
+COMMENT ON FUNCTION login.usergroup_set_topics(prm_token integer, prm_ugr_id integer, prm_top_ids integer[])
 IS 'Set authorized topics for an usergroup';
 
 CREATE OR REPLACE FUNCTION login.usergroup_portal_list(
