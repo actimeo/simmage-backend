@@ -86,6 +86,8 @@ BEGIN
   FROM (SELECT 
     CASE WHEN (req->>'ugr_id') IS NULL THEN NULL ELSE ugr_id END as ugr_id, 
     CASE WHEN (req->>'ugr_name') IS NULL THEN NULL ELSE ugr_name END as ugr_name, 
+    CASE WHEN (req->>'ugr_rights') IS NULL THEN NULL ELSE ugr_rights END as ugr_rights, 
+    CASE WHEN (req->>'ugr_statuses') IS NULL THEN NULL ELSE ugr_statuses END as ugr_statuses, 
     CASE WHEN (req->>'groups') IS NULL THEN NULL ELSE
       login.usergroup_group_json(prm_token, ugr_id, req->'groups') END as groups,
     CASE WHEN (req->>'portals') IS NULL THEN NULL ELSE
