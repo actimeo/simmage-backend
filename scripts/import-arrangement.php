@@ -29,9 +29,14 @@ $variationUser = $base->login->user_login('variation', 'variation', '{users,orga
 
 $token = $variationUser['usr_token'];
 
-$topics_map = import_topics($dir . DIRECTORY_SEPARATOR . 'topics.csv', $base, $token, CSV_SEPARATOR);
-import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', $base, $token, CSV_SEPARATOR);
-import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', $base, $token, CSV_SEPARATOR);
-import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', $base, $token, CSV_SEPARATOR, $topics_map);
-import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', $base, $token, CSV_SEPARATOR, $topics_map);
+$topics_map = import_topics($dir . DIRECTORY_SEPARATOR . 'topics.csv', 
+			    $base, $token, CSV_SEPARATOR);
+import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', 
+	       $base, $token, CSV_SEPARATOR);
+$organs_map = import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', 
+			    $base, $token, CSV_SEPARATOR);
+import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', 
+		    $base, $token, CSV_SEPARATOR, $topics_map);
+import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', 
+		       $base, $token, CSV_SEPARATOR, $topics_map);
 $base->commit ();
