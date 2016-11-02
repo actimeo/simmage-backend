@@ -186,6 +186,34 @@ $$;
 COMMENT ON FUNCTION login.usergroup_set_topics(prm_token integer, prm_ugr_id integer, prm_top_ids integer[])
 IS 'Set authorized topics for an usergroup';
 
+CREATE OR REPLACE FUNCTION login.usergroup_topic_set_rights(prm_token integer, prm_ugr_id integer, prm_top_id integer, prm_ugt_rights usergroup_topic_right[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  UPDATE login.usergroup_topic SET ugt_rights = prm_ugt_rights 
+    WHERE ugr_id = prm_ugr_id AND top_id = prm_top_id;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_topic_set_rights(prm_token integer, prm_ugr_id integer, prm_top_id integer, prm_ugt_rights usergroup_topic_right[]) IS 'Set rights for a usergroup/topic ';
+
+CREATE OR REPLACE FUNCTION login.usergroup_topic_get_rights(prm_token integer, prm_ugr_id integer, prm_top_id integer)
+RETURNS login.usergroup_topic_right[]
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret login.usergroup_topic_right[];
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT ugt_rights INTO ret FROM login.usergroup_topic WHERE ugr_id = prm_ugr_id AND top_id = prm_top_id;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_topic_get_rights(prm_token integer, prm_ugr_id integer, prm_top_id integer) IS 'Returns the rights for a usergroup/topic';
+
 CREATE OR REPLACE FUNCTION login.usergroup_portal_list(
   prm_token integer, 
   prm_ugr_id integer)

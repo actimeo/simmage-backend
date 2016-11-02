@@ -280,6 +280,30 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(null, $topIds);
   }
 
+  public function testUsergroupTopicSetRights() {
+    $topName1 = 'topic 1';
+    $topDesc1 = 'description 1';
+    $icon1 = 'health';
+    $color1 = '#ffffff';
+    $topId1 = self::$base->organ->topic_add($this->token, $topName1, $topDesc1, $icon1, $color1);
+    $topName2 = 'topic 2';
+    $topDesc2 = 'description 2';
+    $icon2 = 'health';
+    $color2 = '#ffffff';
+    $topId2 = self::$base->organ->topic_add($this->token, $topName2, $topDesc2, $icon2, $color2);
+    $topName3 = 'topic 3';
+    $topDesc3 = 'description 3';
+    $icon3 = 'health';
+    $color3 = '#ffffff';
+    $topId3 = self::$base->organ->topic_add($this->token, $topName3, $topDesc3, $icon3, $color3);
+
+    $usergroupName = 'An usergroup';
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1));
+    self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId1, ['event_read', 'event_add']);
+    self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId2, ['event_update']);
+  }
+
   public function testUsergroupExternalGroupSet() {
     $orgNameA = 'Organization A';
     $orgNameB = 'Organization B';

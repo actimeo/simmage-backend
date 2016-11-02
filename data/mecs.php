@@ -72,6 +72,13 @@ $ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éduc
 $base->login->usergroup_set_topics($token, $ugEncadrement, array($tBudget, $tPlacement, $tEtatCivil, $tVeture, $tPriseEnCharge, $tProjet));
 $base->login->usergroup_set_topics($token, $ugEducateur, array($tHygiene, $tEducation, $tStage, $tLogement, $tScolarite, $tRestauration));
 
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tBudget, [ 'event_add', 'event_read' ]);
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tPlacement, [ 'event_add' ]);
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tEtatCivil, [ 'event_read' ]);
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tVeture, [ 'event_update' ]);
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tPriseEnCharge, [ 'event_add', 'event_read' ]);
+$base->login->usergroup_topic_set_rights($token, $ugEncadrement, $tProjet, [ 'event_read' ]);
+
 $base->login->usergroup_set_portals($token, $ugEncadrement, array($pEncadrement));
 $base->login->usergroup_set_portals($token, $ugEducateur, array($pEducateur));
 
