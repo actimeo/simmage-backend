@@ -62,7 +62,9 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
 
     $mme_name = 'a main menu';
-    $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name);
+    $mme_content_type = 'events.eventsview';
+    $mme_content_id = 1;
+    $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name, $mme_content_type, $mme_content_id);
     $this->assertGreaterThan(0, $mme_id);
   }
 
@@ -76,8 +78,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
     $mme_name1 = 'a first menu';
     $mme_name2 = 'a second menu';
-    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name1);
-    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name2);
+    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name1, null, null);
+    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name2, null, null);
     $this->assertGreaterThan($id1, $id2);
   }
 
@@ -94,8 +96,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
 
     $mme_name = 'a first menu';
-    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mse_name);
-    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mse_name);
+    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mse_name, null, null);
+    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mse_name, null, null);
   }  
 
   /**
@@ -112,8 +114,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_id2 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name2);
     
     $mme_name = 'a section';
-    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id1, $mme_name);
-    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id2, $mme_name);
+    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id1, $mme_name, null, null);
+    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id2, $mme_name, null, null);
     $this->assertGreaterThan($id1, $id2);
   }  
 
@@ -126,7 +128,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
 
     $mme_name = 'a main menu';
-    $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name);
+    $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name, null, null);
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(1, count($mainmenus));
   }
@@ -141,8 +143,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
     $mme_name1 = 'a first menu';
     $mme_name2 = 'a second menu';
-    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name1);
-    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name2);
+    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name1, null, null);
+    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name2, null, null);
    
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(2, count($mainmenus));
@@ -159,8 +161,8 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_id2 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name2);
     
     $mme_name = 'a menu';
-    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id1, $mme_name);
-    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id2, $mme_name);
+    $id1 = self::$base->portal->mainmenu_add($this->token, $mse_id1, $mme_name, null, null);
+    $id2 = self::$base->portal->mainmenu_add($this->token, $mse_id2, $mme_name, null, null);
 
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id1);
     $this->assertEquals(1, count($mainmenus));
@@ -182,7 +184,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mme_name[2] = 'a third menu';
     $mme_name[3] = 'a fourth menu';
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i]);
+      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i], null, null);
     
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(4, count($mainmenus));
@@ -201,7 +203,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $name1 = 'a menu';
     $name2 = 'another menu';
     
-    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, $name1);
+    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, $name1, null, null);
     self::$base->portal->mainmenu_rename($this->token, $id, $name2);
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(1, count($mainmenus));
@@ -222,7 +224,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
     
-    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, $name1);
+    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, $name1, null, null);
     self::$base->portal->mainmenu_rename($this->token, $id+1, $name2);
   }
 
@@ -232,7 +234,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name);
 
-    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, 'a menu');
+    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, 'a menu', null, null);
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(1, count($mainmenus));
     self::$base->portal->mainmenu_delete($this->token, $id);
@@ -252,7 +254,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mse_name = 'a main section';
     $mse_id = self::$base->portal->mainsection_add($this->token, $por, $mse_name);
 
-    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, 'a menu');
+    $id = self::$base->portal->mainmenu_add($this->token, $mse_id, 'a menu', null, null);
     self::$base->portal->mainmenu_delete($this->token, $id+1);
   }
 
@@ -269,7 +271,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mme_name[2] = '3';
     $mme_name[3] = '4';
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i]);
+      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i], null, null);
     
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(4, count($mainmenus));
@@ -292,7 +294,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mme_name[2] = '3';
     $mme_name[3] = '4';
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i]);
+      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i], null, null);
     
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(4, count($mainmenus));
@@ -315,7 +317,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $mme_name[2] = '3';
     $mme_name[3] = '4';
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i]);
+      $id[$i] = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name[$i], null, null);
     
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
     $this->assertEquals(4, count($mainmenus));

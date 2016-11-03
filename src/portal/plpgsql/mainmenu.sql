@@ -4,7 +4,7 @@ SET search_path = portal;
 -- MAINMENU --
 --------------
 
-CREATE OR REPLACE FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text)
+CREATE OR REPLACE FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text, prm_content_type portal.mainmenu_content_type, prm_content_id integer)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -14,13 +14,13 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, '{structure}');
   SELECT COALESCE(MAX(mme_order), 0) + 1 INTO new_order FROM portal.mainmenu WHERE mse_id = prm_mse_id;
-  INSERT INTO portal.mainmenu (mse_id, mme_name, mme_order)
-    VALUES (prm_mse_id, prm_name, new_order)
+  INSERT INTO portal.mainmenu (mse_id, mme_name, mme_order, mme_content_type, mme_content_id)
+    VALUES (prm_mse_id, prm_name, new_order, prm_content_type, prm_content_id)
     RETURNING mme_id INTO ret;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text) 
+COMMENT ON FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text, prm_content_type portal.mainmenu_content_type, prm_content_id integer) 
 IS 'Add a menu entry to a section of a portal main view';
 
 CREATE OR REPLACE FUNCTION mainmenu_list(prm_token integer, prm_mse_id integer)
