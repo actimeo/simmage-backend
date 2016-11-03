@@ -10,7 +10,9 @@ BEGIN
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
     FROM (SELECT
       CASE WHEN (req->>'mme_id') IS NULL THEN NULL ELSE mme_id END as mme_id, 
-      CASE WHEN (req->>'mme_name') IS NULL THEN NULL ELSE  mme_name END as mme_name
+      CASE WHEN (req->>'mme_name') IS NULL THEN NULL ELSE  mme_name END as mme_name,
+      CASE WHEN (req->>'mme_content_type') IS NULL THEN NULL ELSE  mme_content_type END as mme_content_type,
+      CASE WHEN (req->>'mme_content_id') IS NULL THEN NULL ELSE  mme_content_id END as mme_content_id
       FROM portal.mainmenu 
       WHERE mse_id = prm_mse_id
       ORDER BY mme_order) d;
