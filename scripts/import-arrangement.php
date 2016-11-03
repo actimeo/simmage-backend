@@ -8,6 +8,8 @@ require 'import-arrangement-sub/portals.php';
 require 'import-arrangement-sub/organs.php';
 require 'import-arrangement-sub/events-types.php';
 require 'import-arrangement-sub/documents-types.php';
+require 'import-arrangement-sub/groups.php';
+require 'import-arrangement-sub/usergroups.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -31,12 +33,16 @@ $token = $variationUser['usr_token'];
 
 $topics_map = import_topics($dir . DIRECTORY_SEPARATOR . 'topics.csv', 
 			    $base, $token, CSV_SEPARATOR);
-import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', 
-	       $base, $token, CSV_SEPARATOR);
+$portals_map = import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', 
+			      $base, $token, CSV_SEPARATOR);
 $organs_map = import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', 
 			    $base, $token, CSV_SEPARATOR);
 import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', 
 		    $base, $token, CSV_SEPARATOR, $topics_map);
 import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', 
 		       $base, $token, CSV_SEPARATOR, $topics_map);
+$groups_map = import_groups($dir . DIRECTORY_SEPARATOR . 'groups.csv', 
+			    $base, $token, CSV_SEPARATOR, $topics_map, $organs_map);
+$usergroups_map = import_usergroups($dir . DIRECTORY_SEPARATOR . 'usergroups.csv', 
+			    $base, $token, CSV_SEPARATOR, $portals_map, $groups_map);
 $base->commit ();
