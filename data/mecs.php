@@ -53,17 +53,66 @@ $uJean = create_user($base, $token, $loginJean, 'jean', 'Jean', 'ÉDUC');
 $uPierre = create_user($base, $token, $loginPierre, 'pierre', 'Pierre', 'ÉDUC');
 $uSophie = create_user($base, $token, $loginSophie, 'sophie', 'Sophie', 'ÉDUC');
 
+// Create MECS Sauvegarde organization with groups
+$oMecs = $base->organ->organization_add($token, "MECS Sauvegarde", 'Description...', true);
+
+// 
+// Events Types
+//
+$etyAbs1 = $base->events->event_type_add($token, 'absence', 'Absentéisme', false);
+$base->events->event_type_set_organizations($token, $etyAbs1, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs1, array($tStage));
+
+$etyAbs2 = $base->events->event_type_add($token, 'absence', 'Accident du travail', false);
+$base->events->event_type_set_organizations($token, $etyAbs2, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs2, array($tStage));
+
+$etyAbs3 = $base->events->event_type_add($token, 'absence', 'Arrêt maladie', false);
+$base->events->event_type_set_organizations($token, $etyAbs3, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs3, array($tStage));
+
+$etyAbs4 = $base->events->event_type_add($token, 'absence', 'Autre', true);
+$base->events->event_type_set_organizations($token, $etyAbs4, array($oMecs));
+$base->events->event_type_set_topics($token, $etyAbs4, array($tStage));
+
+$etyDep1 = $base->events->event_type_add($token, 'expense', 'Ameublement et décoration', false);
+$base->events->event_type_set_organizations($token, $etyDep1, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep1, array($tVeture, $tLogement));
+
+$etyDep2 = $base->events->event_type_add($token, 'expense', 'Coiffeur', false);
+$base->events->event_type_set_organizations($token, $etyDep2, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep2, array($tHygiene));
+
+$etyDep3 = $base->events->event_type_add($token, 'expense', 'Autre', true);
+$base->events->event_type_set_organizations($token, $etyDep3, array($oMecs));
+$base->events->event_type_set_topics($token, $etyDep3, array($tBudget));
+
+// Documents types
+$dty1 = $base->documents->document_type_add($token, 'Assurance responsabilité civile', false);
+$base->documents->document_type_set_organizations($token, $dty1, array($oMecs));
+$base->documents->document_type_set_topics($token, $dty1, array($tLogement, $tPriseEnCharge, $tVeture));
+
+$dty2 = $base->documents->document_type_add($token, 'Attestation de sécurité sociale', false);
+$base->documents->document_type_set_organizations($token, $dty2, array($oMecs));
+$base->documents->document_type_set_topics($token, $dty2, array($tPriseEnCharge, $tSante));
+
+// Events views
+$evv1 = $base->events->eventsview_add($token, 'Absences, Emploi', array('absence'), $etyAbs1, array($tStage));
+
+// Documents views
+$dov1 = $base->documents->documentsview_add($token, 'Docs Attestation', $dty2, array($tPriseEnCharge));
+
 // Create portals
 $pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement', 'Portail pour l\'encadrement');
 $pEducateur = $base->portal->portal_add($token, 'Portail Éducateur', 'Portail pour les éducateurs');
 
 $mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1");
-$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 2");
+$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1", 'events.eventsview', $evv1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 2", 'documents.documentsview', $dov1);
 
 $mseEducateur = $base->portal->mainsection_add($token, $pEducateur, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEducateur, "Menu 1");
-$base->portal->mainmenu_add($token, $mseEducateur, "Menu 2");
+$base->portal->mainmenu_add($token, $mseEducateur, "Menu 1", 'events.eventsview', $evv1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Menu 2", 'documents.documentsview', $dov1);
 
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');
@@ -91,9 +140,6 @@ foreach (array($loginMarie, $loginJeanne) as $login) {
 foreach (array($loginPaul, $loginJean, $loginPierre, $loginSophie) as $login) {
   $base->login->user_usergroup_set($token, $login, $ugEducateur);
 }
-
-// Create MECS Sauvegarde organization with groups
-$oMecs = $base->organ->organization_add($token, "MECS Sauvegarde", 'Description...', true);
 
 // Groups Pavillon 1, 2
 $topicsPavillons = array($tLogement, $tRestauration, $tEducation, 
@@ -203,52 +249,6 @@ $base->organ->dossier_status_change($token, $dosFam2, $oMecs, 'preadmission', '0
 $dosFamExt1 = $base->organ->dossier_add_grouped($token, 'Famille de Pierre', true);
 
 $dosFamExt2 = $base->organ->dossier_add_grouped($token, 'Famille de Paul', true);
-
-// 
-// Events Types
-//
-$etyAbs1 = $base->events->event_type_add($token, 'absence', 'Absentéisme', false);
-$base->events->event_type_set_organizations($token, $etyAbs1, array($oMecs));
-$base->events->event_type_set_topics($token, $etyAbs1, array($tStage));
-
-$etyAbs2 = $base->events->event_type_add($token, 'absence', 'Accident du travail', false);
-$base->events->event_type_set_organizations($token, $etyAbs2, array($oMecs));
-$base->events->event_type_set_topics($token, $etyAbs2, array($tStage));
-
-$etyAbs3 = $base->events->event_type_add($token, 'absence', 'Arrêt maladie', false);
-$base->events->event_type_set_organizations($token, $etyAbs3, array($oMecs));
-$base->events->event_type_set_topics($token, $etyAbs3, array($tStage));
-
-$etyAbs4 = $base->events->event_type_add($token, 'absence', 'Autre', true);
-$base->events->event_type_set_organizations($token, $etyAbs4, array($oMecs));
-$base->events->event_type_set_topics($token, $etyAbs4, array($tStage));
-
-$etyDep1 = $base->events->event_type_add($token, 'expense', 'Ameublement et décoration', false);
-$base->events->event_type_set_organizations($token, $etyDep1, array($oMecs));
-$base->events->event_type_set_topics($token, $etyDep1, array($tVeture, $tLogement));
-
-$etyDep2 = $base->events->event_type_add($token, 'expense', 'Coiffeur', false);
-$base->events->event_type_set_organizations($token, $etyDep2, array($oMecs));
-$base->events->event_type_set_topics($token, $etyDep2, array($tHygiene));
-
-$etyDep3 = $base->events->event_type_add($token, 'expense', 'Autre', true);
-$base->events->event_type_set_organizations($token, $etyDep3, array($oMecs));
-$base->events->event_type_set_topics($token, $etyDep3, array($tBudget));
-
-// Documents types
-$dty1 = $base->documents->document_type_add($token, 'Assurance responsabilité civile', false);
-$base->documents->document_type_set_organizations($token, $dty1, array($oMecs));
-$base->documents->document_type_set_topics($token, $dty1, array($tLogement, $tPriseEnCharge, $tVeture));
-
-$dty2 = $base->documents->document_type_add($token, 'Attestation de sécurité sociale', false);
-$base->documents->document_type_set_organizations($token, $dty2, array($oMecs));
-$base->documents->document_type_set_topics($token, $dty2, array($tPriseEnCharge, $tSante));
-
-// Events views
-$evv1 = $base->events->eventsview_add($token, 'Absences, Emploi', array('absence'), $etyAbs1, array($tStage));
-
-// Documents views
-$dov1 = $base->documents->documentsview_add($token, 'Docs Attestation', $dty2, array($tPriseEnCharge));
 
 $base->commit ();
 

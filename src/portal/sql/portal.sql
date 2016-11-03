@@ -8,6 +8,12 @@ CREATE TYPE portal.entity AS ENUM (
   'contact',
   'family'
 );
+
+CREATE TYPE portal.mainmenu_content_type AS ENUM (
+  'documents.documentsview',
+  'events.eventsview'
+);
+
 /*
 CREATE TYPE portal.topics AS ENUM (
   'social',
@@ -64,7 +70,9 @@ CREATE TABLE mainmenu (
   mme_id serial PRIMARY KEY,
   mse_id integer NOT NULL REFERENCES portal.mainsection,
   mme_name text NOT NULL,
-  mme_order integer NOT NULL CHECK (mme_order > 0) ,
+  mme_order integer NOT NULL CHECK (mme_order > 0),
+  mme_content_type portal.mainmenu_content_type,
+  mme_content_id integer,
   UNIQUE(mse_id, mme_name),
   UNIQUE(mse_id, mme_order) 
 );
@@ -88,48 +96,5 @@ CREATE TABLE personmenu (
   UNIQUE(pse_id, pme_order) 
 );
 
-/* person views */
-/* ************ */
-CREATE TYPE portal.personview_element_type AS ENUM (
-  'personsample1',
-  'personsample2'
-);
 
-CREATE TABLE personview_element (
-  pve_id serial PRIMARY KEY,
-  pve_type portal.personview_element_type NOT NULL,
-  pve_name text NOT NULL,
-  pve_entities portal.entity[] NOT NULL 
-    CHECK (pve_entities <> '{}'),
-  UNIQUE(pve_type, pve_name)
-);
-
-CREATE TABLE personview (
-  pme_id integer PRIMARY KEY REFERENCES portal.personmenu,
-  pvi_title text NOT NULL,
-  pvi_icon text NOT NULL,
-  pve_id integer NOT NULL REFERENCES portal.personview_element
-);
-
-/* main views */
-/* ********** */
-CREATE TYPE portal.mainview_element_type AS ENUM (
-  'sample1',
-  'sample2'
-);
-
-CREATE TABLE mainview_element (
-  mve_id serial PRIMARY KEY,
-  mve_type portal.mainview_element_type NOT NULL,
-  mve_name text NOT NULL,
-  UNIQUE(mve_type, mve_name)
-);
-
-CREATE TABLE mainview (
-  mme_id integer PRIMARY KEY REFERENCES portal.mainmenu,
-  mvi_title text NOT NULL,
-  mvi_icon text NOT NULL,
-  mve_id integer NOT NULL REFERENCES portal.mainview_element,
-  pme_id_associated integer REFERENCES portal.personview(pme_id)
-);
 
