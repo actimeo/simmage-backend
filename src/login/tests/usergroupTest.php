@@ -60,17 +60,48 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
   public function testUsergroupAdd() {
     $name1 = 'Usergroup 1';
     $name2 = 'Usergroup 2';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, '{preadmission, admission, present, left}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, null, null, null, null, 
+					      '{preadmission, admission, present, left}');
     $this->assertGreaterThan(0, $ugr1);
-    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, '{preadmission, admission, present, left}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, null, null, null, null, 
+					      '{preadmission, admission, present, left}');
+    $this->assertGreaterThan($ugr1, $ugr2);    
+  }
+
+  public function testUsergroupAddWithTopicRights() {
+    $topName1 = 'topic 1';
+    $topDesc1 = 'description 1';
+    $icon1 = 'health';
+    $color1 = '#ffffff';
+    $topId1 = self::$base->organ->topic_add($this->token, $topName1, $topDesc1, $icon1, $color1);
+    $topName2 = 'topic 2';
+    $topDesc2 = 'description 2';
+    $icon2 = 'health';
+    $color2 = '#ffffff';
+    $topId2 = self::$base->organ->topic_add($this->token, $topName2, $topDesc2, $icon2, $color2);
+
+    $name1 = 'Usergroup 1';
+    $name2 = 'Usergroup 2';
+    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, 
+					      null, // grp_ids
+					      null, // por_ids
+					      null, // top_ids
+					      null, // top_rights
+					      null, // ugr_rights
+					      '{preadmission, admission, present, left}');
+    $this->assertGreaterThan(0, $ugr1);
+    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, null, null, null, null, 
+					      '{preadmission, admission, present, left}');
     $this->assertGreaterThan($ugr1, $ugr2);    
   }
 
   public function testUsergroupList() {
     $name1 = 'Usergroup 1';
     $name2 = 'Usergroup 2';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, '{preadmission, admission, present, left}');
-    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, '{preadmission, admission, present, left}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, $name1, null, null, null, null, null, 
+					      '{preadmission, admission, present, left}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, $name2, null, null, null, null, null, 
+					      '{preadmission, admission, present, left}');
     $ugrs = self::$base->login->usergroup_list($this->token);
     $found = 0;
     foreach ($ugrs as $ugr) {
@@ -87,7 +118,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 
   public function testUsergroupGet() {
     $name = 'usergroup';
-    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, '{preadmission, admission, present, left}');
+    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, null, null, null, null, 
+					       '{preadmission, admission, present, left}');
 
     $this->assertGreaterThan(0, $ugrId);
 
@@ -98,11 +130,13 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 
   public function testUsergroupUpdate() {
     $name = 'Usergroup';
-    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, '{preadmission, admission, present, left}');
+    $ugrId = self::$base->login->usergroup_add($this->token, $name, null, null, null, null, null, 
+					       '{preadmission, admission, present, left}');
 
     $this->assertGreaterThan(0, $ugrId);
 
-    self::$base->login->usergroup_update($this->token, $ugrId, 'Renamed usergroup', null, '{preadmission, admission, present, left}');
+    self::$base->login->usergroup_update($this->token, $ugrId, 'Renamed usergroup', null, null, null, null, null, 
+					 '{preadmission, admission, present, left}');
 
     $ugr = self::$base->login->usergroup_get($this->token, $ugrId);
 
@@ -111,7 +145,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
   
   public function testUserUsergroupSet() {
     $ugrName = 'Usergroup name';
-    $ugr = self::$base->login->usergroup_add($this->token, $ugrName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $ugrName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
 
     $loginUser = 'user';
     $parFirstname = 'Paul';
@@ -140,7 +175,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($porId2, $porId3);
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
 
     $porIds = self::$base->login->usergroup_portal_list($this->token, $ugr);
@@ -189,7 +225,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($grpIdA2, $grpIdB1);
     
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
     
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA2, $grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
@@ -250,7 +287,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($topId2, $topId3);
 
     $usergroupName = 'An usergroup';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1));
 
     $topIds = self::$base->login->usergroup_topic_list($this->token, $ugr);
@@ -298,7 +336,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $topId3 = self::$base->organ->topic_add($this->token, $topName3, $topDesc3, $icon3, $color3);
 
     $usergroupName = 'An usergroup';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1));
     self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId1, ['event_read', 'event_add']);
     self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId2, ['event_update']);
@@ -320,7 +359,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $grpIdB1 = self::$base->organ->group_add($this->token, $orgIdB, $grpNameB1, $grpDescB1, false, 'organization');
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->login->usergroup_set_groups($this->token, $ugr, 
@@ -370,7 +410,8 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan($topId1, $topId2);
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null, 
+					     '{preadmission, admission, present, left}');
 
     self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
 

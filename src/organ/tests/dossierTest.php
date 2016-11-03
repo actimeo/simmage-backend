@@ -312,8 +312,10 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0, $grpId1);
     $this->assertGreaterThan($grpId1, $grpId2);
 
-    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
-    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, null, null, null, null,
+					      '{preadmission, admission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, null, null, null, null,
+					      '{admission, present}');
 
     self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
     self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));

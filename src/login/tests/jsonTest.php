@@ -59,7 +59,7 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
 
   public function testUsergroupGroupJson() {
     $name = 'Usergroup';
-    $ugr = self::$base->login->usergroup_add($this->token, $name, null, 
+    $ugr = self::$base->login->usergroup_add($this->token, $name, null, null, null, null, null,
 					     '{preadmission, admission, present, left}');
 
     $orgName = 'Organization';
@@ -102,7 +102,8 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, null, null, null, null,
+					     '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
     
     $req = [ 'por_id' => true,
@@ -137,11 +138,13 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
 
     $usergroupName1 = 'A user group';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, '{preadmission, admission, present, left}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, null, null, null, null,
+					      '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr1, array($porId2, $porId1));
 
     $usergroupName2 = 'Another user group';
-    $ugr2 = self::$base->login->usergroup_add($this->token, $usergroupName2, null, '{preadmission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, $usergroupName2, null, null, null, null, null,
+					      '{preadmission}');
     self::$base->login->usergroup_set_portals($this->token, $ugr2, array($porId2));
     
     $req = [ 'ugr_id' => true,
@@ -174,7 +177,8 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
 
     $usergroupName1 = 'A user group';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, '{preadmission, admission, present, left}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, null, null, null, null,
+					      '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr1, array($porId2, $porId1));
 
     $orgName = 'Organization';
