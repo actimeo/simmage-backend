@@ -12,8 +12,6 @@ All functions from this module require the ''structure'' user right.';
 
 COMMENT ON TYPE portal.mainview_get_details IS 'Type returned by mainview_get_details function';
 
-COMMENT ON TYPE portal.param_list IS 'Type returned by param_list function';
-
 COMMENT ON TYPE portal.personview_details_list IS 'Type returned by personview_details_list function';
 
 COMMENT ON TYPE portal.personview_get_details IS 'Type returned by personview_get_details function';
@@ -41,11 +39,6 @@ COMMENT ON TABLE portal.mainview_element IS 'Elements that can be attached to a 
 COMMENT ON COLUMN portal.mainview_element.mve_id IS 'Unique identifier';
 COMMENT ON COLUMN portal.mainview_element.mve_type IS 'Type of main view element';
 COMMENT ON COLUMN portal.mainview_element.mve_name IS 'Name of main view element';
-
-COMMENT ON TABLE portal.param_value IS 'Portal parameter value';
-COMMENT ON COLUMN portal.param_value.por_id IS 'Portal identifier';
-COMMENT ON COLUMN portal.param_value.pva_param IS 'Portal parameter';
-COMMENT ON COLUMN portal.param_value.pva_value_bool IS 'Value';
 
 COMMENT ON TABLE portal.personmenu IS 'Menu entries of a view for an entity type';
 COMMENT ON COLUMN portal.personmenu.pme_id IS 'Unique identifier';

@@ -133,27 +133,3 @@ CREATE TABLE mainview (
   pme_id_associated integer REFERENCES portal.personview(pme_id)
 );
 
--- portal parameters
-CREATE TYPE portal.param_type AS ENUM (
-  'topic', 
-  'bool'
-);
-
-CREATE TYPE portal.param AS ENUM (
-  'topic.topic',
-  'add-patient.bool',
-  'add-staff.bool',
-  'add-contact.bool',
-  'add-family.bool',
-  'delete-notes.bool'  
-);
-
-CREATE TABLE portal.param_value (
-  por_id integer NOT NULL REFERENCES portal.portal,
-  pva_param portal.param NOT NULL,
-  pva_value_bool boolean,
-/*  pva_value_topic portal.topics, */
-  CONSTRAINT pva_pkey PRIMARY KEY(por_id, pva_param)
-);
---  TODO comment, one value NOTNULL exactly
-
