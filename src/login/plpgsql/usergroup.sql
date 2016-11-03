@@ -1,9 +1,9 @@
 SET search_path = login;
 
-DROP FUNCTION IF EXISTS login.usergroup_add(prm_token integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
-	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
-DROP FUNCTION IF EXISTS login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
-	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
+-- DROP FUNCTION IF EXISTS login.usergroup_add(prm_token integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
+-- 	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
+-- DROP FUNCTION IF EXISTS login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
+-- 	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
 
 DROP TYPE IF EXISTS login.topic_rights;
 CREATE TYPE login.topic_rights as (
