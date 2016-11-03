@@ -4,11 +4,15 @@ function import_portals($file, $base, $token, $delimiter = "\t") {
   if ($f === FALSE)
     return -1;
   
+  $code_map = [];  
   while ( ($line = fgetcsv($f, 0, $delimiter)) !== FALSE) {
     if ($line[0][0] == '#')
       continue;
-    $base->portal->portal_add($token, $line[0], $line[1]);
+    $code = $line[0];
+    $id = $base->portal->portal_add($token, $line[1], $line[2]);
+    $code_map[$code] = $id;
   }
 
   fclose($f);
+  return $code_map;
 }
