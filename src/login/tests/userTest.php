@@ -114,12 +114,10 @@ class userTest extends PHPUnit_Framework_TestCase {
     self::$base->login->user_add($this->token, $loginUser2, array('users'), $parId2, null);
 
     $usergroupName1 = 'A user group';
-    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, null, null, null, null, 
-					      '{preadmission, admission, present, left}');
+    $ugr1 = self::$base->login->usergroup_add($this->token, $usergroupName1, null, '{preadmission, admission, present, left}');
 
     $usergroupName2 = 'Another user group';
-    $ugr2 = self::$base->login->usergroup_add($this->token, $usergroupName2, null, null, null, null, null, 
-					      '{preadmission, admission, present, left}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, $usergroupName2, null, '{preadmission, admission, present, left}');
     
     self::$base->login->user_usergroup_set($this->token, $loginUser1, $ugr1);
 
