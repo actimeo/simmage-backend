@@ -115,8 +115,8 @@ $base->portal->mainmenu_add($token, $mseEducateur, "Menu 1", 'events.eventsview'
 $base->portal->mainmenu_add($token, $mseEducateur, "Menu 2", 'documents.documentsview', $dov1);
 
 // Create user groups
-$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', [], [], [], [], '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');
-$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', [], [], [], [], '{external_dossier_add}', '{present}');
+$ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');
+$ugEducateur = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Éducateur', '{external_dossier_add}', '{present}');
 
 $base->login->usergroup_set_topics($token, $ugEncadrement, array($tBudget, $tPlacement, $tEtatCivil, $tVeture, $tPriseEnCharge, $tProjet));
 $base->login->usergroup_set_topics($token, $ugEducateur, array($tHygiene, $tEducation, $tStage, $tLogement, $tScolarite, $tRestauration));

@@ -1,22 +1,8 @@
 SET search_path = login;
 
--- DROP FUNCTION IF EXISTS login.usergroup_add(prm_token integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
--- 	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
--- DROP FUNCTION IF EXISTS login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[],
--- 	prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_rights[], prm_statuses organ.dossier_status_value[]);
-
-DROP TYPE IF EXISTS login.topic_rights;
-CREATE TYPE login.topic_rights as (
-  rights usergroup_topic_right[]
-);
-
-CREATE FUNCTION login.usergroup_add(
+CREATE OR REPLACE FUNCTION login.usergroup_add(
   prm_token integer, 
   prm_name text,
-  prm_grp_ids integer[],
-  prm_por_ids integer[],
-  prm_top_ids integer[],
-  prm_top_rights login.topic_rights[],
   prm_ugr_rights login.usergroup_right[],
   prm_statuses organ.dossier_status_value[])
 RETURNS integer
@@ -25,56 +11,38 @@ VOLATILE
 AS $$
 DECLARE
   ret integer;
-  array_size integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
   INSERT INTO login.usergroup (ugr_name, ugr_rights, ugr_statuses) VALUES (prm_name, prm_ugr_rights, prm_statuses)
     RETURNING ugr_id INTO ret;
-  PERFORM login.usergroup_set_groups(prm_token, ret, prm_grp_ids);
-  PERFORM login.usergroup_set_portals(prm_token, ret, prm_por_ids);
-  PERFORM login.usergroup_set_topics(prm_token, ret, prm_top_ids);
-  array_size := array_upper(prm_top_rights, 1);
-  IF array_size IS NULL THEN array_size := 0; END IF;
-  FOR t in 1..array_size
-  LOOP
-    PERFORM login.usergroup_topic_set_rights(prm_token, ret, prm_top_ids[t], prm_top_rights[t].rights);
-  END LOOP;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_add(prm_token integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[], prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[]) IS 'Add a new user group';
+COMMENT ON FUNCTION login.usergroup_add(prm_token integer, prm_name text, prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[]) IS 'Add a new user group';
 
-CREATE FUNCTION login.usergroup_update(
-  prm_token integer,
-  prm_ugr_id integer,
-  prm_name text,
-  prm_grp_ids integer[],
-  prm_por_ids integer[],
-  prm_top_ids integer[],
-  prm_top_rights login.topic_rights[],
-  prm_ugr_rights login.usergroup_right[],
-  prm_statuses organ.dossier_status_value[])
+CREATE OR REPLACE FUNCTION login.usergroup_rename(prm_token integer, prm_ugr_id integer, prm_name text)
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
 AS $$
-DECLARE
-  array_size integer;
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
-  UPDATE login.usergroup SET ugr_name = prm_name, ugr_rights = prm_ugr_rights ,ugr_statuses = prm_statuses WHERE ugr_id = prm_ugr_id;
-  PERFORM login.usergroup_set_groups(prm_token, prm_ugr_id, prm_grp_ids);
-  PERFORM login.usergroup_set_portals(prm_token, prm_ugr_id, prm_por_ids);
-  PERFORM login.usergroup_set_topics(prm_token, prm_ugr_id, prm_top_ids);
-  array_size := array_upper(prm_top_rights, 1);
-  IF array_size IS NULL THEN array_size := 0; END IF;
-  FOR t in 1..array_size
-  LOOP
-    PERFORM login.usergroup_topic_set_rights(prm_token, prm_ugr_id, prm_top_ids[t], prm_top_rights[t].rights);
-  END LOOP;
+  UPDATE login.usergroup SET ugr_name = prm_name WHERE ugr_id = prm_ugr_id;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_grp_ids integer[], prm_por_ids integer[], prm_top_ids integer[], prm_top_rights login.topic_rights[], prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[])
+COMMENT ON FUNCTION login.usergroup_rename(prm_token integer, prm_ugr_id integer, prm_name text) IS 'Rename an usergroup';
+
+CREATE OR REPLACE FUNCTION login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  UPDATE login.usergroup SET ugr_name = prm_name, ugr_statuses = prm_statuses WHERE ugr_id = prm_ugr_id;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[])
 IS 'Update an usergroup name and/or its authorized dossier statuses values';
 
 CREATE OR REPLACE FUNCTION login.usergroup_get(prm_token integer, prm_ugr_id integer)

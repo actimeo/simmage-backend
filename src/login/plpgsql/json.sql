@@ -63,8 +63,7 @@ BEGIN
       CASE WHEN (req->>'ugt_rights') IS NULL THEN NULL ELSE ugt_rights END AS ugt_rights
       FROM organ.topic 
       INNER JOIN login.usergroup_topic USING (top_id) 
-      WHERE ugr_id = prm_ugr_id
-      ORDER BY top_name) d;
+      WHERE ugr_id = prm_ugr_id) d;
   RETURN ret;
 END;
 $$;

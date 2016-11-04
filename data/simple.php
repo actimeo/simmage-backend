@@ -45,8 +45,8 @@ $porId1 = $base->portal->portal_add($token, 'portal 1', 'desc 1');
 $porId2 = $base->portal->portal_add($token, 'portal 2', 'desc 2');
 $porId3 = $base->portal->portal_add($token, 'portal 3', 'desc 3');
 
-$ug1 = $base->login->usergroup_add($token, 'Usergroup 1', [], [], [], [], '{external_dossier_add}', '{preadmission, admission}');
-$ug2 = $base->login->usergroup_add($token, 'Usergroup 2', [], [], [], [], '{internal_dossier_add}', '{present, left}');
+$ug1 = $base->login->usergroup_add($token, 'Usergroup 1', '{external_dossier_add}', '{preadmission, admission}');
+$ug2 = $base->login->usergroup_add($token, 'Usergroup 2', '{internal_dossier_add}', '{present, left}');
 
 // Give user1 access to 1 portal
 $base->login->usergroup_set_portals($token, $ug1, array($porId3));
