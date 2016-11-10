@@ -115,14 +115,14 @@ $mseCI = $base->portal->mainsection_add($token, $porId3, 'Section CI');
 $mseCII = $base->portal->mainsection_add($token, $porId3, 'Section CII');
 $mseCIII = $base->portal->mainsection_add($token, $porId3, 'Section CIII');
 
-$base->portal->mainmenu_add($token, $mseCI, "Menu CI1", null, null);
+$base->portal->mainmenu_add($token, $mseCI, "Menu CI1", 'Un titre', null, null);
 
-$base->portal->mainmenu_add($token, $mseCII, "Menu CII1", null, null);
-$base->portal->mainmenu_add($token, $mseCII, "Menu CII2", null, null);
+$base->portal->mainmenu_add($token, $mseCII, "Menu CII1", 'Un titre', null, null);
+$base->portal->mainmenu_add($token, $mseCII, "Menu CII2", 'Un titre', null, null);
 
-$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII1", null, null);
-$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII2", null, null);
-$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII3", null, null);
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII1", 'Un titre', null, null);
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII2", 'Un titre', null, null);
+$base->portal->mainmenu_add($token, $mseCIII, "Menu CIII3", 'Un titre', null, null);
 
 $base->organ->dossier_add_individual($token, 'firstname', 'lastname', '01/09/2016', 'male', false);
 $base->organ->dossier_add_individual($token, 'firstname2', 'lastname2', '01/09/2016', 'male', false);

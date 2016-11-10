@@ -4,7 +4,7 @@ SET search_path = portal;
 -- MAINMENU --
 --------------
 
-CREATE OR REPLACE FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text, prm_content_type portal.mainmenu_content_type, prm_content_id integer)
+CREATE OR REPLACE FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text, prm_title text, prm_content_type portal.mainmenu_content_type, prm_content_id integer)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -14,13 +14,19 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, '{structure}');
   SELECT COALESCE(MAX(mme_order), 0) + 1 INTO new_order FROM portal.mainmenu WHERE mse_id = prm_mse_id;
-  INSERT INTO portal.mainmenu (mse_id, mme_name, mme_order, mme_content_type, mme_content_id)
-    VALUES (prm_mse_id, prm_name, new_order, prm_content_type, prm_content_id)
+  INSERT INTO portal.mainmenu (mse_id, mme_name, mme_order, mme_title, mme_content_type, mme_content_id)
+    VALUES (prm_mse_id, prm_name, new_order, prm_title, prm_content_type, prm_content_id)
     RETURNING mme_id INTO ret;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION mainmenu_add(prm_token integer, prm_mse_id integer, prm_name text, prm_content_type portal.mainmenu_content_type, prm_content_id integer) 
+COMMENT ON FUNCTION mainmenu_add(
+  prm_token integer, 
+  prm_mse_id integer, 
+  prm_name text, 
+  prm_title text,
+  prm_content_type portal.mainmenu_content_type, 
+  prm_content_id integer) 
 IS 'Add a menu entry to a section of a portal main view';
 
 CREATE OR REPLACE FUNCTION mainmenu_list(prm_token integer, prm_mse_id integer)
@@ -36,6 +42,21 @@ END;
 $$;
 COMMENT ON FUNCTION mainmenu_list(prm_token integer, prm_mse_id integer) 
 IS 'List the menu entries in a section of a portal main view';
+
+CREATE OR REPLACE FUNCTION portal.mainmenu_get(prm_token integer, prm_mme_id integer)
+RETURNS portal.mainmenu
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE 
+  ret portal.mainmenu;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT * INTO ret FROM portal.mainmenu WHERE mme_id = prm_mme_id;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION portal.mainmenu_get(prm_token integer, prm_mme_id integer) IS 'Returns information about a mainmenu';
 
 CREATE OR REPLACE FUNCTION mainmenu_rename(prm_token integer, prm_id integer, prm_name text)
 RETURNS void
