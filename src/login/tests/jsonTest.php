@@ -37,7 +37,6 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
   {
     //    echo "\n".'*** pre conditions'."\n";
     self::$base->startTransaction();
-    self::$base->startTransaction();
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
     self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
@@ -190,20 +189,6 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     self::$base->login->usergroup_set_groups($this->token, $ugr1, 
 					     array($grpId1, $grpId2));
     
-    $req = [ 'ugr_id' => true,
-	     'ugr_name' => true,
-	     'groups' => [ 'grp_id' => true,
-			   'grp_name' => true ],
-	     'portals' => [ 'por_id' => true,
-			    'por_name' => true,
-			    'por_description' => true ] ];
-    $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
-    $res = json_decode(json_encode($json), true);
-    $this->assertEquals($ugr1, $res['ugr_id']);
-    $this->assertEquals($usergroupName1, $res['ugr_name']);
-    $this->assertNotNull($res['groups']);
-    $this->assertNotNull($res['portals']);
-
     $req = [ 'ugr_id' => true,
 	     'ugr_name' => true,
 	     'groups' => [ 'grp_id' => true,
