@@ -102,17 +102,23 @@ $evv1 = $base->events->eventsview_add($token, 'Absences, Emploi', array('absence
 // Documents views
 $dov1 = $base->documents->documentsview_add($token, 'Docs Attestation', $dty2, array($tPriseEnCharge));
 
+// Lists views
+$liv1 = $base->lists->listsview_add($token, 'A list of dossiers');
+$liv2 = $base->lists->listsview_add($token, 'Another list of dossiers');
+
 // Create portals
 $pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement', 'Portail pour l\'encadrement');
 $pEducateur = $base->portal->portal_add($token, 'Portail Éducateur', 'Portail pour les éducateurs');
 
 $mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 1", "Événements...", 'events.eventsview', $evv1);
-$base->portal->mainmenu_add($token, $mseEncadrement, "Menu 2", "Documents ...", 'documents.documentsview', $dov1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Events", "Événements...", 'events.eventsview', $evv1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Docs", "Documents ...", 'documents.documentsview', $dov1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Dossiers", "List ...", 'lists.listsview', $liv1);
 
 $mseEducateur = $base->portal->mainsection_add($token, $pEducateur, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEducateur, "Menu 1", "Événements", 'events.eventsview', $evv1);
-$base->portal->mainmenu_add($token, $mseEducateur, "Menu 2", "Documents", 'documents.documentsview', $dov1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Events", "Événements", 'events.eventsview', $evv1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Docs", "Documents", 'documents.documentsview', $dov1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Dossiers", "List ...", 'lists.listsview', $liv1);
 
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');

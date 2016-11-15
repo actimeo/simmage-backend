@@ -11,7 +11,8 @@ CREATE TYPE portal.entity AS ENUM (
 
 CREATE TYPE portal.mainmenu_content_type AS ENUM (
   'documents.documentsview',
-  'events.eventsview'
+  'events.eventsview',
+  'lists.listsview'
 );
 
 CREATE TABLE portal (
