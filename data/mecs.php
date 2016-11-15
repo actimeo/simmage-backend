@@ -233,7 +233,7 @@ $base->organ->dossier_assignment_add($token, $dos1, array ($gPavillon1, $gPsy, $
 $base->organ->dossier_status_change($token, $dos1, $oMecs, 'present', '01/01/2016');
 
 $dos2 = $base->organ->dossier_add_individual($token, 'Nom 2', 'prénom 2', '02/09/1998', 'male', false);
-$base->organ->dossier_assignment_add($token, $dos2, array ($gPavillon1, $gPsy, $gAdmin, $gCe1));
+$base->organ->dossier_assignment_add($token, $dos2, array ($gPavillon2, $gPsy, $gAdmin, $gCe1));
 $base->organ->dossier_status_change($token, $dos2, $oMecs, 'present', '01/02/2016');
 
 $dos3 = $base->organ->dossier_add_individual($token, 'Nom 3', 'prénom 3', '03/09/1998', 'female', false);
