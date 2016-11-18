@@ -171,13 +171,16 @@ class organizationTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testOrganizationDelete() {
-    $name = 'an organization';
-    $desc = 'an organization desc';
-    $id = self::$base->organ->organization_add($this->token, $name, $desc, true);
+    $name1 = 'an organization';
+    $desc1 = 'an organization desc';
+    $id1 = self::$base->organ->organization_add($this->token, $name1, $desc1, true);
+    $name2 = 'another organization';
+    $desc2 = 'another organization desc';
+    $id2 = self::$base->organ->organization_add($this->token, $name2, $desc2, true);
     $orgs = self::$base->organ->organization_list($this->token, null);
     $nAfterAdd = count($orgs);
     $this->assertGreaterThan(0, count($orgs));
-    self::$base->organ->organization_delete($this->token, $id);
+    self::$base->organ->organization_delete($this->token, $id1);
     $orgs = self::$base->organ->organization_list($this->token, null);
     $this->assertEquals($nAfterAdd-1, count($orgs));
   }
