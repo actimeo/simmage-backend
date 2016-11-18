@@ -239,7 +239,7 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($personmenus));
     self::$base->portal->personmenu_delete($this->token, $id);
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
-    $this->assertEquals(0, count($personmenus));
+    $this->assertNull($personmenus);
   }
 
   /**

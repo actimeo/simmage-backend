@@ -206,7 +206,7 @@ class personSectionTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($personsections));
     self::$base->portal->personsection_delete($this->token, $id);
     $personsections = self::$base->portal->personsection_list($this->token, $por, 'patient');
-    $this->assertEquals(0, count($personsections));
+    $this->assertNull($personsections);
   }
 
   /**

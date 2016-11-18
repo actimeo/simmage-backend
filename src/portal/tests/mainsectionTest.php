@@ -215,7 +215,7 @@ class mainsectionTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($mainsections));
     self::$base->portal->mainsection_delete($this->token, $id);
     $mainsections = self::$base->portal->mainsection_list($this->token, $por);
-    $this->assertEquals(0, count($mainsections));
+    $this->assertNull($mainsections);
   }
 
   /**

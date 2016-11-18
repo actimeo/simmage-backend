@@ -85,7 +85,7 @@ class participantAssignmentTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($grps));
     self::$base->organ->participant_assignment_delete($this->token, $this->grpId, $this->parId);
     $grps = self::$base->organ->participant_assignment_list_groups($this->token, $this->parId);    
-    $this->assertEquals(0, count($grps));    
+    $this->assertNull($grps);    
   }
 
   /**
