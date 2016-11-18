@@ -160,7 +160,7 @@ class groupTest extends PHPUnit_Framework_TestCase {
     
     self::$base->organ->group_delete($this->token, $grpId);
     $grpsAfter = self::$base->organ->group_list($this->token, $orgId, true);
-    $this->assertEquals(0, count($grpsAfter));
+    $this->assertNull($grpsAfter);
   }
 
   public function testGroupRename() {
