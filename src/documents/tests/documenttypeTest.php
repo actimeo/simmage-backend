@@ -252,9 +252,9 @@ class documenttypeTest extends PHPUnit_Framework_TestCase {
     $indiv1 = true;
     $id = self::$base->documents->document_type_add($this->token, $name1, $indiv1);
     $tops = self::$base->documents->document_type_topics_list($this->token, $id);
-    $this->assertEquals(0, count($tops));
+    $this->assertNull($tops);
     $orgs = self::$base->documents->document_type_organizations_list($this->token, $id);
-    $this->assertEquals(0, count($orgs));
+    $this->assertNull($orgs);
     $name2 = 'another document type';
     $indiv2 = false;
 
