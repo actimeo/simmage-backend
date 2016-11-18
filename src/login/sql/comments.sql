@@ -42,6 +42,8 @@ COMMENT ON TYPE login.user_info IS 'User information, returned by user_info call
 
 COMMENT ON TYPE login.user_login IS 'Type returned by user_login function';
 
+COMMENT ON TYPE login.user_usergroup_type IS '';
+
 COMMENT ON TABLE login.user IS 'Webservice users';
 COMMENT ON COLUMN login.user.usr_login IS 'User login';
 COMMENT ON COLUMN login.user.usr_salt IS 'Encrypted password';
@@ -56,6 +58,8 @@ COMMENT ON COLUMN login.user.usr_token_creation_date IS 'Token creation date for
 COMMENT ON TABLE login.usergroup IS 'Usergroup, defining rights for users';
 COMMENT ON COLUMN login.usergroup.ugr_id IS 'Unique identifier';
 COMMENT ON COLUMN login.usergroup.ugr_name IS 'Usergroup name';
+COMMENT ON COLUMN login.usergroup.ugr_rights IS '';
+COMMENT ON COLUMN login.usergroup.ugr_statuses IS '';
 
 COMMENT ON TABLE login.usergroup_group IS 'Groups that users from a usergroup can view';
 COMMENT ON COLUMN login.usergroup_group.ugg_id IS 'Unique identifier';
@@ -66,3 +70,9 @@ COMMENT ON TABLE login.usergroup_portal IS 'Permissions for users from group to 
 COMMENT ON COLUMN login.usergroup_portal.ugp_id IS 'Unique identifier';
 COMMENT ON COLUMN login.usergroup_portal.ugr_id IS 'User group identifier';
 COMMENT ON COLUMN login.usergroup_portal.por_id IS 'A portal the user can use';
+
+COMMENT ON TABLE login.usergroup_topic IS '';
+COMMENT ON COLUMN login.usergroup_topic.ugt_id IS '';
+COMMENT ON COLUMN login.usergroup_topic.ugr_id IS '';
+COMMENT ON COLUMN login.usergroup_topic.top_id IS '';
+COMMENT ON COLUMN login.usergroup_topic.ugt_rights IS '';

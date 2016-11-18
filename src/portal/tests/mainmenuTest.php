@@ -272,7 +272,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($mainmenus));
     self::$base->portal->mainmenu_delete($this->token, $id);
     $mainmenus = self::$base->portal->mainmenu_list($this->token, $mse_id);
-    $this->assertEquals(0, count($mainmenus));
+    $this->assertNull($mainmenus);
   }
 
   /**

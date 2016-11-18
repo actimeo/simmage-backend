@@ -15,6 +15,9 @@ COMMENT ON COLUMN portal.mainmenu.mme_id IS 'Unique identifier';
 COMMENT ON COLUMN portal.mainmenu.mse_id IS 'Main section containing this menu entry';
 COMMENT ON COLUMN portal.mainmenu.mme_name IS 'Menu name';
 COMMENT ON COLUMN portal.mainmenu.mme_order IS 'Menu order in the section';
+COMMENT ON COLUMN portal.mainmenu.mme_title IS '';
+COMMENT ON COLUMN portal.mainmenu.mme_content_type IS '';
+COMMENT ON COLUMN portal.mainmenu.mme_content_id IS '';
 
 COMMENT ON TABLE portal.mainsection IS 'The main view of a portal consists of menus regrouped in sections. This table defines these sections.';
 COMMENT ON COLUMN portal.mainsection.mse_id IS 'Unique identifier';

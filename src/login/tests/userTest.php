@@ -125,7 +125,7 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($list1));
 
     $list2 = self::$base->login->user_list($this->token, $ugr2);
-    $this->assertEquals(0, count($list2));
+    $this->assertNull($list2);
 
     $listAll = self::$base->login->user_list($this->token, null);
     $this->assertEquals(count($listBefore) + 2, count($listAll));
