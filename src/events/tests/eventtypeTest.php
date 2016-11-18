@@ -290,9 +290,9 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     $indiv1 = true;
     $id = self::$base->events->event_type_add($this->token, $cat1, $name1, $indiv1);
     $tops = self::$base->events->event_type_topics_list($this->token, $id);
-    $this->assertEquals(0, count($tops));
+    $this->assertNull($tops);
     $orgs = self::$base->events->event_type_organizations_list($this->token, $id);
-    $this->assertEquals(0, count($orgs));
+    $this->assertNull($orgs);
     $cat2 = 'expense';
     $name2 = 'another event type';
     $indiv2 = false;
