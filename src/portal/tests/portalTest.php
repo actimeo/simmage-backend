@@ -145,13 +145,16 @@ class portalTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testPortalDelete() {
-    $name = 'a portal';
-    $desc = 'another desc';
-    $id = self::$base->portal->portal_add($this->token, $name, $desc);
+    $name1 = 'a portal';
+    $desc1 = 'a desc';
+    $id1 = self::$base->portal->portal_add($this->token, $name1, $desc1);
+    $name2 = 'another portal';
+    $desc2 = 'another desc';
+    $id2 = self::$base->portal->portal_add($this->token, $name2, $desc2);
     $portals = self::$base->portal->portal_list($this->token);
     $nAfterAdd = count($portals);
     $this->assertGreaterThan(0, count($portals));   
-    self::$base->portal->portal_delete($this->token, $id);
+    self::$base->portal->portal_delete($this->token, $id1);
     $portals = self::$base->portal->portal_list($this->token);
     $this->assertEquals($nAfterAdd-1, count($portals));
   }
