@@ -10,6 +10,7 @@ require 'import-arrangement-sub/events-types.php';
 require 'import-arrangement-sub/documents-types.php';
 require 'import-arrangement-sub/groups.php';
 require 'import-arrangement-sub/usergroups.php';
+require 'import-arrangement-sub/users.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -45,4 +46,6 @@ $groups_map = import_groups($dir . DIRECTORY_SEPARATOR . 'groups.csv',
 			    $base, $token, CSV_SEPARATOR, $topics_map, $organs_map);
 $usergroups_map = import_usergroups($dir . DIRECTORY_SEPARATOR . 'usergroups.csv', 
 			    $base, $token, CSV_SEPARATOR, $portals_map, $groups_map);
+import_users($dir . DIRECTORY_SEPARATOR . 'users.csv', 
+	     $base, $token, CSV_SEPARATOR, $usergroups_map);
 $base->commit ();
