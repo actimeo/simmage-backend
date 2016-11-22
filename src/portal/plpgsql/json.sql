@@ -11,6 +11,7 @@ BEGIN
     FROM (SELECT
       CASE WHEN (req->>'mme_id') IS NULL THEN NULL ELSE mme_id END as mme_id, 
       CASE WHEN (req->>'mme_name') IS NULL THEN NULL ELSE  mme_name END as mme_name,
+      CASE WHEN (req->>'mme_icon') IS NULL THEN NULL ELSE  mme_icon END as mme_icon,
       CASE WHEN (req->>'mme_content_type') IS NULL THEN NULL ELSE  mme_content_type END as mme_content_type,
       CASE WHEN (req->>'mme_content_id') IS NULL THEN NULL ELSE  mme_content_id END as mme_content_id
       FROM portal.mainmenu 

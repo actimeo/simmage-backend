@@ -80,10 +80,12 @@ class portalJsonTest extends PHPUnit_Framework_TestCase {
     $mse_idA = self::$base->portal->mainsection_add($this->token, $por_id1, $mse_nameA);
 
     $mme_nameA1 = 'main menu A.1';
-    $mme_idA1 = self::$base->portal->mainmenu_add($this->token, $mse_idA, $mme_nameA1, 'title', null, null);
+    $mme_idA1 = self::$base->portal->mainmenu_add($this->token, $mse_idA, $mme_nameA1, 
+						  'title', 'group', null, null);
 
     $mme_nameA2 = 'main menu A.2';
-    $mme_idA2 = self::$base->portal->mainmenu_add($this->token, $mse_idA, $mme_nameA2, 'title', null, null);
+    $mme_idA2 = self::$base->portal->mainmenu_add($this->token, $mse_idA, $mme_nameA2, 
+						  'title', 'group', null, null);
 
     $req = [ 'mme_id' => true ];
     $json = self::$base->portal->mainmenu_json($this->token, $mse_idA, json_encode($req));

@@ -35,7 +35,8 @@ $token = $variationUser['usr_token'];
 $topics_map = import_topics($dir . DIRECTORY_SEPARATOR . 'topics.csv', 
 			    $base, $token, CSV_SEPARATOR);
 $portals_map = import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv', 
-			      $base, $token, CSV_SEPARATOR);
+			      $base, $token, CSV_SEPARATOR, $topics_map,
+			      $dir . DIRECTORY_SEPARATOR . 'arranger');
 $organs_map = import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', 
 			    $base, $token, CSV_SEPARATOR);
 import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', 
@@ -48,4 +49,5 @@ $usergroups_map = import_usergroups($dir . DIRECTORY_SEPARATOR . 'usergroups.csv
 			    $base, $token, CSV_SEPARATOR, $portals_map, $groups_map);
 import_users($dir . DIRECTORY_SEPARATOR . 'users.csv', 
 	     $base, $token, CSV_SEPARATOR, $usergroups_map);
+
 $base->commit ();

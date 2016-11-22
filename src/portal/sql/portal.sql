@@ -36,6 +36,7 @@ CREATE TABLE mainmenu (
   mme_name text NOT NULL,
   mme_order integer NOT NULL CHECK (mme_order > 0),
   mme_title text NOT NULL,
+  mme_icon text NOT NULL,
   mme_content_type portal.mainmenu_content_type,
   mme_content_id integer,
   UNIQUE(mse_id, mme_name),
