@@ -1,6 +1,8 @@
 <?php
 function import_statuses($file, $base, $token, $delimiter = "\t", $dossiers_map, $organs_map) {
 
+  if (!file_exists($file))
+    return -1;
   $f = fopen($file, 'r');
   if ($f === FALSE)
     return -1;

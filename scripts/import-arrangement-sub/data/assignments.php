@@ -1,12 +1,14 @@
 <?php
 function import_assignments($file, $base, $token, $delimiter = "\t", $dossiers_map, $groups_map) {
 
-  $groups_slice = 1;
-  $groups = null;
-
+  if (!file_exists($file))
+    return -1;
   $f = fopen($file, 'r');
   if ($f === FALSE)
     return -1;
+
+  $groups_slice = 1;
+  $groups = null;
 
   while ( ($line = fgetcsv($f, 0, $delimiter)) !== FALSE) {
     if ($line[0][0] == '#') {

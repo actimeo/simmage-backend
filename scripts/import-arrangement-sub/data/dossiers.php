@@ -1,6 +1,8 @@
 <?php
 function import_dossiers($file, $base, $token, $delimiter = "\t") {
   
+  if (!file_exists($file))
+    return -1;
   $f = fopen($file, 'r');
   if ($f === FALSE)
     return -1;
