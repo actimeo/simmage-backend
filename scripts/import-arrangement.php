@@ -12,6 +12,10 @@ require 'import-arrangement-sub/groups.php';
 require 'import-arrangement-sub/usergroups.php';
 require 'import-arrangement-sub/users.php';
 
+require 'import-arrangement-sub/data/dossiers.php';
+require 'import-arrangement-sub/data/assignments.php';
+require 'import-arrangement-sub/data/statuses.php';
+
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
@@ -49,5 +53,12 @@ $usergroups_map = import_usergroups($dir . DIRECTORY_SEPARATOR . 'usergroups.csv
 			    $base, $token, CSV_SEPARATOR, $portals_map, $groups_map);
 import_users($dir . DIRECTORY_SEPARATOR . 'users.csv', 
 	     $base, $token, CSV_SEPARATOR, $usergroups_map);
+
+$dossiers_map = import_dossiers($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'dossiers.csv',
+				$base, $token, CSV_SEPARATOR);
+import_assignments($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'assignments.csv',
+		   $base, $token, CSV_SEPARATOR, $dossiers_map, $groups_map);
+import_statuses($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'statuses.csv',
+		$base, $token, CSV_SEPARATOR, $dossiers_map, $organs_map);
 
 $base->commit ();
