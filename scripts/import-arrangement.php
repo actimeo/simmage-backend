@@ -15,6 +15,7 @@ require 'import-arrangement-sub/users.php';
 require 'import-arrangement-sub/data/dossiers.php';
 require 'import-arrangement-sub/data/assignments.php';
 require 'import-arrangement-sub/data/statuses.php';
+require 'import-arrangement-sub/data/documents.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -45,8 +46,8 @@ $organs_map = import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv',
 			    $base, $token, CSV_SEPARATOR);
 import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', 
 		    $base, $token, CSV_SEPARATOR, $topics_map);
-import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', 
-		       $base, $token, CSV_SEPARATOR, $topics_map);
+$dtys_map = import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', 
+				   $base, $token, CSV_SEPARATOR, $topics_map);
 $groups_map = import_groups($dir . DIRECTORY_SEPARATOR . 'groups.csv', 
 			    $base, $token, CSV_SEPARATOR, $topics_map, $organs_map);
 $usergroups_map = import_usergroups($dir . DIRECTORY_SEPARATOR . 'usergroups.csv', 
@@ -60,5 +61,7 @@ import_assignments($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . '
 		   $base, $token, CSV_SEPARATOR, $dossiers_map, $groups_map);
 import_statuses($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'statuses.csv',
 		$base, $token, CSV_SEPARATOR, $dossiers_map, $organs_map);
+import_documents($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'documents.csv',
+		 $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map, $dtys_map);
 
 $base->commit ();
