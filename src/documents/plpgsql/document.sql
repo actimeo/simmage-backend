@@ -275,12 +275,16 @@ DECLARE
   
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RAISE WARNING 'go';
+  RAISE WARNING '%', (SELECT ARRAY(SELECT * FROM organ.dossiers_authorized_for_user(prm_token)));
   RETURN documents.document_json(prm_token, (SELECT ARRAY(
    SELECT DISTINCT doc_id FROM documents.document
     INNER JOIN documents.document_topic USING(doc_id)
     INNER JOIN documents.documentsview_topic USING(top_id)
-    INNER JOIN documents.documentsview USING(dov_id))), req);
+    INNER JOIN documents.documentsview USING(dov_id)
+    INNER JOIN documents.document_dossier USING(doc_id)
+    INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
+      ON dossiers_authorized_for_user = document_dossier.dos_id
+    )), req);
 END;
 $$;
 COMMENT ON FUNCTION documents.document_in_view_list(prm_token integer, prm_dov_id integer, req json) IS 'Returns the documents visible in a documents view';
