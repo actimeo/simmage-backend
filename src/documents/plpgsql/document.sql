@@ -288,9 +288,9 @@ BEGIN
     INNER JOIN documents.document_dossier USING(doc_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
       ON dossiers_authorized_for_user = document_dossier.dos_id
-    INNER JOIN organ.dossier_assignment USING(dos_id)   
-    WHERE (prm_grp_id IS NULL OR prm_grp_id = dossier_assignment.grp_id)
-    )), req);
+    WHERE (prm_grp_id IS NULL OR 
+           prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = document_dossier.dos_id)
+    ))), req);
 END;
 $$;
 COMMENT ON FUNCTION documents.document_in_view_list(
