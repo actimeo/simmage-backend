@@ -264,7 +264,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
 	     'dossiers' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
-    $ret = self::$base->documents->document_in_view_list($this->token, $dov_id, json_encode($req));
+    $ret = self::$base->documents->document_in_view_list($this->token, $dov_id, NULL, json_encode($req));
     print_r($ret);
   }  
 }

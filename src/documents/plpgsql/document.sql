@@ -265,7 +265,11 @@ END;
 $$;
 COMMENT ON FUNCTION documents.document_json(prm_token integer, prm_doc_ids integer[], req json) IS 'Returns information about a document as json';
 
-CREATE OR REPLACE FUNCTION documents.document_in_view_list(prm_token integer, prm_dov_id integer, req json)
+CREATE OR REPLACE FUNCTION documents.document_in_view_list(
+  prm_token integer, 
+  prm_dov_id integer, 
+  prm_grp_id integer, 
+  req json)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -284,7 +288,14 @@ BEGIN
     INNER JOIN documents.document_dossier USING(doc_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
       ON dossiers_authorized_for_user = document_dossier.dos_id
+    INNER JOIN organ.dossier_assignment USING(dos_id)   
+    WHERE (prm_grp_id IS NULL OR prm_grp_id = dossier_assignment.grp_id)
     )), req);
 END;
 $$;
-COMMENT ON FUNCTION documents.document_in_view_list(prm_token integer, prm_dov_id integer, req json) IS 'Returns the documents visible in a documents view';
+COMMENT ON FUNCTION documents.document_in_view_list(
+  prm_token integer, 
+  prm_dov_id integer, 
+  prm_grp_id integer, 
+  req json)
+ IS 'Returns the documents visible in a documents view';
