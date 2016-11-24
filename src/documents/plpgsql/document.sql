@@ -233,7 +233,7 @@ END;
 $$;
 COMMENT ON FUNCTION documents.document_topic_json(prm_token integer, prm_doc_id integer, req json) IS 'Returns the topics of a document as json';
 
-CREATE OR REPLACE FUNCTION documents.document_json(prm_token integer, prm_doc_id integer, req json)
+CREATE OR REPLACE FUNCTION documents.document_json(prm_token integer, prm_doc_ids integer[], req json)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -242,7 +242,7 @@ DECLARE
   ret json;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  SELECT unnest(array_agg(row_to_json(d))) INTO ret
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
   FROM (SELECT 
     CASE WHEN (req->>'doc_id') IS NULL THEN NULL ELSE doc_id END as doc_id, 
     CASE WHEN (req->>'par_id_responsible') IS NULL THEN NULL ELSE par_id_responsible END as par_id_responsible, 
@@ -258,9 +258,29 @@ BEGIN
       documents.document_topic_json(prm_token, doc_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
       documents.document_dossier_json(prm_token, doc_id, req->'dossiers') END as dossiers
-    FROM documents.document WHERE doc_id = prm_doc_id
+    FROM documents.document WHERE doc_id = ANY(prm_doc_ids)
   ) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION documents.document_json(prm_token integer, prm_doc_id integer, req json) IS 'Returns information about a document as json';
+COMMENT ON FUNCTION documents.document_json(prm_token integer, prm_doc_ids integer[], req json) IS 'Returns information about a document as json';
+
+CREATE OR REPLACE FUNCTION documents.document_in_view_list(prm_token integer, prm_dov_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  the_doc_id integer;
+  
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RAISE WARNING 'go';
+  RETURN documents.document_json(prm_token, (SELECT ARRAY(
+   SELECT DISTINCT doc_id FROM documents.document
+    INNER JOIN documents.document_topic USING(doc_id)
+    INNER JOIN documents.documentsview_topic USING(top_id)
+    INNER JOIN documents.documentsview USING(dov_id))), req);
+END;
+$$;
+COMMENT ON FUNCTION documents.document_in_view_list(prm_token integer, prm_dov_id integer, req json) IS 'Returns the documents visible in a documents view';

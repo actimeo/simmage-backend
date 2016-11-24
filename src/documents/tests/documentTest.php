@@ -210,11 +210,61 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
 	     'dossiers' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
-    $json = self::$base->documents->document_json($this->token, $id, json_encode($req));
+    $docs_json = self::$base->documents->document_json($this->token, [ $id ], json_encode($req));
+    $this->assertEquals(1, count($docs_json));
+    $json = $docs_json[0];
     $this->assertEquals($id, $json->doc_id);
     $this->assertEquals($title, $json->doc_title);
     $this->assertEquals(2, count($json->topics));
     $this->assertEquals(1, count($json->dossiers));
   }
 
+  public function testDocumentInDocumentsView() {
+    $name = 'a documents view';
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $indivDty = true;
+    $dov_id = self::$base->documents->documentsview_add($this->token, $name, null, [ $top1, $top2 ]);
+
+    $name = 'a document type';
+    $indiv = true;
+    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
+    
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';    
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $par_id_responsible1 = null;
+    $title1 = 'a document title';
+    $desc1 = "";
+    $status1 = 'done';
+    $doc_id1 = self::$base->documents->document_add($this->token, $par_id_responsible1, 
+						    $dty_id, $title1, $desc1, $status1, 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+						    );
+
+    $par_id_responsible2 = null;
+    $title2 = 'a document title';
+    $desc2 = "";
+    $status2 = 'done';
+    $doc_id2 = self::$base->documents->document_add($this->token, $par_id_responsible2, 
+						    $dty_id, $title2, $desc2, $status2, 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1, $top2 ], [ $dosId ]
+						    );
+
+    $req = [ 'doc_id' => true,
+	     'doc_title' => true,
+	     'topics' => [ 'top_id' => true,
+			   'top_name' => true ],
+	     'dossiers' => [ 'dos_id' => true,
+			     'dos_firstname' => true,
+			     'dos_lastname' => true ] ];
+    $ret = self::$base->documents->document_in_view_list($this->token, $dov_id, json_encode($req));
+    print_r($ret);
+  }  
 }
