@@ -279,7 +279,6 @@ DECLARE
   
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RAISE WARNING '%', (SELECT ARRAY(SELECT * FROM organ.dossiers_authorized_for_user(prm_token)));
   RETURN documents.document_json(prm_token, (SELECT ARRAY(
    SELECT DISTINCT doc_id FROM documents.document
     INNER JOIN documents.document_topic USING(doc_id)
