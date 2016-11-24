@@ -247,6 +247,7 @@ BEGIN
     CASE WHEN (req->>'doc_id') IS NULL THEN NULL ELSE doc_id END as doc_id, 
     CASE WHEN (req->>'par_id_responsible') IS NULL THEN NULL ELSE par_id_responsible END as par_id_responsible, 
     CASE WHEN (req->>'dty_id') IS NULL THEN NULL ELSE dty_id END as dty_id, 
+    CASE WHEN (req->>'dty_name') IS NULL THEN NULL ELSE dty_name END as dty_name, 
     CASE WHEN (req->>'doc_title') IS NULL THEN NULL ELSE doc_title END as doc_title, 
     CASE WHEN (req->>'doc_description') IS NULL THEN NULL ELSE doc_description END as doc_description, 
     CASE WHEN (req->>'doc_status') IS NULL THEN NULL ELSE doc_status END as doc_status, 
@@ -258,7 +259,9 @@ BEGIN
       documents.document_topic_json(prm_token, doc_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
       documents.document_dossier_json(prm_token, doc_id, req->'dossiers') END as dossiers
-    FROM documents.document WHERE doc_id = ANY(prm_doc_ids)
+    FROM documents.document 
+      LEFT JOIN documents.document_type USING(dty_id)
+      WHERE doc_id = ANY(prm_doc_ids)
   ) d;
   RETURN ret;
 END;
