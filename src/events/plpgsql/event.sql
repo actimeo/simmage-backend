@@ -248,6 +248,7 @@ BEGIN
     CASE WHEN (req->>'eve_id') IS NULL THEN NULL ELSE eve_id END as eve_id, 
     CASE WHEN (req->>'eve_title') IS NULL THEN NULL ELSE eve_title END as eve_title, 
     CASE WHEN (req->>'ety_id') IS NULL THEN NULL ELSE ety_id END as ety_id, 
+    CASE WHEN (req->>'ety_name') IS NULL THEN NULL ELSE ety_name END as ety_name, 
     CASE WHEN (req->>'eve_duration') IS NULL THEN NULL ELSE eve_duration END as eve_duration, 
     CASE WHEN (req->>'eve_start_time') IS NULL THEN NULL ELSE eve_start_time END as eve_start_time, 
     CASE WHEN (req->>'eve_end_time') IS NULL THEN NULL ELSE eve_end_time END as eve_end_time, 
