@@ -11,7 +11,7 @@ CREATE TABLE events.event (
   eve_end_time timestamp with time zone NOT NULL,
   -- for synchronization
   eve_mod_date timestamp with time zone,
-  eve_del_date timestamp with time zone
+  eve_del_date timestamp with time zone,
   -- other, optional info
   eve_place text,
   eve_cost money,
@@ -25,7 +25,7 @@ CREATE TABLE events.event_topic (
   CONSTRAINT event_topic_pkey PRIMARY KEY(eve_id, top_id)
 );
 
-CREATE TABLE documents.event_dossier (
+CREATE TABLE events.event_dossier (
   eve_id integer NOT NULL REFERENCES events.event,
   dos_id integer NOT NULL REFERENCES organ.dossier,
   CONSTRAINT event_dossier_pkey PRIMARY KEY(eve_id, dos_id)
