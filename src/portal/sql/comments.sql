@@ -16,6 +16,7 @@ COMMENT ON COLUMN portal.mainmenu.mse_id IS 'Main section containing this menu e
 COMMENT ON COLUMN portal.mainmenu.mme_name IS 'Menu name';
 COMMENT ON COLUMN portal.mainmenu.mme_order IS 'Menu order in the section';
 COMMENT ON COLUMN portal.mainmenu.mme_title IS '';
+COMMENT ON COLUMN portal.mainmenu.mme_icon IS '';
 COMMENT ON COLUMN portal.mainmenu.mme_content_type IS '';
 COMMENT ON COLUMN portal.mainmenu.mme_content_id IS '';
 
