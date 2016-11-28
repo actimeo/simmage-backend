@@ -254,8 +254,9 @@ BEGIN
     INNER JOIN notes.note_dossier USING(not_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
       ON dossiers_authorized_for_user = note_dossier.dos_id
-    WHERE (prm_grp_id IS NULL OR 
-           prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = note_dossier.dos_id)
+    WHERE nov_id = prm_nov_id AND
+      (prm_grp_id IS NULL OR 
+       prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = note_dossier.dos_id)
     ))), req);
 END;
 $$;
