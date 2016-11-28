@@ -5,7 +5,7 @@ require_once 'config.inc.php';
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
 
-class DocumentTest extends PHPUnit_Framework_TestCase {
+class NoteTest extends PHPUnit_Framework_TestCase {
   private static $base;
   private static $pgHost;
   private static $pgUser;
@@ -53,15 +53,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     self::$base->rollback();
   }
 
-  public function testDocumentAdd() {
-    $name = 'a document type';
-    $indiv = true;
-    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
-    $par_id_responsible = null;
-    $title = 'a document title';
-    $desc = "";
-    $status = 'done';
-
+  public function testNoteAdd() {
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
     $top_icon1 = 'health';
@@ -78,25 +70,15 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $lname = 'lastname';
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
-
-    $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
-					       $dty_id, $title, $desc, $status, 
-					       null, null, null, // dates
-					       null, // file
-					       [ $top_id1, $top_id2 ], [ $dosId ]
-					       );
+    
+    $id = self::$base->notes->note_add($this->token, 'a note', 
+				       '30/01/2016', '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       );
     $this->assertGreaterThan(0, $id);
   }  
 
-  public function testDocumentGet() {
-    $name = 'a document type';
-    $indiv = true;
-    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
-    $par_id_responsible = null;
-    $title = 'a document title';
-    $desc = "";
-    $status = 'done';
-
+  public function testNoteGet() {
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
     $top_icon1 = 'health';
@@ -114,36 +96,21 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
-					       $dty_id, $title, $desc, $status, 
-					       null, null, null, // dates
-					       null, // file
-					       [ $top_id1, $top_id2 ], [ $dosId ]
-					       );
-    $doc = self::$base->documents->document_get($this->token, $id);
-    $this->assertEquals($doc['doc_id'], $id);
-    $this->assertEquals($doc['par_id_responsible'], $par_id_responsible);
-    $this->assertEquals($doc['dty_id'], $dty_id);
-    $this->assertEquals($doc['doc_title'], $title);
-    $this->assertEquals($doc['doc_description'], $desc);
-    $this->assertEquals($doc['doc_status'], $status);
+    $id = self::$base->notes->note_add($this->token, 'a note', 
+				       '30/01/2016', '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       );
+    $doc = self::$base->notes->note_get($this->token, $id);
+    $this->assertEquals($doc['not_id'], $id);
 
-    $topics = self::$base->documents->document_topic_list($this->token, $id);
+    $topics = self::$base->notes->note_topic_list($this->token, $id);
     $this->assertEquals([ $top_id1, $top_id2 ], array_map(function ($t) { return $t['top_id']; }, $topics));
 
-    $dossiers = self::$base->documents->document_dossier_list($this->token, $id);
+    $dossiers = self::$base->notes->note_dossier_list($this->token, $id);
     $this->assertEquals([ $dosId ], array_map(function ($d) { return $d['dos_id']; }, $dossiers));
   }  
 
-  public function testDocumentGetUnknown() {
-    $name = 'a document type';
-    $indiv = true;
-    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
-    $par_id_responsible = null;
-    $title = 'a document title';
-    $desc = "";
-    $status = 'done';
-
+  public function testNoteGetUnknown() {
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
     $top_icon1 = 'health';
@@ -161,25 +128,15 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
-					       $dty_id, $title, $desc, $status, 
-					       null, null, null, // dates
-					       null, // file
-					       [ $top_id1, $top_id2 ], [ $dosId ]
-					       );
+    $id = self::$base->notes->note_add($this->token, 'a note', 
+				       '30/01/2016', '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       );
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    $doc = self::$base->documents->document_get($this->token, $id + 1);
+    $doc = self::$base->notes->note_get($this->token, $id + 1);
   }
 
-  public function testDocumentJson() {
-    $name = 'a document type';
-    $indiv = true;
-    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
-    $par_id_responsible = null;
-    $title = 'a document title';
-    $desc = "";
-    $status = 'done';
-
+  public function testNoteJson() {
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
     $top_icon1 = 'health';
@@ -197,73 +154,54 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
-					       $dty_id, $title, $desc, $status, 
-					       null, null, null, // dates
-					       null, // file
-					       [ $top_id1, $top_id2 ], [ $dosId ]
-					       );
-    $req = [ 'doc_id' => true,
-	     'doc_title' => true,
+    $id = self::$base->notes->note_add($this->token, 'a note', 
+				       '30/01/2016', '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       );
+    $req = [ 'not_id' => true,
+	     'not_text' => true,
 	     'topics' => [ 'top_id' => true,
 			   'top_name' => true ],
 	     'dossiers' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
-    $docs_json = self::$base->documents->document_json($this->token, [ $id ], json_encode($req));
-    $this->assertEquals(1, count($docs_json));
-    $json = $docs_json[0];
-    $this->assertEquals($id, $json->doc_id);
-    $this->assertEquals($title, $json->doc_title);
+    $nots_json = self::$base->notes->note_json($this->token, [ $id ], json_encode($req));
+    $this->assertEquals(1, count($nots_json));
+    $json = $nots_json[0];
+    $this->assertEquals($id, $json->not_id);
+    $this->assertEquals('a note', $json->not_text);
     $this->assertEquals(2, count($json->topics));
     $this->assertEquals(1, count($json->dossiers));
   }
 
-  public function testDocumentInDocumentsView() {
-    $name = 'a documents view';
+  public function testNoteInNotesView() {
+    $name = 'a notes view';
     $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
     $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
-    $indivDty = true;
-    $dov_id = self::$base->documents->documentsview_add($this->token, $name, null, [ $top1, $top2 ]);
+    $nov_id = self::$base->notes->notesview_add($this->token, $name, [ $top1, $top2 ]);
 
-    $name = 'a document type';
-    $indiv = true;
-    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
-    
     $fname = 'firstname';
     $lname = 'lastname';
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $par_id_responsible1 = null;
-    $title1 = 'a document title';
-    $desc1 = "";
-    $status1 = 'done';
-    $doc_id1 = self::$base->documents->document_add($this->token, $par_id_responsible1, 
-						    $dty_id, $title1, $desc1, $status1, 
-						    null, null, null, // dates
-						    null, // file
-						    [ $top1 ], [ $dosId ]
-						    );
+    $doc_id1 = self::$base->notes->note_add($this->token, 'a note', 
+					    '30/01/2016', '29/01/2016', 'an object', 
+					    [ $top1 ], [ $dosId ]
+					    );
 
-    $par_id_responsible2 = null;
-    $title2 = 'a document title';
-    $desc2 = "";
-    $status2 = 'done';
-    $doc_id2 = self::$base->documents->document_add($this->token, $par_id_responsible2, 
-						    $dty_id, $title2, $desc2, $status2, 
-						    null, null, null, // dates
-						    null, // file
-						    [ $top1, $top2 ], [ $dosId ]
-						    );
+    $doc_id2 = self::$base->notes->note_add($this->token, 'another note', 
+					    '30/03/2016', '29/03/2016', 'an object', 
+					    [ $top1, $top2 ], [ $dosId ]
+					    );
 
     $req = [ 'doc_id' => true,
-	     'doc_title' => true,
+	     'not_text' => true,
 	     'topics' => [ 'top_id' => true,
 			   'top_name' => true ],
 	     'dossiers' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
-    $ret = self::$base->documents->document_in_view_list($this->token, $dov_id, NULL, json_encode($req));
-  }  
+    $ret = self::$base->notes->note_in_view_list($this->token, $nov_id, NULL, json_encode($req));
+  } 
 }
