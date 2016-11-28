@@ -39,7 +39,7 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
-  UPDATE login.usergroup SET ugr_name = prm_name, ugr_statuses = prm_statuses WHERE ugr_id = prm_ugr_id;
+  UPDATE login.usergroup SET ugr_name = prm_name, ugr_statuses = prm_statuses, ugr_rights = prm_ugr_rights WHERE ugr_id = prm_ugr_id;
 END;
 $$;
 COMMENT ON FUNCTION login.usergroup_update(prm_token integer, prm_ugr_id integer, prm_name text, prm_ugr_rights login.usergroup_right[], prm_statuses organ.dossier_status_value[])
