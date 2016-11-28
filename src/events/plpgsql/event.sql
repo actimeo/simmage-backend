@@ -291,8 +291,9 @@ BEGIN
     INNER JOIN events.event_dossier USING(eve_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
       ON dossiers_authorized_for_user = event_dossier.dos_id
-    WHERE (prm_grp_id IS NULL OR 
-           prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = event_dossier.dos_id)
+    WHERE evv_id = prm_evv_id AND
+      (prm_grp_id IS NULL OR 
+       prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = event_dossier.dos_id)
     ))), req);
 END;
 $$;

@@ -17,6 +17,7 @@ require 'import-arrangement-sub/data/assignments.php';
 require 'import-arrangement-sub/data/statuses.php';
 require 'import-arrangement-sub/data/documents.php';
 require 'import-arrangement-sub/data/events.php';
+require 'import-arrangement-sub/data/notes.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -66,5 +67,7 @@ import_documents($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'do
 		 $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map, $dtys_map);
 import_events($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'events.csv',
 	      $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map, $etys_map);
+import_notes($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'notes.csv',
+	     $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map);
 
 $base->commit ();

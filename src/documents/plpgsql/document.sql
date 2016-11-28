@@ -290,8 +290,9 @@ BEGIN
     INNER JOIN documents.document_dossier USING(doc_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
       ON dossiers_authorized_for_user = document_dossier.dos_id
-    WHERE (prm_grp_id IS NULL OR 
-           prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = document_dossier.dos_id)
+    WHERE dov_id = prm_dov_id AND
+      (prm_grp_id IS NULL OR 
+       prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = document_dossier.dos_id)
     ))), req);
 END;
 $$;
