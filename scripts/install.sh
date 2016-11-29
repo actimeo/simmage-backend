@@ -28,7 +28,10 @@ FILES="$FILES $BASE/notes/sql/notesviews.sql $BASE/notes/sql/note.sql"
 FILES="$FILES $BASE/notes/plpgsql/*.sql $BASE/notes/sql/comments.sql"
 
 FILES="$FILES $BASE/resources/sql/resourcesview.sql $BASE/resources/sql/resource.sql"
-FILES="$FILES $BASE/resources/plpgsql/*.sql $BASE/notes/sql/comments.sql"
+FILES="$FILES $BASE/resources/plpgsql/*.sql $BASE/resources/sql/comments.sql"
+
+FILES="$FILES $BASE/objectives/sql/objectivesviews.sql $BASE/resources/sql/objective.sql"
+FILES="$FILES $BASE/objectives/plpgsql/*.sql $BASE/objectives/sql/comments.sql"
 
 FILES="$FILES $BASE/pgdoc/sql/schema.sql $BASE/pgdoc/plpgsql/*.sql"
 
