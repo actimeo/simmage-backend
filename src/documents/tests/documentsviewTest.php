@@ -143,4 +143,18 @@ class documentsviewTest extends PHPUnit_Framework_TestCase {
     $evv = self::$base->documents->documentsview_get($this->token, $id);
   }  
 
+  public function testDocumentsViewGetTopics() {
+    $name = 'a documents view';
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $nameDty = 'a document type';
+    $indivDty = true;
+    $idDty = self::$base->documents->document_type_add($this->token, $nameDty, $indivDty);
+
+    $id = self::$base->documents->documentsview_add($this->token, $name, $idDty, [$top1, $top2]);
+    $this->assertGreaterThan(0, $id);
+
+    $tops = self::$base->documents->documentsview_get_topics($this->token, $id);
+    $this->assertEquals(2, count($tops));
+  }
 }

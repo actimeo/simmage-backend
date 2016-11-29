@@ -156,6 +156,22 @@ class eventsviewTest extends PHPUnit_Framework_TestCase {
     self::$base->events->eventsview_delete($this->token, $id);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $evv = self::$base->events->eventsview_get($this->token, $id);
-  }  
+  }
 
+  public function testEventsViewGetTopics() {
+    $name = 'an events view';
+    $cats = ['incident', 'absence'];
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $catEty = 'incident';
+    $nameEty = 'an event type';
+    $indivEty = true;
+    $idEty = self::$base->events->event_type_add($this->token, $catEty, $nameEty, $indivEty);
+
+    $id = self::$base->events->eventsview_add($this->token, $name, $cats, $idEty, [$top1, $top2]);
+    $this->assertGreaterThan(0, $id);
+
+    $tops = self::$base->events->eventsview_get_topics($this->token, $id);
+    $this->assertEquals(2, count($tops));
+  }
 }
