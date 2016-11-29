@@ -117,4 +117,14 @@ class ResourcesviewTest extends PHPUnit_Framework_TestCase {
     $evv = self::$base->resources->resourcesview_get($this->token, $id);
   }  
 
+  public function testResourcesViewGetTopics() {
+    $name = 'a resources view';
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $id = self::$base->resources->resourcesview_add($this->token, $name, [$top1, $top2]);
+    $this->assertGreaterThan(0, $id);
+
+    $tops = self::$base->resources->resourcesview_get_topics($this->token, $id);
+    $this->assertEquals(2, count($tops));
+  }
 }
