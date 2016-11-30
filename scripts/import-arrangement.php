@@ -19,6 +19,7 @@ require 'import-arrangement-sub/data/documents.php';
 require 'import-arrangement-sub/data/events.php';
 require 'import-arrangement-sub/data/notes.php';
 require 'import-arrangement-sub/data/resources.php';
+require 'import-arrangement-sub/data/objectives.php';
 
 use \actimeo\pgproc\PgProcedures;
 use \actimeo\pgproc\PgProcException;
@@ -72,5 +73,7 @@ import_notes($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'notes.
 	     $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map);
 import_resources($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'resources.csv',
 		 $base, $token, CSV_SEPARATOR, $topics_map);
+import_objectives($dir . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'objectives.csv',
+		  $base, $token, CSV_SEPARATOR, $dossiers_map, $topics_map);
 
 $base->commit ();

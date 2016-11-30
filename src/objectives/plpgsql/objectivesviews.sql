@@ -135,3 +135,18 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION objectives.objectivesview_delete(prm_token integer, prm_id integer) IS 'Delete an objectives view';
+
+CREATE OR REPLACE FUNCTION objectives.objectivesview_get_topics(prm_token integer,prm_id integer)
+RETURNS SETOF text
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RETURN QUERY
+    SELECT top_name
+    FROM organ.topic
+    WHERE top_id = ANY(SELECT top_id FROM objectives.objectivesview_topic WHERE obv_id = prm_id);
+END;
+$$;
+COMMENT ON FUNCTION objectives.objectivesview_get_topics(prm_token integer, prm_id integer) IS 'Return the list of topics associated to a view';
