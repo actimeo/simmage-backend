@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION objectives.objective_add(
   prm_token integer, 
   prm_name text,
+  prm_open boolean,
   prm_deadline date,
   prm_topics integer[], 
   prm_dossiers integer[])
@@ -12,8 +13,8 @@ DECLARE
   new_id integer;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
-  INSERT INTO objectives.objective (obj_name, obj_deadline)
-    VALUES (prm_name, prm_deadline)
+  INSERT INTO objectives.objective (obj_name, obj_open, obj_deadline)
+    VALUES (prm_name, prm_open, prm_deadline)
     RETURNING obj_id INTO new_id;
   PERFORM objectives.objective_set_topics(prm_token, new_id, prm_topics);
   PERFORM objectives.objective_set_dossiers(prm_token, new_id, prm_dossiers);
@@ -23,6 +24,7 @@ $$;
 COMMENT ON FUNCTION objectives.objective_add(
   prm_token integer,
   prm_name text,
+  prm_open boolean,
   prm_deadline date,
   prm_topics integer[], 
   prm_dossiers integer[])
@@ -213,6 +215,7 @@ BEGIN
   FROM (SELECT 
     CASE WHEN (req->>'obj_id') IS NULL THEN NULL ELSE obj_id END as obj_id, 
     CASE WHEN (req->>'obj_name') IS NULL THEN NULL ELSE obj_name END as obj_name, 
+    CASE WHEN (req->>'obj_open') IS NULL THEN NULL ELSE obj_open END as obj_open, 
     CASE WHEN (req->>'obj_deadline') IS NULL THEN NULL ELSE obj_deadline END as obj_deadline, 
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       objectives.objective_topic_json(prm_token, obj_id, req->'topics') END as topics,

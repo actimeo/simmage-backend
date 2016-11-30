@@ -1,8 +1,8 @@
 CREATE TABLE objectives.objective (
   obj_id serial PRIMARY KEY,
   obj_name text NOT NULL,
-  obj_deadline date,
-  obj_open boolean
+  obj_open boolean NOT NULL,
+  obj_deadline date
 );
 
 CREATE TABLE objectives.objective_topic (

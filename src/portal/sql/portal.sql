@@ -13,8 +13,9 @@ CREATE TYPE portal.mainmenu_content_type AS ENUM (
   'documents',
   'events',
   'lists',
-  'notes',
-  'resources'
+  'notes',	
+  'resources',
+  'objectives'
 );
 
 CREATE TABLE portal (

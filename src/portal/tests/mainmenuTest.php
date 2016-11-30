@@ -63,7 +63,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
     $mme_name = 'a main menu';
     $mme_title = 'a main menu title';
-    $mme_content_type = 'events.eventsview';
+    $mme_content_type = 'events';
     $mme_content_id = 1;
     $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name, 
 						$mme_title, 'group', 
@@ -158,7 +158,7 @@ class mainmenuTest extends PHPUnit_Framework_TestCase {
 
     $mme_name = 'a main menu';
     $mme_title = 'a main menu title';
-    $mme_content_type = 'events.eventsview';
+    $mme_content_type = 'events';
     $mme_content_id = 1;
     $mme_id = self::$base->portal->mainmenu_add($this->token, $mse_id, $mme_name, 
 						$mme_title, 'group', 

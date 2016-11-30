@@ -72,7 +72,7 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
     
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 '01/01/2018',
+						 true, '01/01/2018',
 						 [ $top_id1, $top_id2 ], [ $dosId ]
 						 );
     $this->assertGreaterThan(0, $id);
@@ -97,7 +97,7 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 '01/01/2018',
+						 true, '01/01/2018',
 						 [ $top_id1, $top_id2 ], [ $dosId ]
 						 );
     $doc = self::$base->objectives->objective_get($this->token, $id);
@@ -129,7 +129,7 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 '01/01/2018', 
+						 true, '01/01/2018', 
 						 [ $top_id1, $top_id2 ], [ $dosId ]
 				       );
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
@@ -155,7 +155,7 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 '01/01/2018', 
+						 true, '01/01/2018', 
 						 [ $top_id1, $top_id2 ], [ $dosId ]
 						 );
     $req = [ 'obj_id' => true,
@@ -186,12 +186,12 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $doc_id1 = self::$base->objectives->objective_add($this->token, 'a objective', 
-						      '01/01/2018',
+						      true, '01/01/2018',
 						      [ $top1 ], [ $dosId ]
 						      );
 
     $doc_id2 = self::$base->objectives->objective_add($this->token, 'another objective', 
-						      '01/01/2018',
+						      true, '01/01/2018',
 						      [ $top1, $top2 ], [ $dosId ]
 						      );
 
@@ -204,4 +204,15 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
 			     'dos_lastname' => true ] ];
     $ret = self::$base->objectives->objective_in_view_list($this->token, $obv_id, NULL, json_encode($req));
   } 
+
+  public function testObjectivesViewGetTopics() {
+    $name = 'a objectives view';
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+    $id = self::$base->objectives->objectivesview_add($this->token, $name, [$top1, $top2]);
+    $this->assertGreaterThan(0, $id);
+    
+    $tops = self::$base->objectives->objectivesview_get_topics($this->token, $id);
+    $this->assertEquals(2, count($tops));
+  }
 }
