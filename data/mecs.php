@@ -111,14 +111,14 @@ $pEncadrement = $base->portal->portal_add($token, 'Portail Encadrement', 'Portai
 $pEducateur = $base->portal->portal_add($token, 'Portail Éducateur', 'Portail pour les éducateurs');
 
 $mseEncadrement = $base->portal->mainsection_add($token, $pEncadrement, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEncadrement, "Events", "Événements...", 'event', 'events.eventsview', $evv1);
-$base->portal->mainmenu_add($token, $mseEncadrement, "Docs", "Documents ...", 'attach_file', 'documents.documentsview', $dov1);
-$base->portal->mainmenu_add($token, $mseEncadrement, "Dossiers", "List ...", 'group', 'lists.listsview', $liv1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Events", "Événements...", 'event', 'events', $evv1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Docs", "Documents ...", 'attach_file', 'documents', $dov1);
+$base->portal->mainmenu_add($token, $mseEncadrement, "Dossiers", "List ...", 'group', 'lists', $liv1);
 
 $mseEducateur = $base->portal->mainsection_add($token, $pEducateur, 'Section 1');
-$base->portal->mainmenu_add($token, $mseEducateur, "Events", "Événements", 'event', 'events.eventsview', $evv1);
-$base->portal->mainmenu_add($token, $mseEducateur, "Docs", "Documents", 'attach_file', 'documents.documentsview', $dov1);
-$base->portal->mainmenu_add($token, $mseEducateur, "Dossiers", "List ...", 'group', 'lists.listsview', $liv1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Events", "Événements", 'event', 'events', $evv1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Docs", "Documents", 'attach_file', 'documents', $dov1);
+$base->portal->mainmenu_add($token, $mseEducateur, "Dossiers", "List ...", 'group', 'lists', $liv1);
 
 // Create user groups
 $ugEncadrement = $base->login->usergroup_add($token, 'Groupe d\'utilisateurs Encadrement', '{internal_dossier_add, external_dossier_add}', '{preadmission, admission, present, left}');
