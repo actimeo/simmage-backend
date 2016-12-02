@@ -265,5 +265,10 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
     $ret = self::$base->documents->document_in_view_list($this->token, $dov_id, NULL, json_encode($req));
-  }  
+  }
+
+  public function testDocumentStatusList() {
+    $list = self::$base->documents->document_status_list();
+    $this->assertEquals($list[0], 'todo');
+  }
 }
