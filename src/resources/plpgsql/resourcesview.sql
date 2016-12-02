@@ -137,14 +137,14 @@ $$;
 COMMENT ON FUNCTION resources.resourcesview_delete(prm_token integer, prm_id integer) IS 'Delete an resources view';
 
 CREATE OR REPLACE FUNCTION resources.resourcesview_get_topics(prm_token integer, prm_id integer)
-RETURNS SETOF text
+RETURNS SETOF organ.topic
 LANGUAGE plpgsql
 VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY
-    SELECT top_name
+    SELECT *
     FROM organ.topic
     WHERE top_id = ANY(SELECT top_id FROM resources.resourcesview_topic WHERE rev_id = prm_id);
 END;
