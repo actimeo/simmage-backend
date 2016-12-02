@@ -31,6 +31,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('organ', 'dossier_status_value_list'),
 			 array('login', 'usergroup_right_list'),
 			 array('login', 'usergroup_topic_right_list'),
+			 array('documents', 'document_status_list'),
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {

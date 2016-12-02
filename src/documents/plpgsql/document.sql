@@ -61,6 +61,44 @@ COMMENT ON FUNCTION documents.document_add(
   prm_dossiers integer[])
  IS 'Add a new document';
 
+CREATE OR REPLACE FUNCTION documents.document_update(
+  prm_token integer, prm_doc_id integer, prm_par_id_responsible integer, prm_dty_id integer,
+  prm_title text, prm_description text, prm_status documents.document_status,
+  prm_obtainment_date date, prm_execution_date date, prm_validity_date date,
+  prm_file text, prm_topics integer[], prm_dossiers integer[]
+)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM documents.document WHERE doc_id = prm_doc_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+  UPDATE documents.document SET
+    par_id_responsible = prm_par_id_responsible,
+    dty_id = prm_dty_id,
+    doc_title = prm_title,
+    doc_description = prm_description,
+    doc_status = prm_status,
+    doc_obtainment_date = prm_obtainment_date,
+    doc_execution_date = prm_execution_date,
+    doc_validity_date = prm_validity_date,
+    doc_file = prm_file
+    WHERE doc_id = prm_doc_id;
+
+  PERFORM documents.document_set_topics(prm_token, prm_doc_id, prm_topics);
+  PERFORM documents.document_set_dossiers(prm_token, prm_doc_id, prm_dossiers);
+END;
+$$;
+COMMENT ON FUNCTION documents.document_update(
+  prm_token integer, prm_doc_id integer, prm_par_id_responsible integer, prm_dty_id integer,
+  prm_title text, prm_description text, prm_status documents.document_status,
+  prm_obtainment_date date, prm_execution_date date, prm_validity_date date,
+  prm_file text, prm_topics integer[], prm_dossiers integer[]
+) IS 'update a document informations';
+
 CREATE OR REPLACE FUNCTION documents.document_set_topics(
   prm_token integer,
   prm_doc_id integer,
@@ -231,7 +269,7 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION documents.document_topic_json(prm_token integer, prm_doc_id integer, req json) IS 'Returns the topics of a document as json';
+COMMENT ON FUNCTION documents.document_dossier_json(prm_token integer, prm_doc_id integer, req json) IS 'Returns the dossiers of a document as json';
 
 CREATE OR REPLACE FUNCTION documents.document_json(prm_token integer, prm_doc_ids integer[], req json)
 RETURNS json
@@ -302,3 +340,32 @@ COMMENT ON FUNCTION documents.document_in_view_list(
   prm_grp_id integer, 
   req json)
  IS 'Returns the documents visible in a documents view';
+
+CREATE OR REPLACE FUNCTION documents.document_delete(prm_token integer, prm_doc_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM documents.document WHERE doc_id = prm_doc_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  DELETE FROM documents.document_dossier WHERE doc_id = prm_doc_id;
+  DELETE FROM documents.document_topic WHERE doc_id = prm_doc_id;
+  DELETE FROM documents.document WHERE doc_id = prm_doc_id;
+END;
+$$;
+COMMENT ON FUNCTION documents.document_delete(prm_token integer, prm_doc_id integer) IS 'Delete a document and its links with any topic or dossier';
+
+CREATE OR REPLACE FUNCTION documents.document_status_list()
+RETURNS SETOF documents.document_status
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::documents.document_status));
+END;
+$$;
+COMMENT ON FUNCTION documents.document_status_list() IS 'Returns the list of document statuses';

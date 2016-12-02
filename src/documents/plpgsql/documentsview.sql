@@ -142,14 +142,14 @@ $$;
 COMMENT ON FUNCTION documents.documentsview_delete(prm_token integer, prm_id integer) IS 'Delete an documents view';
 
 CREATE OR REPLACE FUNCTION documents.documentsview_get_topics(prm_token integer, prm_id integer)
-RETURNS SETOF text
+RETURNS SETOF organ.topic
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY
-    SELECT top_name
+    SELECT *
     FROM organ.topic
     WHERE top_id = ANY(SELECT top_id FROM documents.documentsview_topic WHERE dov_id = prm_id);
 END;
