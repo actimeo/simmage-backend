@@ -48,9 +48,9 @@ $portals_map = import_portals($dir . DIRECTORY_SEPARATOR . 'portals.csv',
 			      $dir . DIRECTORY_SEPARATOR . 'arranger');
 $organs_map = import_organs($dir . DIRECTORY_SEPARATOR . 'organs.csv', 
 			    $base, $token, CSV_SEPARATOR);
-$etys_map = import_events_types($dir . DIRECTORY_SEPARATOR . 'events-types.csv', 
+$etys_map = import_events_types($dir . DIRECTORY_SEPARATOR . 'eventstypes.csv', 
 		    $base, $token, CSV_SEPARATOR, $topics_map);
-$dtys_map = import_documents_types($dir . DIRECTORY_SEPARATOR . 'documents-types.csv', 
+$dtys_map = import_documents_types($dir . DIRECTORY_SEPARATOR . 'documentstypes.csv', 
 				   $base, $token, CSV_SEPARATOR, $topics_map);
 $groups_map = import_groups($dir . DIRECTORY_SEPARATOR . 'groups.csv', 
 			    $base, $token, CSV_SEPARATOR, $topics_map, $organs_map);
