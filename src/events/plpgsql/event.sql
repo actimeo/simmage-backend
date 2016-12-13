@@ -299,7 +299,18 @@ END;
 $$;
 COMMENT ON FUNCTION events.event_in_view_list(
   prm_token integer, 
-  prm_evv_id integer, 
+  prm_evv_id integer,
   prm_grp_id integer, 
   req json)
  IS 'Returns the events visible in a events view';
+
+CREATE OR REPLACE FUNCTION events.event_duration_list()
+RETURNS SETOF events.event_duration
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::events.event_duration));
+END;
+$$;
+COMMENT ON FUNCTION events.event_duration_list() IS 'Returns the list of event durations';
