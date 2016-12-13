@@ -320,4 +320,8 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
 			array_map(function ($m) { return $m['org_id']; }, $orgs));    
   }  
 
+  public function testEventDurationList() {
+    $list = self::$base->events->event_duration_list();
+    $this->assertEquals($list[0], 'standard');
+  }
 }
