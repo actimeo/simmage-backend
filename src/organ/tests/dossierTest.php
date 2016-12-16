@@ -354,7 +354,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 
     // Get dossiers from participant assigned groups (participant is not yet assigned to groups)
     $dosList3 = self::$base->organ->dossier_list($token2, false, false, null, true);
-    $this->assertEquals(0, count($dosList3));
+    $this->assertNull($dosList3);
 
     // Repeat after assigning participant to a group
     self::$base->organ->participant_assignment_add($this->token, $grpId2, $parId2);
@@ -363,7 +363,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 
     // Still 0 for other participant not assigned
     $dosList5 = self::$base->organ->dossier_list($token3, false, false, null, true);
-    $this->assertEquals(0, count($dosList5));
+    $this->assertNull($dosList5);
   }
 }
 ?>
