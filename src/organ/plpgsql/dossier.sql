@@ -63,7 +63,8 @@ CREATE OR REPLACE FUNCTION organ.dossier_list(
   prm_token integer, 
   prm_grouped boolean, 
   prm_external boolean, 
-  prm_grp_id integer)
+  prm_grp_id integer,
+  prm_assigned_only boolean)
 RETURNS SETOF organ.dossier
 LANGUAGE plpgsql
 STABLE
@@ -73,18 +74,27 @@ BEGIN
   RETURN QUERY SELECT DISTINCT dossier.* FROM organ.dossier
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) ON dossiers_authorized_for_user = dossier.dos_id
     LEFT JOIN organ.dossier_assignment USING(dos_id)
+    LEFT JOIN organ.participant_assignment USING(grp_id)
     WHERE dos_grouped = prm_grouped AND dos_external = prm_external
       AND (prm_grp_id ISNULL OR prm_grp_id = grp_id)
+      AND (NOT prm_assigned_only 
+           OR participant_assignment.par_id = (SELECT par_id FROM login."user" WHERE "user".usr_token = prm_token))
     ORDER BY dos_lastname, dos_groupname;
 END;
 $$;
-COMMENT ON FUNCTION organ.dossier_list(prm_token integer, prm_grouped boolean, prm_external boolean, prm_grp_id integer) 
+COMMENT ON FUNCTION organ.dossier_list(
+  prm_token integer, 
+  prm_grouped boolean, 
+  prm_external boolean, 
+  prm_grp_id integer,
+  prm_assigned_only boolean) 
 IS 'Return a list of dossiers filtered by grouped and external fields :
 - grouped = false && external = false ==> Patient
 - grouped = true && external = false ==> Family
 - grouped = false && external = true ==> Contact indiv
 - grouped = true && external = true ==> Contact family
-- grp_id: all dossiers if null or the dossiers assigned to a particular group
+- grp_id: all dossiers accessible by the user (via usergroup accessible groups) if null or the dossiers assigned to a particular group
+- assigned_only: all dossiers accessible by the user (via usergroup) if false or the dossiers of the groups where the user/participant is assigned only if true
 ';
 
 CREATE OR REPLACE FUNCTION organ.dossier_get(prm_token integer, prm_id integer)

@@ -328,24 +328,42 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
     $login2 = 'zaertyuiopa';
-    $pwd2 = 'blablabla';
-    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
-                             ."VALUES ('Test2', 'User2')");
-    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
-                             .$login2."', pgcrypto.crypt('"
-                             .$pwd2."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
-                             ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test2'));");
-
+    $parId2 = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
+    self::$base->login->user_add($this->token, $login2, null, $parId2, null);   
+    $pwd2 = self::$base->login->user_get_temporary_pwd($this->token, $login2);
     $usr2 = self::$base->login->user_login($login2, $pwd2, null);
     $token2 = $usr2['usr_token'];
 
+    $login3 = 'sfgjqsfjkgh';
+    $parId3 = self::$base->organ->participant_add($this->token, 'Michel', 'PARIS');
+    self::$base->login->user_add($this->token, $login3, null, $parId3, null);
+    $pwd3 = self::$base->login->user_get_temporary_pwd($this->token, $login3);
+    $usr3 = self::$base->login->user_login($login3, $pwd3, null);
+    $token3 = $usr3['usr_token'];
+
     self::$base->login->user_usergroup_set($this->token, $login2, $ugr2);
 
-    $dosList1 = self::$base->organ->dossier_list($this->token, false, false, $grpId1);
+    $dosList1 = self::$base->organ->dossier_list($this->token, false, false, $grpId1, false);
     $this->assertEquals(3, count($dosList1));
 
-    $dosList2 = self::$base->organ->dossier_list($token2, false, false, $grpId2);
+    $dosList2 = self::$base->organ->dossier_list($token2, false, false, $grpId2, false);
     $this->assertEquals(4, count($dosList2));
+
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId1, $grpId2));
+
+    // Get dossiers from participant assigned groups (participant is not yet assigned to groups)
+    $dosList3 = self::$base->organ->dossier_list($token2, false, false, null, true);
+    $this->assertEquals(0, count($dosList3));
+
+    // Repeat after assigning participant to a group
+    self::$base->organ->participant_assignment_add($this->token, $grpId2, $parId2);
+    $dosList4 = self::$base->organ->dossier_list($token2, false, false, null, true);
+    $this->assertEquals(4, count($dosList4));
+
+    // Still 0 for other participant not assigned
+    $dosList5 = self::$base->organ->dossier_list($token3, false, false, null, true);
+    $this->assertEquals(0, count($dosList5));
   }
 }
 ?>
