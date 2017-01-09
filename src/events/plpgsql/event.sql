@@ -9,6 +9,11 @@ CREATE OR REPLACE FUNCTION events.event_add(
   prm_cost money, 
   prm_description text, 
   prm_sumup text, 
+  prm_recurent boolean,
+  prm_occurence text,
+  prm_docctime integer,
+  prm_mocctime text,
+  prm_occrepeat integer,
   prm_topics integer[], 
   prm_dossiers integer[])
 RETURNS integer
@@ -17,33 +22,81 @@ VOLATILE
 AS $$
 DECLARE
   new_id integer;
+  loop_id integer;
+  ret integer;
+  st_date date;
+  fdnm_date date;
+  get_id boolean := true;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
-  INSERT INTO events.event (
-    eve_title, 
-    ety_id, 
-    eve_duration, 
-    eve_start_time, 
-    eve_end_time, 
-    eve_place, 
-    eve_cost, 
-    eve_description, 
-    eve_sumup
-   ) VALUES (
-    prm_title, 
-    prm_ety_id, 
-    prm_duration, 
-    prm_start_time, 
-    prm_end_time, 
-    prm_place, 
-    prm_cost, 
-    prm_description, 
-    prm_sumup
-   ) RETURNING eve_id INTO new_id;
+  loop_id := 0;
+  IF NOT prm_recurent THEN prm_occrepeat := 1; END IF;
 
-  PERFORM events.event_set_topics(prm_token, new_id, prm_topics);
-  PERFORM events.event_set_dossiers(prm_token, new_id, prm_dossiers);
-  RETURN new_id;  
+  WHILE loop_id < prm_occrepeat LOOP
+    INSERT INTO events.event (
+      eve_title, 
+      ety_id, 
+      eve_duration, 
+      eve_start_time, 
+      eve_end_time, 
+      eve_place, 
+      eve_cost, 
+      eve_description, 
+      eve_sumup
+    ) VALUES (
+      prm_title, 
+      prm_ety_id, 
+      prm_duration, 
+      prm_start_time, 
+      prm_end_time, 
+      prm_place, 
+      prm_cost, 
+      prm_description, 
+      prm_sumup
+    ) RETURNING eve_id INTO new_id;
+    
+    IF get_id = true THEN
+      ret := new_id;
+      get_id := false;
+    END IF;
+
+    PERFORM events.event_set_topics(prm_token, new_id, prm_topics);
+    PERFORM events.event_set_dossiers(prm_token, new_id, prm_dossiers);
+    loop_id := loop_id + 1;
+
+    IF prm_recurent THEN
+      st_date := date (prm_start_time);
+      CASE 
+	WHEN prm_occurence = 'daily' THEN
+	  prm_start_time := cast((st_date + prm_docctime) as text);
+
+	WHEN prm_occurence = 'monthly' THEN
+	    IF prm_mocctime = 'day' THEN
+	      prm_start_time := cast((st_date + interval '1 month') as text);
+
+	    ELSIF prm_mocctime = 'weekday' THEN
+		-- next event is the Nth weekday of next month
+		fdnm_date := date(date_trunc('month', st_date + interval '1 month'));			  -- 1st day of the next month
+		prm_start_time := cast((
+				    fdnm_date								  -- 1st day of the next month
+				    + (7 - extract(dow from fdnm_date) + extract(dow from st_date))::integer % 7  -- (7 - 1st weekday code next month + weekday code of start_date)  % 7
+				    + (ceil((date_part('day', st_date)) / 7) - 1)::integer * 7)		  -- (Nth weekday occurence of start_date month - 1) * 7
+				  as text);
+
+		IF date_part('day', st_date) > 28 THEN
+		  -- If start_date day is after the 28th -> Nth = 5th occurence
+		  -- same weekday can't appear 5 times in 2 consecutives months
+		  -- Nth occurence => Last occurence (5th occurence => 4th occurence, hence the - 7 days)
+		  prm_start_time := cast((date(prm_start_time) - 7) as text);
+		END IF;
+
+	    END IF;
+      END CASE;
+    END IF;
+
+  END LOOP;
+
+  RETURN ret;  
 END;
 $$;
 
@@ -58,6 +111,11 @@ COMMENT ON FUNCTION events.event_add(
   prm_cost money, 
   prm_description text, 
   prm_sumup text, 
+  prm_recurent boolean,
+  prm_occurence text,
+  prm_docctime integer,
+  prm_mocctime text,
+  prm_occrepeat integer,
   prm_topics integer[], 
   prm_dossiers integer[])
  IS 'Add a new event';

@@ -32,6 +32,22 @@ COMMENT ON FUNCTION notes.note_add(
   prm_dossiers integer[])
  IS 'Add a new note';
 
+CREATE OR REPLACE FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
+	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  UPDATE notes.note SET not_text = prm_text, not_event_date = prm_event_date, not_object = prm_object WHERE not_id = prm_not_id;
+  PERFORM notes.note_set_topics(prm_token, prm_not_id, prm_topics);
+  PERFORM notes.note_set_dossiers(prm_token, prm_not_id, prm_dossiers);
+END;
+$$;
+COMMENT ON FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
+	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[]) IS 'Update a note';
+
 CREATE OR REPLACE FUNCTION notes.note_set_topics(
   prm_token integer,
   prm_not_id integer,
@@ -266,3 +282,17 @@ COMMENT ON FUNCTION notes.note_in_view_list(
   prm_grp_id integer, 
   req json)
  IS 'Returns the notes visible in a notes view';
+
+CREATE OR REPLACE FUNCTION notes.note_delete(prm_token integer, prm_not_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  PERFORM notes.note_set_topics(prm_token, prm_not_id, ARRAY[]::integer[]);
+  PERFORM notes.note_set_dossiers(prm_token, prm_not_id, ARRAY[]::integer[]);
+  DELETE FROM notes.note WHERE not_id = prm_not_id;
+END;
+$$;
+COMMENT ON FUNCTION notes.note_delete(prm_token integer, prm_not_id integer) IS 'Delete a note';

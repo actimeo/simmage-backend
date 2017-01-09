@@ -42,7 +42,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('"
-			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization, users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  			     
     $res = self::$base->login->user_login($login, $pwd, null);
     $this->token = $res['usr_token'];
@@ -78,6 +78,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
+					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ]
 					 );
     $this->assertGreaterThan(0, $id);
@@ -108,6 +109,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
+					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ]
 					 );
     $eve = self::$base->events->event_get($this->token, $id);
@@ -147,6 +149,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
+					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ]
 					 );
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
@@ -178,6 +181,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
+					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ]
 					 );
     $req = [ 'eve_id' => true,
@@ -214,12 +218,14 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $eve_id1 = self::$base->events->event_add($this->token, 'a title 1', $ety_id, 'standard', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
+					      false, null, null, null, 0,
 					      [ $top_id1, $top_id2 ], [ $dosId ]
 					      );
 
     $eve_id2 = self::$base->events->event_add($this->token, 'a title 2', $ety_id, 'standard', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
+					      false, null, null, null, 0,
 					      [ $top_id1, $top_id2 ], [ $dosId ]
 					      );
 
@@ -231,6 +237,190 @@ class EventTest extends PHPUnit_Framework_TestCase {
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
     $ret = self::$base->events->event_in_view_list($this->token, $evv_id, NULL, json_encode($req));
-    print_r($ret);
-    }
+    //print_r($ret);
+  }
+
+  public function testEventAddRecurentDaily() {
+      
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'firstname', 'lastname', '01/09/2016', 'male', false);
+
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+
+    $ety_id = self::$base->events->event_type_add($this->token, 'incident', 'an event type', true);
+
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'description 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'description 2', 'health', '#000000');
+
+    $viewId = self::$base->events->eventsview_add($this->token, 'an events view', ['incident'], $ety_id, [ $top_id1, $top_id2 ]);
+
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId, 'preadmission', '01/09/2016');
+
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, 'group 1', 'grp desc 1', false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, 'group 2', 'grp desc 2', false, 'organization');
+
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
+
+    self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
+
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+					      '01/01/2016 00:00:00', '31/12/2016 00:00:00',
+					      null, null, null, null,
+					      true, 'daily', 3, null, 5,
+					      [ $top_id1, $top_id2 ], [ $dosId ]
+				      );
+
+    $secondId = $firstId + 1;
+    $thirdId = $secondId + 1;
+    $fourthId = $thirdId + 1;
+    $fifthId = $fourthId + 1;
+
+    $this->assertGreaterThan(0, $firstId);
+
+    $auth= self::$base->organ->dossiers_authorized_for_user($this->token);
+
+    $req = [  'eve_id' => true,
+	      'eve_title' => true,
+	      'ety_id' => true,
+	      'ety_name' => true,
+	      'eve_duration' => true,
+	      'eve_start_time' => true,
+	      'eve_end_time' => true,
+	      'eve_place' => true,
+	      'eve_cost' => true,
+	      'eve_description' => true,
+	      'eve_sumup' => true,
+	      'dossiers' => [ 'dos_id' => true ] ];
+
+    $eves_json = self::$base->events->event_json($this->token, [ $firstId, $secondId, $thirdId, $fourthId, $fifthId ], json_encode($req));
+    
+    $list = self::$base->events->event_in_view_list($this->token, $viewId, [], json_encode($req));
+    //print_r($eves_json);
+  }
+
+  public function testEventAddRecurentMonthlySameDay() {
+
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'firstname', 'lastname', '01/09/2016', 'male', false);
+
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+
+    $ety_id = self::$base->events->event_type_add($this->token, 'incident', 'an event type', true);
+
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'description 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'description 2', 'health', '#000000');
+
+    $viewId = self::$base->events->eventsview_add($this->token, 'an events view', ['incident'], $ety_id, [ $top_id1, $top_id2 ]);
+
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId, 'preadmission', '01/09/2016');
+
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, 'group 1', 'grp desc 1', false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, 'group 2', 'grp desc 2', false, 'organization');
+
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
+
+    self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
+
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
+					      null, null, null, null,
+					      true, 'monthly', null, 'day', 5,
+					      [ $top_id1, $top_id2 ], [ $dosId ]
+				      );
+
+    $secondId = $firstId + 1;
+    $thirdId = $secondId + 1;
+    $fourthId = $thirdId + 1;
+    $fifthId = $fourthId + 1;
+
+    $this->assertGreaterThan(0, $firstId);
+
+    $auth= self::$base->organ->dossiers_authorized_for_user($this->token);
+
+    $req = [  'eve_id' => true,
+	      'eve_title' => true,
+	      'ety_id' => true,
+	      'ety_name' => true,
+	      'eve_duration' => true,
+	      'eve_start_time' => true,
+	      'eve_end_time' => true,
+	      'eve_place' => true,
+	      'eve_cost' => true,
+	      'eve_description' => true,
+	      'eve_sumup' => true,
+	      'dossiers' => [ 'dos_id' => true ] ];
+
+    $eves_json = self::$base->events->event_json($this->token, [ $firstId, $secondId, $thirdId, $fourthId, $fifthId ], json_encode($req));
+    //print_r($eves_json);
+  }
+
+  public function testEventAddRecurentMonthlySameWeekday() {
+
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'firstname', 'lastname', '01/09/2016', 'male', false);
+
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+
+    $ety_id = self::$base->events->event_type_add($this->token, 'incident', 'an event type', true);
+
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'description 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'description 2', 'health', '#000000');
+
+    $viewId = self::$base->events->eventsview_add($this->token, 'an events view', ['incident'], $ety_id, [ $top_id1, $top_id2 ]);
+
+    self::$base->organ->dossier_status_change($this->token, $dosId, $orgId, 'preadmission', '01/09/2016');
+
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, 'group 1', 'grp desc 1', false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, 'group 2', 'grp desc 2', false, 'organization');
+
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
+
+    self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
+
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
+					      null, null, null, null,
+					      true, 'monthly', null, 'weekday', 5,
+					      [ $top_id1, $top_id2 ], [ $dosId ]
+				      );
+
+    $secondId = $firstId + 1;
+    $thirdId = $secondId + 1;
+    $fourthId = $thirdId + 1;
+    $fifthId = $fourthId + 1;
+
+    $this->assertGreaterThan(0, $firstId);
+
+    $auth= self::$base->organ->dossiers_authorized_for_user($this->token);
+
+    $req = [  'eve_id' => true,
+	      'eve_title' => true,
+	      'ety_id' => true,
+	      'ety_name' => true,
+	      'eve_duration' => true,
+	      'eve_start_time' => true,
+	      'eve_end_time' => true,
+	      'eve_place' => true,
+	      'eve_cost' => true,
+	      'eve_description' => true,
+	      'eve_sumup' => true ];
+
+    $eves_json = self::$base->events->event_json($this->token, [ $firstId, $secondId, $thirdId, $fourthId, $fifthId ], json_encode($req));
+   // print_r($eves_json);
+  }
 }

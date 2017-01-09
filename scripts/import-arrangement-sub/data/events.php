@@ -47,6 +47,7 @@ function import_events($file, $base, $token, $delimiter = "\t", $dossiers_map, $
     $base->events->event_add($token, $title, $ety_id, $duration_type, 
 			     $start_time, $end_time, $place, $cost, 
 			     $description, $sumup,
+			     false, null, null, null, 0,
 			     $top_ids, $dos_ids);    
   }
   fclose($f);

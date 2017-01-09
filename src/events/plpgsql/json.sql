@@ -77,7 +77,7 @@ $$;
 COMMENT ON FUNCTION events.event_type_json (prm_token integer, prm_ety integer, req json)
   IS 'Returns an event type or the list of event types as json';
 
-CREATE OR REPLACE FUNCTION events.event_type_filter_json(prm_token integer, prm_category events.event_category, prm_top_ids integer[])
+CREATE OR REPLACE FUNCTION events.event_type_filter_json(prm_token integer, prm_category events.event_category, prm_top_ids integer[], prm_filter boolean)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -87,18 +87,17 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
-    FROM (SELECT ety_id, ety_name, ety_category, ety_individual_name FROM events.event_type
-	  INNER JOIN events.event_type_topic as top USING (ety_id)
-	  WHERE top_id = ANY(prm_top_ids)
+    FROM (SELECT ety_id, ety_name, ety_category, ety_individual_name FROM events.event_type ev
+	  WHERE (select array_agg(top_id) from events.event_type_topic top where ev.ety_id = top.ety_id) @> prm_top_ids
 	  AND ety_category = prm_category
 	  ORDER BY ety_name) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION events.event_type_filter_json(prm_token integer, prm_category events.event_category, prm_top_ids integer[])
+COMMENT ON FUNCTION events.event_type_filter_json(prm_token integer, prm_category events.event_category, prm_top_ids integer[], prm_filter boolean)
   IS 'Return a list of event types linked to a specific category and topics';
 
-CREATE OR REPLACE FUNCTION events.event_type_list_json(prm_token integer, prm_evv_id integer, prm_top_ids integer[])
+CREATE OR REPLACE FUNCTION events.event_type_list_json(prm_token integer, prm_evv_id integer, prm_top_ids integer[], prm_filter boolean)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -109,9 +108,9 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT array_to_json(array_agg(row_to_json(d)))
   INTO ret
-  FROM (SELECT t.cat, events.event_type_filter_json(prm_token, t.cat, prm_top_ids) as events
+  FROM (SELECT t.cat, events.event_type_filter_json(prm_token, t.cat, prm_top_ids, prm_filter) as events
 	FROM (SELECT unnest(evv_categories) as cat FROM events.eventsview WHERE evv_id = prm_evv_id) as t ) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION events.event_type_list_json(prm_token integer, prm_evv_id integer, prm_top_ids integer[]) IS 'Return a list of event types as json grouped by categories';
+COMMENT ON FUNCTION events.event_type_list_json(prm_token integer, prm_evv_id integer, prm_top_ids integer[], prm_filter boolean) IS 'Return a list of event types as json grouped by categories';
