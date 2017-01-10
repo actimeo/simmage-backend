@@ -3,7 +3,8 @@ CREATE TABLE notes.note (
   not_text text NOT NULL,
   not_creation_date timestamp with time zone,
   not_event_date timestamp with time zone,
-  not_object text
+  not_object text,
+  not_author integer NOT NULL REFERENCES organ.participant
 );
 
 CREATE TABLE notes.note_topic (
