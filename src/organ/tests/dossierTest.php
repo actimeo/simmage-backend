@@ -373,6 +373,11 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     return $ids;
   }
 
+  private static function refereeDossiersIds($list) {
+    $filtered = array_filter($list, function($a) { return $a['dos_referee']; });
+    return dossierTest::sortedDossiersIds($filtered);
+  }
+
   public function testDossierListReferee() {
     $fname1 = 'firstname1';
     $lname1 = 'lastname1';
@@ -465,20 +470,32 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals([$dosId1, $dosId2, $dosId3, $dosId4, $dosId5, $dosId6], 
 			dossierTest::sortedDossiersIds($list1));
 
+    $this->assertEquals([$dosId1, $dosId2], 
+			dossierTest::refereeDossiersIds($list1));
+
     // dossiers accessible via usergroup for user2
     $list2 = self::$base->organ->dossier_list($token2, false, false, null, false);
     $this->assertEquals([$dosId5, $dosId6], 
 			dossierTest::sortedDossiersIds($list2));
+
+    $this->assertEquals([$dosId5], 
+			dossierTest::refereeDossiersIds($list2));
     
     // dossiers accessible via group for user1
     $list3 = self::$base->organ->dossier_list($token1, false, false, null, true);
     $this->assertEquals([$dosId1, $dosId2, $dosId3, $dosId4], 
 			dossierTest::sortedDossiersIds($list3));
    
+    $this->assertEquals([$dosId1, $dosId2], 
+			dossierTest::refereeDossiersIds($list3));
+    
     // dossiers accessible via group for user2
     $list4 = self::$base->organ->dossier_list($token2, false, false, null, true);
     $this->assertEquals([$dosId5, $dosId6], 
 			dossierTest::sortedDossiersIds($list4));
+    
+    $this->assertEquals([$dosId5], 
+			dossierTest::refereeDossiersIds($list4));
     
   }
 }
