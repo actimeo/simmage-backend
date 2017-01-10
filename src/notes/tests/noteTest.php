@@ -164,6 +164,9 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 				       );
     $req = [ 'not_id' => true,
 	     'not_text' => true,
+	     'author' => [ 'par_id' => true,
+			   'par_firstname' => true,
+			   'par_lastname' => true ],
 	     'topics' => [ 'top_id' => true,
 			   'top_name' => true ],
 	     'dossiers' => [ 'dos_id' => true,
@@ -176,6 +179,8 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('a note', $json->not_text);
     $this->assertEquals(2, count($json->topics));
     $this->assertEquals(1, count($json->dossiers));
+    $this->assertEquals('Test', $json->author->par_firstname);
+    $this->assertEquals('User', $json->author->par_lastname);
   }
 
   public function testNoteInNotesView() {
