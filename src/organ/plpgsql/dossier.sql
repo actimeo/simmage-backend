@@ -59,22 +59,48 @@ $$;
 COMMENT ON FUNCTION organ.dossier_add_grouped(prm_token integer, prm_groupname text, prm_external boolean) 
 IS 'Add a new dossier for a whole group (family)';
 
-CREATE OR REPLACE FUNCTION organ.dossier_list(
+DROP FUNCTION IF EXISTS organ.dossier_list(
+  prm_token integer, 
+  prm_grouped boolean, 
+  prm_external boolean, 
+  prm_grp_id integer,
+  prm_assigned_only boolean);
+DROP TYPE IF EXISTS organ.dossier_list;
+
+CREATE TYPE organ.dossier_list AS (
+  dos_id integer,
+  dos_firstname text,
+  dos_lastname text,
+  dos_birthdate date,
+  dos_gender organ.gender,
+  dos_grouped boolean,
+  dos_external boolean,
+  dos_groupname text,
+  dos_referee boolean
+);
+
+CREATE FUNCTION organ.dossier_list(
   prm_token integer, 
   prm_grouped boolean, 
   prm_external boolean, 
   prm_grp_id integer,
   prm_assigned_only boolean)
-RETURNS SETOF organ.dossier
+RETURNS SETOF organ.dossier_list
 LANGUAGE plpgsql
 STABLE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  RETURN QUERY SELECT DISTINCT dossier.* FROM organ.dossier
+  RETURN QUERY SELECT DISTINCT 
+    dos_id, dos_firstname, dos_lastname, dos_birthdate, dos_gender, dos_grouped,
+    dos_external, dos_groupname, 
+    ((prm_assigned_only AND ref_id NOTNULL) OR (ref_id NOTNULL AND participant_assignment.par_id = (SELECT par_id FROM login."user" WHERE "user".usr_token = prm_token)))
+  FROM organ.dossier
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) ON dossiers_authorized_for_user = dossier.dos_id
     LEFT JOIN organ.dossier_assignment USING(dos_id)
     LEFT JOIN organ.participant_assignment USING(grp_id)
+    LEFT JOIN organ.referee 
+      ON referee.doa_id = dossier_assignment.doa_id AND referee.paa_id = participant_assignment.paa_id
     WHERE dos_grouped = prm_grouped AND dos_external = prm_external
       AND (prm_grp_id ISNULL OR prm_grp_id = grp_id)
       AND (NOT prm_assigned_only 
