@@ -17,3 +17,11 @@ CREATE TABLE notes.note_dossier (
   dos_id integer NOT NULL REFERENCES organ.dossier,
   CONSTRAINT note_dossier_pkey PRIMARY KEY(not_id, dos_id)
 );
+
+CREATE TABLE notes.note_recipient (
+  nor_id serial PRIMARY KEY,
+  not_id integer NOT NULL REFERENCES notes.note,
+  par_id integer NOT NULL REFERENCES organ.participant,
+  nor_for_action boolean NOT NULL,
+  nor_done boolean DEFAULT FALSE
+);

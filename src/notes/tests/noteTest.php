@@ -72,8 +72,9 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
     
     $id = self::$base->notes->note_add($this->token, 'a note', 
-				       '30/01/2016', '29/01/2016', 'an object', 
-				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ], 
+				       null, null
 				       );
     $this->assertGreaterThan(0, $id);
   }  
@@ -97,8 +98,9 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->notes->note_add($this->token, 'a note', 
-				       '30/01/2016', '29/01/2016', 'an object', 
-				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ],
+				       null, null
 				       );
     $doc = self::$base->notes->note_get($this->token, $id);
     $this->assertEquals($doc['not_id'], $id);
@@ -129,8 +131,9 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->notes->note_add($this->token, 'a note', 
-				       '30/01/2016', '29/01/2016', 'an object', 
-				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ],
+				       null, null
 				       );
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $doc = self::$base->notes->note_get($this->token, $id + 1);
@@ -155,8 +158,9 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->notes->note_add($this->token, 'a note', 
-				       '30/01/2016', '29/01/2016', 'an object', 
-				       [ $top_id1, $top_id2 ], [ $dosId ]
+				       '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ],
+				       null, null
 				       );
     $req = [ 'not_id' => true,
 	     'not_text' => true,
@@ -186,13 +190,15 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $doc_id1 = self::$base->notes->note_add($this->token, 'a note', 
-					    '30/01/2016', '29/01/2016', 'an object', 
-					    [ $top1 ], [ $dosId ]
+					    '29/01/2016', 'an object', 
+					    [ $top1 ], [ $dosId ],
+				       null, null
 					    );
 
     $doc_id2 = self::$base->notes->note_add($this->token, 'another note', 
-					    '30/03/2016', '29/03/2016', 'an object', 
-					    [ $top1, $top2 ], [ $dosId ]
+					    '29/03/2016', 'an object', 
+					    [ $top1, $top2 ], [ $dosId ],
+				       null, null
 					    );
 
     $req = [ 'doc_id' => true,
@@ -204,4 +210,40 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 			     'dos_lastname' => true ] ];
     $ret = self::$base->notes->note_in_view_list($this->token, $nov_id, NULL, json_encode($req));
   } 
+
+  public function testNoteRecipients() {
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';    
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $par1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
+    $par2 = self::$base->organ->participant_add($this->token, 'Jacques', 'Martin');
+    $par3 = self::$base->organ->participant_add($this->token, 'Marie', 'Poppins');
+    
+    $notId = self::$base->notes->note_add($this->token, 'a note', 
+				       '29/01/2016', 'an object', 
+				       [ $top_id1, $top_id2 ], [ $dosId ], 
+				       [ $par1, $par2 ], [ $par3 ]
+				       );
+    $this->assertGreaterThan(0, $notId);
+
+    $info = self::$base->notes->note_get_recipients($this->token, $notId, false);
+    $this->assertEquals(2, count($info));
+    $action = self::$base->notes->note_get_recipients($this->token, $notId, true);
+    $this->assertEquals(1, count($action));
+  }  
+
 }

@@ -1,11 +1,12 @@
 CREATE OR REPLACE FUNCTION notes.note_add(
   prm_token integer, 
   prm_text text,
-  prm_creation_date timestamp with time zone,
   prm_event_date timestamp with time zone,
   prm_object text,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossiers integer[],
+  prm_recipients_info integer[],
+  prm_recipients_action integer[])
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -15,21 +16,24 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, null);
   INSERT INTO notes.note (not_text, not_creation_date, not_event_date, not_object)
-    VALUES (prm_text, prm_creation_date, prm_event_date, prm_object)
+    VALUES (prm_text, CURRENT_TIMESTAMP, prm_event_date, prm_object)
     RETURNING not_id INTO new_id;
   PERFORM notes.note_set_topics(prm_token, new_id, prm_topics);
   PERFORM notes.note_set_dossiers(prm_token, new_id, prm_dossiers);
+  PERFORM notes.note_set_recipients(prm_token, new_id, false, prm_recipients_info);
+  PERFORM notes.note_set_recipients(prm_token, new_id, true, prm_recipients_action);
   RETURN new_id;
 END;
 $$;
 COMMENT ON FUNCTION notes.note_add(
   prm_token integer,
   prm_text text,
-  prm_creation_date timestamp with time zone,
   prm_event_date timestamp with time zone,
   prm_object text,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossiers integer[],
+  prm_recipients_info integer[],
+  prm_recipients_action integer[])
  IS 'Add a new note';
 
 CREATE OR REPLACE FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
@@ -296,3 +300,56 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION notes.note_delete(prm_token integer, prm_not_id integer) IS 'Delete a note';
+
+CREATE OR REPLACE FUNCTION notes.note_set_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean, prm_par_ids integer[])
+RETURNS void
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  p integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM notes.note WHERE not_id = prm_not_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  IF prm_par_ids ISNULL THEN
+    DELETE FROM notes.note_recipient 
+      WHERE not_id = prm_not_id
+      AND nor_for_action = prm_for_action;
+    RETURN;
+  END IF;
+
+  DELETE FROM notes.note_recipient 
+    WHERE not_id = prm_not_id 
+    AND nor_for_action = prm_for_action
+    AND par_id <> ALL(prm_par_ids);
+
+  FOREACH p IN ARRAY prm_par_ids
+  LOOP
+    IF NOT EXISTS (SELECT 1 FROM notes.note_recipient 
+                     WHERE not_id = prm_not_id 
+		     AND prm_for_action = nor_for_action 
+		     AND par_id = p) THEN
+      INSERT INTO notes.note_recipient (not_id, nor_for_action, par_id) VALUES (prm_not_id, prm_for_action, p);
+    END IF;
+  END LOOP;  
+END;
+$$;
+COMMENT ON FUNCTION notes.note_set_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean, prm_par_ids integer[]) IS 'Set recipients for a note, for information or action';
+
+CREATE OR REPLACE FUNCTION notes.note_get_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean)
+RETURNS SETOF organ.participant
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN QUERY SELECT participant.*
+    FROM organ.participant
+    INNER JOIN notes.note_recipient USING(par_id)
+    WHERE not_id = prm_not_id AND nor_for_action = prm_for_action;
+END;
+$$;
+COMMENT ON FUNCTION notes.note_get_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean) IS 'Get recipients for a note for information or action';
