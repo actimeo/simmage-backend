@@ -224,7 +224,7 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION notes.note_topic_json(prm_token integer, prm_not_id integer, req json) IS 'Returns the topics of a note as json';
+COMMENT ON FUNCTION notes.note_dossier_json(prm_token integer, prm_not_id integer, req json) IS 'Returns the dossiers of a note as json';
 
 CREATE OR REPLACE FUNCTION notes.note_json(prm_token integer, prm_not_ids integer[], req json)
 RETURNS json
@@ -247,7 +247,9 @@ BEGIN
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       notes.note_topic_json(prm_token, not_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
-      notes.note_dossier_json(prm_token, not_id, req->'dossiers') END as dossiers
+      notes.note_dossier_json(prm_token, not_id, req->'dossiers') END as dossiers,
+    CASE WHEN (req->>'recipients') IS NULL THEN NULL ELSE
+      notes.note_recipients_json(prm_token, not_id, req->'recipients') END as recipients
     FROM notes.note 
       WHERE not_id = ANY(prm_not_ids)
   ) d;
@@ -357,3 +359,28 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION notes.note_get_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean) IS 'Get recipients for a note for information or action';
+
+CREATE OR REPLACE FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  RAISE WARNING '%', req;
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'par_id') IS NULL THEN NULL ELSE par_id END as par_id, 
+      CASE WHEN (req->>'par_firstname') IS NULL THEN NULL ELSE  par_firstname END as par_firstname, 
+      CASE WHEN (req->>'par_lastname') IS NULL THEN NULL ELSE  par_lastname END as par_lastname, 
+      CASE WHEN (req->>'par_email') IS NULL THEN NULL ELSE par_email END as par_email,
+      CASE WHEN (req->>'nor_for_action') IS NULL THEN NULL ELSE nor_for_action END as nor_for_action
+      FROM notes.note_recipient INNER JOIN organ.participant USING(par_id)
+      WHERE not_id = prm_not_id) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json) 
+ IS 'Returns the recipients for a note as json';
