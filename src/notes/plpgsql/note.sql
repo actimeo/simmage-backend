@@ -39,7 +39,8 @@ COMMENT ON FUNCTION notes.note_add(
  IS 'Add a new note';
 
 CREATE OR REPLACE FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
-	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[])
+	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[],
+	prm_recipients_info integer[], prm_recipients_action integer[])
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
@@ -49,10 +50,13 @@ BEGIN
   UPDATE notes.note SET not_text = prm_text, not_event_date = prm_event_date, not_object = prm_object WHERE not_id = prm_not_id;
   PERFORM notes.note_set_topics(prm_token, prm_not_id, prm_topics);
   PERFORM notes.note_set_dossiers(prm_token, prm_not_id, prm_dossiers);
+  PERFORM notes.note_set_recipients(prm_token, prm_not_id, false, prm_recipients_info);
+  PERFORM notes.note_set_recipients(prm_token, prm_not_id, true, prm_recipients_action);
 END;
 $$;
 COMMENT ON FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
-	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[]) IS 'Update a note';
+	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[],
+	prm_recipients_info integer[], prm_recipients_action integer[]) IS 'Update a note';
 
 CREATE OR REPLACE FUNCTION notes.note_set_topics(
   prm_token integer,
@@ -300,8 +304,10 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  PERFORM notes.note_set_topics(prm_token, prm_not_id, ARRAY[]::integer[]);
-  PERFORM notes.note_set_dossiers(prm_token, prm_not_id, ARRAY[]::integer[]);
+  PERFORM notes.note_set_topics(prm_token, prm_not_id, NULL);
+  PERFORM notes.note_set_dossiers(prm_token, prm_not_id, NULL);
+  PERFORM notes.note_set_recipients(prm_token, prm_not_id, false, NULL);
+  PERFORM notes.note_set_recipients(prm_token, prm_not_id, true, NULL);
   DELETE FROM notes.note WHERE not_id = prm_not_id;
 END;
 $$;
