@@ -13,10 +13,12 @@ VOLATILE
 AS $$
 DECLARE
   new_id integer;
+  author_id integer;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
-  INSERT INTO notes.note (not_text, not_creation_date, not_event_date, not_object)
-    VALUES (prm_text, CURRENT_TIMESTAMP, prm_event_date, prm_object)
+  SELECT par_id INTO author_id FROM login.user WHERE usr_token = prm_token;
+  INSERT INTO notes.note (not_text, not_creation_date, not_event_date, not_object, not_author)
+    VALUES (prm_text, CURRENT_TIMESTAMP, prm_event_date, prm_object, author_id)
     RETURNING not_id INTO new_id;
   PERFORM notes.note_set_topics(prm_token, new_id, prm_topics);
   PERFORM notes.note_set_dossiers(prm_token, new_id, prm_dossiers);
@@ -240,6 +242,8 @@ BEGIN
     CASE WHEN (req->>'not_creation_date') IS NULL THEN NULL ELSE not_creation_date END as not_creation_date, 
     CASE WHEN (req->>'not_event_date') IS NULL THEN NULL ELSE not_event_date END as not_event_date, 
     CASE WHEN (req->>'not_object') IS NULL THEN NULL ELSE not_object END as not_object, 
+    CASE WHEN (req->>'author') IS NULL THEN NULL ELSE 
+      organ.participant_json(prm_token, not_author, req->'author') END AS author,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       notes.note_topic_json(prm_token, not_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
