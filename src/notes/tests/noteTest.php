@@ -157,10 +157,17 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
+    // Recipients
+    $parId1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Paris');
+    $parId2 = self::$base->organ->participant_add($this->token, 'Margo', 'Paris');
+    $parId3 = self::$base->organ->participant_add($this->token, 'Lila', 'Paris');
+    $parId4 = self::$base->organ->participant_add($this->token, 'Mélina', 'Martin');
+    $parId5 = self::$base->organ->participant_add($this->token, 'Elsa', 'Martin');
+    
     $id = self::$base->notes->note_add($this->token, 'a note', 
 				       '29/01/2016', 'an object', 
 				       [ $top_id1, $top_id2 ], [ $dosId ],
-				       null, null
+				       [ $parId1, $parId2, $parId3 ], [ $parId4, $parId5 ]
 				       );
     $req = [ 'not_id' => true,
 	     'not_text' => true,
@@ -171,7 +178,12 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 			   'top_name' => true ],
 	     'dossiers' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
-			     'dos_lastname' => true ] ];
+			     'dos_lastname' => true ],
+	     'recipients' => [ 'par_id' => true,
+			       'par_firstname' => true,
+			       'par_lastname' => true,
+			       'nor_for_action' => true ]
+	     ];
     $nots_json = self::$base->notes->note_json($this->token, [ $id ], json_encode($req));
     $this->assertEquals(1, count($nots_json));
     $json = $nots_json[0];
@@ -181,6 +193,10 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(1, count($json->dossiers));
     $this->assertEquals('Test', $json->author->par_firstname);
     $this->assertEquals('User', $json->author->par_lastname);
+
+    $this->assertEquals(5, count($json->recipients));
+    $recipients_info_only = array_filter($json->recipients, function($r) { return !$r->nor_for_action; });
+    $this->assertEquals(3, count($recipients_info_only));
   }
 
   public function testNoteInNotesView() {
