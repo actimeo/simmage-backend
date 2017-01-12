@@ -265,6 +265,74 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(2, count($info));
     $action = self::$base->notes->note_get_recipients($this->token, $notId, true);
     $this->assertEquals(1, count($action));
-  }  
+  }
+
+  public function testNoteParticipantList() {
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+
+    $dos_id = self::$base->organ->dossier_add_individual($this->token, 'First', 'Lastname', '21/12/1963', 'male', false);
+
+    $par = self::$base->execute_sql("SELECT par_id FROM login.user WHERE usr_token = ".$this->token);
+    $par1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
+    $par2 = self::$base->organ->participant_add($this->token, 'Jacques', 'Martin');
+    $par3 = self::$base->organ->participant_add($this->token, 'Marie', 'Poppins');
+
+    $login1 = 'flebeleb';
+    $pwd1 = 'gladabaadaleda';
+
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login1."', pgcrypto.crypt('"
+			     .$pwd1."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+			     .$par1.");");
+
+    $res = self::$base->login->user_login($login1, $pwd1, null);
+    $token1 = $res['usr_token'];
+
+    self::$base->notes->note_add($this->token, 'a note',
+				  '21/12/2016', 'an object',
+					[ $top_id1, $top_id2 ], [ $dos_id ],
+					[ $par1, $par2 ], [ $par3 ]);
+
+    self::$base->notes->note_add($token1, 'a note',
+				  '21/12/2016', 'an object',
+					[ $top_id1, $top_id2 ], [ $dos_id ],
+					[ $par1 ], [ $par3, $par ]);
+
+    self::$base->notes->note_add($token1, 'a note',
+				  '21/12/2016', 'an object',
+					[ $top_id1, $top_id2 ], [ $dos_id ],
+					[ ], [ ]);
+
+    self::$base->notes->note_add($token1, 'a note',
+				  '21/12/2016', 'an object',
+					[ $top_id1 ], [ $dos_id ],
+					[ $par ], [ ]);
+
+    self::$base->notes->note_add($this->token, 'a note',
+				  '21/12/2016', 'an object',
+					[ $top_id1, $top_id2 ], [ $dos_id ],
+					[ $par3 ], [ $par ]);
+
+    $req = [ 'not_id' => true,
+	     'not_text' => true,
+	     'author' => [ 'par_id' => true,
+			   'par_firstname' => true,
+			   'par_lastname' => true ],
+	     'topics' => [ 'top_id' => true,
+			   'top_name' => true ],
+	     'dossiers' => [ 'dos_id' => true,
+			     'dos_firstname' => true,
+			     'dos_lastname' => true ],
+	     'recipients' => [ 'par_id' => true,
+			       'par_firstname' => true,
+			       'par_lastname' => true,
+			       'nor_for_action' => true ]
+	     ];
+
+    $list = self::$base->notes->note_participant_list($token1, json_encode($req));
+
+    $this->assertEquals(4, count($list));
+  }
 
 }

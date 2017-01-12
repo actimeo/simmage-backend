@@ -390,3 +390,23 @@ END;
 $$;
 COMMENT ON FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json) 
  IS 'Returns the recipients for a note as json';
+
+CREATE OR REPLACE FUNCTION notes.note_participant_list(prm_token integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  RETURN notes.note_json(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT not_id FROM notes.note
+      LEFT OUTER JOIN notes.note_recipient USING(not_id)
+      WHERE note.not_author = participant OR note_recipient.par_id = participant
+	)), req);
+END;
+$$;
+COMMENT ON FUNCTION notes.note_participant_list(prm_token integer, req json) IS 'Return the notes created or destinated to the current logged user';
