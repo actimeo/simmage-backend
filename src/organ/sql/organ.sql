@@ -128,5 +128,6 @@ CREATE TABLE organ.participant_assignment (
 CREATE TABLE organ.referee (
   ref_id serial PRIMARY KEY,
   doa_id integer NOT NULL REFERENCES organ.dossier_assignment,
-  paa_id integer NOT NULL REFERENCES organ.participant_assignment
+  paa_id integer NOT NULL REFERENCES organ.participant_assignment,
+  ref_function text
 );

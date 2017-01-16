@@ -460,10 +460,10 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     self::$base->organ->participant_assignment_add($this->token, $grpId1, $parId1);
     self::$base->organ->participant_assignment_add($this->token, $grpId2, $parId2);
 
-    self::$base->organ->referee_add($this->token, $grpId1, $dosId1, $parId1);
-    self::$base->organ->referee_add($this->token, $grpId1, $dosId2, $parId1);
+    self::$base->organ->referee_add($this->token, $grpId1, $dosId1, $parId1, 'a function');
+    self::$base->organ->referee_add($this->token, $grpId1, $dosId2, $parId1, 'a function');
 
-    self::$base->organ->referee_add($this->token, $grpId2, $dosId5, $parId2);
+    self::$base->organ->referee_add($this->token, $grpId2, $dosId5, $parId2, 'a function');
 
     // dossiers accessible via usergroup for user1
     $list1 = self::$base->organ->dossier_list($token1, false, false, null, false);
