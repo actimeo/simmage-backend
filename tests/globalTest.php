@@ -18,6 +18,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('login', '_token_assert_other_login'),
 			 array('login', '_user_token_create'),
 			 array('organ', '_dossier_link_get_inverted_relationship'),
+			 array('organ', '_participant_dossier_referee_list'),
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {
