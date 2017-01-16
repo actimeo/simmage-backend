@@ -71,7 +71,7 @@ class RefereeTest extends PHPUnit_Framework_TestCase {
 
     self::$base->organ->participant_assignment_add($this->token, $grpId, $parId);
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId));
-    $ref_id = self::$base->organ->referee_add($this->token, $grpId, $dosId, $parId);
+    $ref_id = self::$base->organ->referee_add($this->token, $grpId, $dosId, $parId, 'a function');
     $this->assertNotNull($ref_id);
   }
 }
