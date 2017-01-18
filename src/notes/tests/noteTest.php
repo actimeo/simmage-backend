@@ -44,7 +44,7 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('"
 			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  			     
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->token = $res['usr_token'];
   }
 
@@ -286,7 +286,7 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 			     .$pwd1."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
 			     .$par1.");");
 
-    $res = self::$base->login->user_login($login1, $pwd1, null);
+    $res = self::$base->login->user_login($login1, $pwd1, null, null);
     $token1 = $res['usr_token'];
 
     self::$base->notes->note_add($this->token, 'a note',

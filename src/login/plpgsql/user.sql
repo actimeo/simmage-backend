@@ -115,7 +115,8 @@ COMMENT ON COLUMN user_login.par_id IS 'Participant linked with this user.';
 CREATE OR REPLACE FUNCTION user_login(
   prm_login character varying, 
   prm_pwd character varying, 
-  prm_rights login.user_right[]) 
+  prm_rights login.user_right[],
+  prm_connection_ip inet) 
 RETURNS user_login
   LANGUAGE plpgsql
   AS $$
@@ -135,6 +136,10 @@ BEGIN
   IF NOT FOUND THEN
     SELECT * INTO tok FROM login._user_token_create (usr);
   END IF;
+  UPDATE login."user" SET 
+    usr_last_connection_date = CURRENT_TIMESTAMP, 
+    usr_last_connection_ip = prm_connection_ip 
+    WHERE usr_login = usr;
   SELECT DISTINCT tok, (usr_pwd NOTNULL), usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO row 
     FROM login."user"
     LEFT JOIN organ.participant USING(par_id)
@@ -142,7 +147,11 @@ BEGIN
   RETURN row;
 END;
 $$;
-COMMENT ON FUNCTION login.user_login(character varying, character varying, prm_rights login.user_right[]) IS 
+COMMENT ON FUNCTION login.user_login(
+  character varying, 
+  character varying, 
+ prm_rights login.user_right[],
+  prm_connection_ip inet) IS 
 'Authenticate a user from its login and password.
 If prm_rights is not null, also verify that user owns all the specified rights.
 If authorization is ok, returns:
@@ -156,6 +165,7 @@ CREATE OR REPLACE FUNCTION user_login_json(
   prm_login character varying, 
   prm_pwd character varying, 
   prm_rights login.user_right[],
+  prm_connection_ip inet,
   req json) 
 RETURNS json
   LANGUAGE plpgsql
@@ -176,6 +186,10 @@ BEGIN
   IF NOT FOUND THEN
     SELECT * INTO tok FROM login._user_token_create (usr);
   END IF;
+  UPDATE login."user" SET 
+    usr_last_connection_date = CURRENT_TIMESTAMP, 
+    usr_last_connection_ip = prm_connection_ip 
+    WHERE usr_login = usr;
   SELECT row_to_json(d) INTO ret 
     FROM (SELECT
       CASE WHEN (req->>'usr_token') IS NULL THEN NULL ELSE usr_token END AS usr_token,
@@ -193,7 +207,12 @@ BEGIN
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION login.user_login_json(character varying, character varying, prm_rights login.user_right[], req json) IS 
+COMMENT ON FUNCTION login.user_login_json(
+  character varying, 
+  character varying, 
+  prm_rights login.user_right[], 
+  prm_connection_ip inet,  
+  req json) IS 
 'Authenticate a user from its login and password.
 If prm_rights is not null, also verify that user owns all the specified rights.
 If authorization is ok, returns:

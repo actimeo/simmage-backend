@@ -57,7 +57,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->assertGreaterThan(0, $res['usr_token']);
     $tempPwd = self::$base->login->user_get_temporary_pwd($res['usr_token'], $login);    
     $this->assertNull($tempPwd);
@@ -82,7 +82,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			    'ugr_name' => true
 			    ]
 	     ];
-    $res = self::$base->login->user_login_json($login, $pwd, null, json_encode($req));
+    $res = self::$base->login->user_login_json($login, $pwd, null, null, json_encode($req));
     $this->assertGreaterThan(0, $res->usr_token);
     $tempPwd = self::$base->login->user_get_temporary_pwd($res->usr_token, $login);    
     $this->assertNull($tempPwd);
@@ -102,7 +102,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
-    $res = self::$base->login->user_login($login, $pwd."X", null);
+    $res = self::$base->login->user_login($login, $pwd."X", null, null);
   }
 
   /**
@@ -118,7 +118,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
-    $res = self::$base->login->user_login($login, $pwd, '{structure}');
+    $res = self::$base->login->user_login($login, $pwd, '{structure}', null);
   }
 
   /**
@@ -133,7 +133,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
-    $res = self::$base->login->user_login($login, $pwd, '{structure}');
+    $res = self::$base->login->user_login($login, $pwd, '{structure}', null);
   }
 
   /**
@@ -149,7 +149,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), NULL, "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			     
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->assertGreaterThan(0, $res['usr_token']);
 
     self::$base->login->user_logout($res['usr_token']);
@@ -172,20 +172,20 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->assertGreaterThan(0, $res['usr_token']);
 
     self::$base->login->user_change_password($res['usr_token'], $newpwd);
     self::$base->login->user_logout($res['usr_token']);
 
-    $res = self::$base->login->user_login($login, $newpwd, null);
+    $res = self::$base->login->user_login($login, $newpwd, null, null);
     $this->assertGreaterThan(0, $res['usr_token']);
     $tempPwd = self::$base->login->user_get_temporary_pwd($res['usr_token'], $login);
     $this->assertNull($tempPwd);
     
     self::$base->login->user_logout($res['usr_token']);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    $res = self::$base->login->user_login($login, 'wrong_pwd', null);
+    $res = self::$base->login->user_login($login, 'wrong_pwd', null, null);
   }
 
   /**
@@ -213,16 +213,16 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test2'));");			   
 
 
-    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
+    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null, null);
     $this->assertGreaterThan(0, $admin['usr_token']);
 
-    $toto = self::$base->login->user_login($loginLost, $pwdLost, null);
+    $toto = self::$base->login->user_login($loginLost, $pwdLost, null, null);
     $this->assertGreaterThan(0, $toto['usr_token']);
     self::$base->login->user_logout($toto['usr_token']);
     
     $tmppwd = self::$base->login->user_regenerate_password($admin['usr_token'], $loginLost);
 
-    $toto2 = self::$base->login->user_login($loginLost, $tmppwd, null);
+    $toto2 = self::$base->login->user_login($loginLost, $tmppwd, null, null);
     $this->assertGreaterThan(0, $toto2['usr_token']);
     $tempPwd = self::$base->login->user_get_temporary_pwd($admin['usr_token'], $loginLost);
     $this->assertNotNull($tempPwd);
@@ -245,7 +245,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			   
 
 
-    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null);
+    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, null, null);
     $this->assertGreaterThan(0, $admin['usr_token']);
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
@@ -263,7 +263,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     .$pwdAdmin."', pgcrypto.gen_salt('bf', 8)), '{users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			
 
-    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users'));
+    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users'), null);
 
     $loginUser = 'a user';
     $parFirstname = 'Paul';
@@ -275,7 +275,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($user['usr_login'], $loginUser);
     $this->assertEquals($user['usr_rights'], array('users'));			      
 
-    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'), null);
     $this->assertGreaterThan(0, $res['usr_token']);
   }
 
@@ -291,7 +291,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));"); 			  
 
 
-    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users', 'organization'));
+    $admin = self::$base->login->user_login($loginAdmin, $pwdAdmin, array('users', 'organization'), null);
 
     $loginUser = 'user';
     $parFirstname = 'Paul';
