@@ -71,6 +71,7 @@ class userTest extends PHPUnit_Framework_TestCase {
 
     $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'), null);
     $this->assertGreaterThan(0, $this->token);
+    $this->assertNotNull($res['usr_previous_connection_date']);
   }
 
   public function testUserList() {

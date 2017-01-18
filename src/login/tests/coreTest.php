@@ -77,6 +77,7 @@ class coreTest extends PHPUnit_Framework_TestCase {
 	    'usr_token' => true,
 	    'usr_temp_pwd' => true,
 	    'usr_rights' => true,
+	    'usr_previous_connection_date' => true,
 	    'usergroup' => [
 			    'ugr_id' => true,
 			    'ugr_name' => true
@@ -87,6 +88,11 @@ class coreTest extends PHPUnit_Framework_TestCase {
     $tempPwd = self::$base->login->user_get_temporary_pwd($res->usr_token, $login);    
     $this->assertNull($tempPwd);
     $this->assertEquals(array('users', 'structure'), $res->usr_rights);
+
+    // Disconnect/reconnect to be sure to get a non null previous connection date
+    self::$base->login->user_logout($res->usr_token);
+    $res = self::$base->login->user_login_json($login, $pwd, null, null, json_encode($req));
+    $this->assertNotNull($res->usr_previous_connection_date);
   }
   
   /**

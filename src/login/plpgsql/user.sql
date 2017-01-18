@@ -104,7 +104,9 @@ CREATE TYPE user_login AS (
   par_id integer,
   ugr_id integer,
   par_firstname text,
-  par_lastname text
+  par_lastname text,
+  usr_previous_connection_date timestamp with time zone,
+  usr_previous_connection_ip inet
 );
 COMMENT ON TYPE user_login IS 'Type returned by user_login function';
 COMMENT ON COLUMN user_login.usr_token IS 'Token to use for other functions';
@@ -140,7 +142,11 @@ BEGIN
     usr_last_connection_date = CURRENT_TIMESTAMP, 
     usr_last_connection_ip = prm_connection_ip 
     WHERE usr_login = usr;
-  SELECT DISTINCT tok, (usr_pwd NOTNULL), usr_rights, par_id, ugr_id, par_firstname, par_lastname INTO row 
+  SELECT DISTINCT 
+    tok, (usr_pwd NOTNULL), usr_rights, par_id, ugr_id, 
+    par_firstname, par_lastname,
+    usr_last_connection_date, usr_last_connection_ip
+   INTO row 
     FROM login."user"
     LEFT JOIN organ.participant USING(par_id)
     WHERE usr_login = usr;
@@ -186,15 +192,13 @@ BEGIN
   IF NOT FOUND THEN
     SELECT * INTO tok FROM login._user_token_create (usr);
   END IF;
-  UPDATE login."user" SET 
-    usr_last_connection_date = CURRENT_TIMESTAMP, 
-    usr_last_connection_ip = prm_connection_ip 
-    WHERE usr_login = usr;
   SELECT row_to_json(d) INTO ret 
     FROM (SELECT
       CASE WHEN (req->>'usr_token') IS NULL THEN NULL ELSE usr_token END AS usr_token,
       CASE WHEN (req->>'usr_temp_pwd') IS NULL THEN NULL ELSE (usr_pwd NOTNULL) END AS usr_temp_pwd,
       CASE WHEN (req->>'usr_rights') IS NULL THEN NULL ELSE usr_rights END AS usr_rights,
+      CASE WHEN (req->>'usr_previous_connection_date') IS NULL THEN NULL ELSE usr_last_connection_date END AS usr_previous_connection_date,
+      CASE WHEN (req->>'usr_previous_connection_ip') IS NULL THEN NULL ELSE usr_last_connection_ip END AS usr_previous_connection_ip,
       CASE WHEN (req->>'usergroup') IS NULL THEN NULL 
            WHEN ugr_id IS NULL THEN NULL
 	   ELSE login.usergroup_json(tok, ugr_id, req->'usergroup') END AS usergroup,
@@ -204,6 +208,12 @@ BEGIN
       FROM login."user"
       LEFT JOIN organ.participant USING(par_id)
       WHERE usr_login = usr) d;
+  -- update after getting values so we can return previous connection infos
+  UPDATE login."user" SET 
+    usr_last_connection_date = CURRENT_TIMESTAMP, 
+    usr_last_connection_ip = prm_connection_ip 
+    WHERE usr_login = usr;
+
   RETURN ret;
 END;
 $$;
