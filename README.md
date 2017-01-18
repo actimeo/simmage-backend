@@ -52,3 +52,4 @@ $ sudo su postgres -c ./scripts/update.sh
 ./vendor/bin/phpunit --stop-on-error src/
 ```
 
+.
