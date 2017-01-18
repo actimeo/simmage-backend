@@ -9,7 +9,7 @@ $base = new PgProcedures ($pg_host, $pg_user, $pg_pass, $pg_database, $pg_port);
 
 $base->startTransaction();
 
-$variationUser = $base->login->user_login('variation', 'variation', '{users,organization,structure}');
+$variationUser = $base->login->user_login('variation', 'variation', '{users,organization,structure}', null);
 
 $token = $variationUser['usr_token'];
 
@@ -263,7 +263,7 @@ function create_user($base, $token, $login, $pwd, $firstname, $lastname) {
   $base->login->user_add($token, $login, null, $parId, null);
   $userInfo = $base->login->user_info($token, $login);
   $userTempPwd = $base->login->user_get_temporary_pwd($token, $login);
-  $user = $base->login->user_login($login, $userTempPwd, null);
+  $user = $base->login->user_login($login, $userTempPwd, null, null);
   $base->login->user_change_password($user['usr_token'], $pwd);
   return $parId;
 }
