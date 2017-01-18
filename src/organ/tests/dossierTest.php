@@ -44,7 +44,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization, users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  			  
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->token = $res['usr_token'];
   }
 
@@ -331,14 +331,14 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $parId2 = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
     self::$base->login->user_add($this->token, $login2, null, $parId2, null);   
     $pwd2 = self::$base->login->user_get_temporary_pwd($this->token, $login2);
-    $usr2 = self::$base->login->user_login($login2, $pwd2, null);
+    $usr2 = self::$base->login->user_login($login2, $pwd2, null, null);
     $token2 = $usr2['usr_token'];
 
     $login3 = 'sfgjqsfjkgh';
     $parId3 = self::$base->organ->participant_add($this->token, 'Michel', 'PARIS');
     self::$base->login->user_add($this->token, $login3, null, $parId3, null);
     $pwd3 = self::$base->login->user_get_temporary_pwd($this->token, $login3);
-    $usr3 = self::$base->login->user_login($login3, $pwd3, null);
+    $usr3 = self::$base->login->user_login($login3, $pwd3, null, null);
     $token3 = $usr3['usr_token'];
 
     self::$base->login->user_usergroup_set($this->token, $login2, $ugr2);
@@ -445,7 +445,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $parId1 = self::$base->organ->participant_add($this->token, 'Michel', 'PARIS');
     self::$base->login->user_add($this->token, $login1, null, $parId1, null);
     $pwd1 = self::$base->login->user_get_temporary_pwd($this->token, $login1);
-    $usr1 = self::$base->login->user_login($login1, $pwd1, null);
+    $usr1 = self::$base->login->user_login($login1, $pwd1, null, null);
     $token1 = $usr1['usr_token'];
     self::$base->login->user_usergroup_set($this->token, $login1, $ugr1);
 
@@ -453,7 +453,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $parId2 = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
     self::$base->login->user_add($this->token, $login2, null, $parId2, null);   
     $pwd2 = self::$base->login->user_get_temporary_pwd($this->token, $login2);
-    $usr2 = self::$base->login->user_login($login2, $pwd2, null);
+    $usr2 = self::$base->login->user_login($login2, $pwd2, null, null);
     $token2 = $usr2['usr_token'];
     self::$base->login->user_usergroup_set($this->token, $login2, $ugr2);
     

@@ -46,7 +46,7 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
 			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{structure,organization,users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->token = $res['usr_token'];
   }
 

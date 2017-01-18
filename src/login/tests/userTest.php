@@ -47,7 +47,7 @@ class userTest extends PHPUnit_Framework_TestCase {
 			     .$pwd."', pgcrypto.gen_salt('bf', 8)), '{organization,users}', "
 			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
 
-    $res = self::$base->login->user_login($login, $pwd, null);
+    $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->token = $res['usr_token'];
   }
 
@@ -69,7 +69,7 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($user['usr_rights'], array('users'));			      
     $tempPwd = self::$base->login->user_get_temporary_pwd($this->token, $loginUser);    
 
-    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'), null);
     $this->assertGreaterThan(0, $this->token);
   }
 
@@ -87,7 +87,7 @@ class userTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($user['usr_rights'], array('users'));			      
     $tempPwd = self::$base->login->user_get_temporary_pwd($this->token, $loginUser);    
 
-    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'));
+    $res = self::$base->login->user_login($loginUser, $tempPwd, array('users'), null);
     $this->assertGreaterThan(0, $this->token);
 
     $list = self::$base->login->user_list($this->token, null);
