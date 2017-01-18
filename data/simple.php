@@ -9,7 +9,7 @@ $base = new PgProcedures ($pg_host, $pg_user, $pg_pass, $pg_database, $pg_port);
 
 $base->startTransaction();
 
-$variationUser = $base->login->user_login('variation', 'variation', '{users,organization,structure}');
+$variationUser = $base->login->user_login('variation', 'variation', '{users,organization,structure}', null);
 
 $token = $variationUser['usr_token'];
 
@@ -28,7 +28,7 @@ $stfId1 = $base->organ->participant_add($token, 'Pierre', 'MARTIN');
 $base->login->user_add($token, $userLogin1, null, $stfId1, null);
 $fooInfo1 = $base->login->user_info($token, $userLogin1);
 $fooTempPwd1 = $base->login->user_get_temporary_pwd($token, $userLogin1);
-$foo1 = $base->login->user_login($userLogin1, $fooTempPwd1, null);
+$foo1 = $base->login->user_login($userLogin1, $fooTempPwd1, null, null);
 $base->login->user_change_password($foo1['usr_token'], 'bar');
 
 // Create user foo2
@@ -37,7 +37,7 @@ $stfId2 = $base->organ->participant_add($token, 'Paul', 'DURAND');
 $base->login->user_add($token, $userLogin2, null, $stfId2, null);
 $fooInfo2 = $base->login->user_info($token, $userLogin2);
 $fooTempPwd2 = $base->login->user_get_temporary_pwd($token, $userLogin2);
-$foo2 = $base->login->user_login($userLogin2, $fooTempPwd2, null);
+$foo2 = $base->login->user_login($userLogin2, $fooTempPwd2, null, null);
 $base->login->user_change_password($foo2['usr_token'], 'bar');
 
 // Create portals
