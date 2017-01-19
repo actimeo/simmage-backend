@@ -37,21 +37,21 @@ $tTransport = $base->organ->topic_add($token, 'Transport', 'Transport', 'transpo
 
 // Create user marie, Secrétaire
 $loginMarie = 'marie';
-$uMarie = create_user($base, $token, $loginMarie, 'marie', 'Marie', 'SECRET');
+$uMarie = create_user($base, $token, $loginMarie, 'Aa##marie', 'Marie', 'SECRET');
 
 // Create user jeanne, Psychologue
 $loginJeanne = 'jeanne';
-$uJeanne = create_user($base, $token, $loginJeanne, 'jeanne', 'Jeanne', 'PSYCHO');
+$uJeanne = create_user($base, $token, $loginJeanne, 'Aa##jeanne', 'Jeanne', 'PSYCHO');
 
 // Create paul, jean, pierre, sophie, Éducateurs
 $loginPaul = 'paul';
 $loginJean = 'jean';
 $loginPierre = 'pierre';
 $loginSophie = 'sophie';
-$uPaul = create_user($base, $token, $loginPaul, 'paul', 'Paul', 'ÉDUC');
-$uJean = create_user($base, $token, $loginJean, 'jean', 'Jean', 'ÉDUC');
-$uPierre = create_user($base, $token, $loginPierre, 'pierre', 'Pierre', 'ÉDUC');
-$uSophie = create_user($base, $token, $loginSophie, 'sophie', 'Sophie', 'ÉDUC');
+$uPaul = create_user($base, $token, $loginPaul, 'Aa##paul', 'Paul', 'ÉDUC');
+$uJean = create_user($base, $token, $loginJean, 'Aa##jean', 'Jean', 'ÉDUC');
+$uPierre = create_user($base, $token, $loginPierre, 'Aa##pierre', 'Pierre', 'ÉDUC');
+$uSophie = create_user($base, $token, $loginSophie, 'Aa##sophie', 'Sophie', 'ÉDUC');
 
 // Create MECS Sauvegarde organization with groups
 $oMecs = $base->organ->organization_add($token, "MECS Sauvegarde", 'Description...', true);
