@@ -246,19 +246,30 @@ $$;
 COMMENT ON FUNCTION login.user_logout(integer) IS 
 'Disconnect the user. The user token will not be usable anymore after this call.';
 
+CREATE DOMAIN login.valid_password 
+  AS text
+  CHECK(char_length(VALUE) >= 8 
+        AND 2 < char_length(COALESCE(substring(VALUE from '[^a-zA-Z0-9]'), '')
+                           || COALESCE(substring(VALUE from  '[0-9]'), '')
+                           || COALESCE(substring(VALUE from '[A-Z]'), '')
+                           || COALESCE(substring(VALUE from '[a-z]'), '')));
+
 CREATE OR REPLACE FUNCTION user_change_password(
   prm_token integer, 
-  prm_password varchar)
+  prm_password text)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
+DECLARE 
+  pwd login.valid_password = '123456aA';
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
+  pwd = prm_password; -- asserts that prm_password is in domain
   UPDATE login."user" SET usr_pwd = NULL, usr_salt = pgcrypto.crypt (prm_password, pgcrypto.gen_salt('bf', 8)) 
     WHERE usr_token = prm_token;
 END;
 $$;
-COMMENT ON FUNCTION user_change_password(prm_token integer, prm_password varchar) IS
+COMMENT ON FUNCTION user_change_password(prm_token integer, prm_password text) IS
 'Change the password of the current user.';
 
 CREATE OR REPLACE FUNCTION user_regenerate_password(

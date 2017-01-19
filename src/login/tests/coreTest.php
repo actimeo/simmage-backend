@@ -171,12 +171,12 @@ class coreTest extends PHPUnit_Framework_TestCase {
   public function testUserChangePassword() {
     $login = 'testdejfhcqcsdfkhn';
     $pwd = 'ksfdjgsfdyubg';    
-    $newpwd = 'sdfjkgh';    
+    $newpwd = '12345678aA';
     self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
 			     ."VALUES ('Test', 'User')");
     self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
 			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
-			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");			  
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
 
     $res = self::$base->login->user_login($login, $pwd, null, null);
     $this->assertGreaterThan(0, $res['usr_token']);
@@ -192,6 +192,38 @@ class coreTest extends PHPUnit_Framework_TestCase {
     self::$base->login->user_logout($res['usr_token']);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $res = self::$base->login->user_login($login, 'wrong_pwd', null, null);
+  }
+
+  public function testUserChangeTooShortPassword() {
+    $login = 'testdejfhcqcsdfkhn';
+    $pwd = 'ksfdjgsfdyubg';    
+
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
+    $res = self::$base->login->user_login($login, $pwd, null, null);
+    $this->assertGreaterThan(0, $res['usr_token']);
+
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    self::$base->login->user_change_password($res['usr_token'], '1234567');
+  }
+
+  public function testUserChangePasswordError1() {
+    $login = 'testdejfhcqcsdfkhn';
+    $pwd = 'ksfdjgsfdyubg';    
+
+    self::$base->execute_sql("INSERT INTO organ.participant (par_firstname, par_lastname) "
+			     ."VALUES ('Test', 'User')");
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			     .$login."', pgcrypto.crypt('".$pwd."', pgcrypto.gen_salt('bf', 8)), '{users}', "
+			     ."(SELECT par_id FROM organ.participant WHERE par_firstname='Test'));");
+    $res = self::$base->login->user_login($login, $pwd, null, null);
+    $this->assertGreaterThan(0, $res['usr_token']);
+
+    $this->setExpectedException('\actimeo\pgproc\PgProcException');
+    self::$base->login->user_change_password($res['usr_token'], '1234567a');
   }
 
   /**
