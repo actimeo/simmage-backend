@@ -29,7 +29,7 @@ $base->login->user_add($token, $userLogin1, null, $stfId1, null);
 $fooInfo1 = $base->login->user_info($token, $userLogin1);
 $fooTempPwd1 = $base->login->user_get_temporary_pwd($token, $userLogin1);
 $foo1 = $base->login->user_login($userLogin1, $fooTempPwd1, null, null);
-$base->login->user_change_password($foo1['usr_token'], 'bar');
+$base->login->user_change_password($foo1['usr_token'], 'bar#Bar#BAR');
 
 // Create user foo2
 $userLogin2 = 'foo2';
@@ -38,7 +38,7 @@ $base->login->user_add($token, $userLogin2, null, $stfId2, null);
 $fooInfo2 = $base->login->user_info($token, $userLogin2);
 $fooTempPwd2 = $base->login->user_get_temporary_pwd($token, $userLogin2);
 $foo2 = $base->login->user_login($userLogin2, $fooTempPwd2, null, null);
-$base->login->user_change_password($foo2['usr_token'], 'bar');
+$base->login->user_change_password($foo2['usr_token'], 'bar#Bar#BAR');
 
 // Create portals
 $porId1 = $base->portal->portal_add($token, 'portal 1', 'desc 1');
