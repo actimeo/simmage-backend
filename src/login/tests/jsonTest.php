@@ -249,5 +249,54 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $this->assertNull($res->groups);
     $this->assertNotNull($res->portals);
   }
+
+  public function testUserJson() {
+    // usergroup
+    $porName1 = 'portal 1';
+    $porName2 = 'portal 2';
+    $porName3 = 'portal 3';
+    $porDesc1 = 'portal desc 1';
+    $porDesc2 = 'portal desc 2';
+    $porDesc3 = 'portal desc 3';
+    $porId1 = self::$base->portal->portal_add($this->token, $porName1, $porDesc1);
+    $porId2 = self::$base->portal->portal_add($this->token, $porName2, $porDesc2);
+    $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
+
+    $usergroupName = 'A user group';
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
+
+    $parId = self::$base->organ->participant_add($this->token, 'Pierre', 'PARIS');
+    $login = 'pierre';
+    self::$base->login->user_add($this->token, $login, array('users'), $parId, $ugr);
+
+    $tempPwd = self::$base->login->user_get_temporary_pwd($this->token, $login);
+    $ip = '1.2.3.4';
+    $res2 = self::$base->login->user_login($login, $tempPwd, array('users'), $ip);
+    $token2 = $res2['usr_token'];
+
+
+
+    $req = [
+	    'usr_login' => true,
+	    'usr_pwd' => true,
+	    'usr_rights' => true,
+	    'usr_last_connection_date' => true,
+	    'usr_last_connection_ip' => true,
+	    'participant' => [ 'par_id' => true ],
+	    'usergroup' => [ 
+			    'ugr_id' => true, 
+			    'portals' => [ 'por_id' => true ],
+			    'groups' => [ 'grp_id' => true ]
+			     ]
+	    ];
+    $res = self::$base->login->user_json($token2, json_encode($req));
+    $this->assertEquals($login, $res->usr_login);
+    $this->assertEquals($tempPwd, $res->usr_pwd);
+    $this->assertEquals(['users'], $res->usr_rights);
+    $this->assertEquals($ip, $res->usr_last_connection_ip);
+    $this->assertEquals($parId, $res->participant->par_id);
+  }
+
 }
 ?>

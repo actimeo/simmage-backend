@@ -103,3 +103,41 @@ END;
 $$;
 COMMENT ON FUNCTION login.usergroup_json(prm_token integer, prm_ugr_id integer, req json) 
  IS 'Returns a usergroup or the list of usergroups as json';
+
+CREATE OR REPLACE FUNCTION login.user_json(prm_token integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT row_to_json(d) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'usr_login') IS NULL THEN NULL 
+        ELSE usr_login END as usr_login,
+      CASE WHEN (req->>'usr_pwd') IS NULL THEN NULL 
+        ELSE usr_pwd END AS usr_pwd,
+      CASE WHEN (req->>'usr_rights') IS NULL THEN NULL 
+        ELSE usr_rights END AS usr_rights,
+      CASE WHEN (req->>'usr_last_connection_date') IS NULL THEN NULL 
+        ELSE usr_last_connection_date END AS usr_last_connection_date,
+      CASE WHEN (req->>'usr_last_connection_ip') IS NULL THEN NULL 
+        ELSE usr_last_connection_ip END AS usr_last_connection_ip,
+      CASE WHEN (req->>'participant') IS NULL THEN NULL 
+        WHEN par_id IS NULL THEN NULL
+	ELSE organ.participant_json(prm_token, par_id, req->'participant') END AS participant,
+      CASE WHEN (req->>'usergroup') IS NULL THEN NULL 
+        WHEN ugr_id IS NULL THEN NULL
+	ELSE login.usergroup_json(prm_token, ugr_id, req->'usergroup') END AS usergroup
+      FROM login."user"
+      LEFT JOIN organ.participant USING(par_id)
+      LEFT JOIN login.usergroup USING(ugr_id)
+      WHERE usr_token = prm_token
+      ) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION login.user_json(prm_token integer, req json)
+ IS 'Returns information about the connected user';
