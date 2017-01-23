@@ -263,8 +263,30 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $porId3 = self::$base->portal->portal_add($this->token, $porName3, $porDesc3);
 
     $usergroupName = 'A user group';
-    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
+    $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, '{internal_dossier_add}', '{preadmission, admission, present, left}');
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId2, $porId1));
+
+    // Usergroup topics
+    $topName1 = 'topic 1';
+    $topDesc1 = 'description 1';
+    $icon1 = 'health';
+    $color1 = '#ffffff';
+    $topId1 = self::$base->organ->topic_add($this->token, $topName1, $topDesc1, $icon1, $color1);
+    $topName2 = 'topic 2';
+    $topDesc2 = 'description 2';
+    $icon2 = 'health';
+    $color2 = '#ffffff';
+    $topId2 = self::$base->organ->topic_add($this->token, $topName2, $topDesc2, $icon2, $color2);
+    $topName3 = 'topic 3';
+    $topDesc3 = 'description 3';
+    $icon3 = 'health';
+    $color3 = '#ffffff';
+    $topId3 = self::$base->organ->topic_add($this->token, $topName3, $topDesc3, $icon3, $color3);
+
+    self::$base->login->usergroup_set_topics($this->token, $ugr, array($topId2, $topId1));
+    self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId1, ['event_read', 'event_add']);
+    self::$base->login->usergroup_topic_set_rights($this->token, $ugr, $topId2, ['event_update']);
+    
 
     $parId = self::$base->organ->participant_add($this->token, 'Pierre', 'PARIS');
     $login = 'pierre';
@@ -286,8 +308,14 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
 	    'participant' => [ 'par_id' => true ],
 	    'usergroup' => [ 
 			    'ugr_id' => true, 
+			    'ugr_rights' => true,
 			    'portals' => [ 'por_id' => true ],
-			    'groups' => [ 'grp_id' => true ]
+			    'groups' => [ 'grp_id' => true ],
+			    'topics' => [
+					 'top_id' => true,
+					 'top_name' => true,
+					 'ugt_rights' => true
+					 ]
 			     ]
 	    ];
     $res = self::$base->login->user_json($token2, json_encode($req));
