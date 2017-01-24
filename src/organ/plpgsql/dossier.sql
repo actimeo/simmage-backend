@@ -347,6 +347,8 @@ BEGIN
 	scnd_relationship = 'father';
       WHEN 'wife' THEN
         scnd_relationship = 'husband';
+      WHEN 'nephew', 'niece' THEN
+        scnd_relationship = NULL;
     END CASE;
   ELSIF prm_gender_rel = 'female' THEN
     CASE prm_relationship
@@ -358,6 +360,8 @@ BEGIN
         scnd_relationship = 'mother';
       WHEN 'husband' THEN
         scnd_relationship = 'wife';
+      WHEN 'nephew', 'niece' THEN
+        scnd_relationship = NULL;
     END CASE;
   END IF;
   RETURN scnd_relationship;
