@@ -624,10 +624,18 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 			   'org_id' => true,
 			   'org_name' => true,
 			   'dst_value' => true
-			   ]
+			   ],
+	    'related' => [
+			  'dos_id' => true,
+			  'dos_firstname' => true,
+			  'dos_lastname' => true,
+			  'dos_groupname' => true,
+			  'dol_relationship' => true
+			  ]
 	    ];
     // dossiers accessible via usergroup for user1
     $list1 = self::$base->organ->dossier_list_json($token1, false, false, null, false, json_encode($req));
+    print_r($list1);
     $this->assertEquals(6, count($list1));
     $this->assertEquals([$dosId1, $dosId2, $dosId3, $dosId4, $dosId5, $dosId6], 
 			dossierTest::sortedDossiersIdsJson($list1));

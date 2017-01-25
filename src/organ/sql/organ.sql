@@ -48,7 +48,15 @@ CHECK ((dos_grouped = true
 	AND dos_gender IS NOT NULL));
 
 CREATE TYPE organ.dossier_relationship 
-  as ENUM ('brother', 'sister', 'father', 'mother', 'son', 'daughter', 'husband', 'wife', 'family', 'nephew', 'niece');
+  as ENUM ('brother', 'sister', 
+     	   'father', 'mother', 
+	   'son', 'daughter', 
+	   'husband', 'wife', 
+	   'nephew', 'niece', 
+	   'uncle', 'aunt', 
+	   'gotfather', 'godmother',
+	   -- groups
+	   'family', 'siblings');
 
 CREATE TABLE organ.dossier_link (
   dol_id serial PRIMARY KEY,
