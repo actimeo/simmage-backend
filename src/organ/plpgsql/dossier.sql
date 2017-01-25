@@ -202,9 +202,9 @@ VOLATILE
 AS $$
 DECLARE
   ret integer;
-  gender organ.gender;
-  gender_rel organ.gender;
-  scnd_relationship organ.dossier_relationship = null;
+--  gender organ.gender;
+--  gender_rel organ.gender;
+--  scnd_relationship organ.dossier_relationship = null;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   IF (SELECT dos_grouped FROM organ.dossier WHERE dos_id = prm_id) 
@@ -221,13 +221,13 @@ BEGIN
   INSERT INTO organ.dossier_link(dos_id, dos_id_related, dol_relationship) 
     VALUES (prm_id, prm_id_related, prm_relationship)
     RETURNING dol_id INTO ret;
-  IF prm_relationship IS NOT NULL THEN
-    SELECT dos_gender INTO gender FROM organ.dossier WHERE dos_id = prm_id;
-    SELECT dos_gender INTO gender_rel FROM organ.dossier WHERE dos_id = prm_id_related;
-  END IF;
-  scnd_relationship = organ._dossier_link_get_inverted_relationship(prm_relationship, gender, gender_rel);
-  INSERT INTO organ.dossier_link(dos_id, dos_id_related, dol_relationship) 
-    VALUES (prm_id_related, prm_id, scnd_relationship);
+--  IF prm_relationship IS NOT NULL THEN
+--    SELECT dos_gender INTO gender FROM organ.dossier WHERE dos_id = prm_id;
+--    SELECT dos_gender INTO gender_rel FROM organ.dossier WHERE dos_id = prm_id_related;
+--  END IF;
+--  scnd_relationship = organ._dossier_link_get_inverted_relationship(prm_relationship, gender, gender_rel);
+--  INSERT INTO organ.dossier_link(dos_id, dos_id_related, dol_relationship) 
+--    VALUES (prm_id_related, prm_id, scnd_relationship);
   RETURN ret;
 END;
 $$;
@@ -439,7 +439,9 @@ BEGIN
       CASE WHEN (req->>'assignments') IS NULL THEN NULL ELSE
         organ.dossier_assignment_list_json(prm_token, dos_id, req->'assignments') END AS assignments,
       CASE WHEN (req->>'statuses') IS NULL THEN NULL ELSE
-        organ.dossier_status_list_json(prm_token, dos_id, NULL, req->'statuses') END AS statuses
+        organ.dossier_status_list_json(prm_token, dos_id, NULL, req->'statuses') END AS statuses,
+      CASE WHEN (req->>'related') IS NULL THEN NULL ELSE
+        organ.dossier_related_json(prm_token, dos_id, req->'related') END AS related
       FROM organ.dossier_list(prm_token, prm_grouped, prm_external, prm_grp_id, prm_assigned_only)
       ) d;
   RETURN ret;
@@ -453,3 +455,39 @@ COMMENT ON FUNCTION organ.dossier_list_json(
   prm_assigned_only boolean,
   req json)
  IS 'Returns information about a list of dossiers accessible by the user';
+
+CREATE OR REPLACE FUNCTION organ.dossier_related_json(
+  prm_token integer, 
+  prm_dos_id integer,
+  req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'dos_id') IS NULL THEN NULL ELSE dossier_related.dos_id END as dos_id, 
+      CASE WHEN (req->>'dos_firstname') IS NULL THEN NULL ELSE dos_firstname END as dos_firstname,
+      CASE WHEN (req->>'dos_lastname') IS NULL THEN NULL ELSE dos_lastname END as dos_lastname,
+      CASE WHEN (req->>'dos_birthdate') IS NULL THEN NULL ELSE dos_birthdate END as dos_birthdate,
+      CASE WHEN (req->>'dos_gender') IS NULL THEN NULL ELSE dos_gender END as dos_gender,
+      CASE WHEN (req->>'dos_grouped') IS NULL THEN NULL ELSE dos_grouped END as dos_grouped,
+      CASE WHEN (req->>'dos_external') IS NULL THEN NULL ELSE dos_external END as dos_external,
+      CASE WHEN (req->>'dos_groupname') IS NULL THEN NULL ELSE dos_groupname END as dos_groupname,
+      CASE WHEN (req->>'dol_relationship') IS NULL THEN NULL ELSE dol_relationship END as dol_relationship
+      FROM organ.dossier dossier_related 
+        INNER JOIN organ.dossier_link ON dossier_link.dos_id_related = dossier_related.dos_id
+        WHERE dossier_link.dos_id = prm_dos_id
+      ) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_related_json(
+  prm_token integer, 
+  prm_dos_id integer, 
+  req json)
+ IS 'Returns information about the dossiers in relation with the given dossier';
