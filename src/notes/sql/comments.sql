@@ -10,10 +10,18 @@ COMMENT ON COLUMN notes.note.not_text IS '';
 COMMENT ON COLUMN notes.note.not_creation_date IS '';
 COMMENT ON COLUMN notes.note.not_event_date IS '';
 COMMENT ON COLUMN notes.note.not_object IS '';
+COMMENT ON COLUMN notes.note.not_author IS '';
 
 COMMENT ON TABLE notes.note_dossier IS '';
 COMMENT ON COLUMN notes.note_dossier.not_id IS '';
 COMMENT ON COLUMN notes.note_dossier.dos_id IS '';
+
+COMMENT ON TABLE notes.note_recipient IS '';
+COMMENT ON COLUMN notes.note_recipient.nor_id IS '';
+COMMENT ON COLUMN notes.note_recipient.not_id IS '';
+COMMENT ON COLUMN notes.note_recipient.par_id IS '';
+COMMENT ON COLUMN notes.note_recipient.nor_for_action IS '';
+COMMENT ON COLUMN notes.note_recipient.nor_done IS '';
 
 COMMENT ON TABLE notes.note_topic IS '';
 COMMENT ON COLUMN notes.note_topic.not_id IS '';

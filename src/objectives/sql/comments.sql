@@ -1,10 +1,14 @@
 COMMENT ON SCHEMA objectives IS '';
 
+COMMENT ON TYPE objectives.objectivesview_get IS '';
+
+COMMENT ON TYPE objectives.objectivesview_list IS '';
+
 COMMENT ON TABLE objectives.objective IS '';
 COMMENT ON COLUMN objectives.objective.obj_id IS '';
 COMMENT ON COLUMN objectives.objective.obj_name IS '';
-COMMENT ON COLUMN objectives.objective.obj_deadline IS '';
 COMMENT ON COLUMN objectives.objective.obj_open IS '';
+COMMENT ON COLUMN objectives.objective.obj_deadline IS '';
 
 COMMENT ON TABLE objectives.objective_dossier IS '';
 COMMENT ON COLUMN objectives.objective_dossier.obj_id IS '';

@@ -35,7 +35,7 @@ Referee
 When a dossier is attached to a group, a referee is chosen from the participants attached to this same group.
 ';
 
-COMMENT ON TYPE organ.dossier_organization_status IS 'Status of a dossier in an organization, returned by dossier_status_list';
+COMMENT ON TYPE organ.dossier_list IS '';
 
 COMMENT ON TYPE organ.group_list IS 'Group information, including organization info, returned by group_list';
 
@@ -114,6 +114,7 @@ COMMENT ON TABLE organ.referee IS 'Participant is a referee for a patient in a g
 COMMENT ON COLUMN organ.referee.ref_id IS 'Unique identifier';
 COMMENT ON COLUMN organ.referee.doa_id IS 'Dossier assignation to a group';
 COMMENT ON COLUMN organ.referee.paa_id IS 'Participant assignation to a group';
+COMMENT ON COLUMN organ.referee.ref_function IS '';
 
 COMMENT ON TABLE organ.topic IS 'A general topic';
 COMMENT ON COLUMN organ.topic.top_id IS 'Unique identifier';
