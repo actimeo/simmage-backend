@@ -385,20 +385,71 @@ END;
 $$;
 COMMENT ON FUNCTION organ.dossier_assignment_add(prm_token integer, prm_dos_id integer, prm_grp_ids integer[]) IS 'Assign a dossier to groups';
 
-CREATE OR REPLACE FUNCTION organ.dossier_assignment_list(prm_token integer, prm_dos_id integer)
-RETURNS SETOF organ.group
+CREATE OR REPLACE FUNCTION organ.dossier_assignment_list_json(prm_token integer, prm_dos_id integer, req json)
+RETURNS json
 LANGUAGE plpgsql
 STABLE
 AS $$
 DECLARE
-  row organ.group;
+  ret json;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
-  -- TODO verify user can access this dossier
-  RETURN QUERY SELECT "group".*
-    FROM organ."group"
-    INNER JOIN organ.dossier_assignment USING(grp_id)
-    WHERE dos_id = prm_dos_id;
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'grp_id') IS NULL THEN NULL ELSE grp_id END as grp_id, 
+      CASE WHEN (req->>'grp_name') IS NULL THEN NULL ELSE grp_name END as grp_name,
+      CASE WHEN (req->>'grp_description') IS NULL THEN NULL ELSE grp_description END as grp_description,
+      CASE WHEN (req->>'grp_mandatory') IS NULL THEN NULL ELSE grp_mandatory END as grp_mandatory,
+      CASE WHEN (req->>'grp_orientation') IS NULL THEN NULL ELSE grp_orientation END as grp_orientation
+      FROM organ."group"
+      INNER JOIN organ.dossier_assignment USING(grp_id)
+      WHERE dos_id = prm_dos_id      
+      ) d;
+  RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.dossier_assignment_list(prm_token integer, prm_dos_id integer) IS 'Returns the list of groups a dossier is assigned to';
+COMMENT ON FUNCTION organ.dossier_assignment_list_json(prm_token integer, prm_dos_id integer, req json) IS 'Returns the list of groups a dossier is assigned to';
+
+CREATE OR REPLACE FUNCTION organ.dossier_list_json(
+  prm_token integer, 
+  prm_grouped boolean, 
+  prm_external boolean, 
+  prm_grp_id integer, 
+  prm_assigned_only boolean,
+  req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'dos_id') IS NULL THEN NULL ELSE dos_id END as dos_id, 
+      CASE WHEN (req->>'dos_firstname') IS NULL THEN NULL ELSE dos_firstname END as dos_firstname,
+      CASE WHEN (req->>'dos_lastname') IS NULL THEN NULL ELSE dos_lastname END as dos_lastname,
+      CASE WHEN (req->>'dos_birthdate') IS NULL THEN NULL ELSE dos_birthdate END as dos_birthdate,
+      CASE WHEN (req->>'dos_gender') IS NULL THEN NULL ELSE dos_gender END as dos_gender,
+      CASE WHEN (req->>'dos_grouped') IS NULL THEN NULL ELSE dos_grouped END as dos_grouped,
+      CASE WHEN (req->>'dos_external') IS NULL THEN NULL ELSE dos_external END as dos_external,
+      CASE WHEN (req->>'dos_groupname') IS NULL THEN NULL ELSE dos_groupname END as dos_groupname,
+      CASE WHEN (req->>'dos_referee_functions') IS NULL THEN NULL ELSE dos_referee_functions END as dos_referee_functions,
+      CASE WHEN (req->>'assignments') IS NULL THEN NULL ELSE
+        organ.dossier_assignment_list_json(prm_token, dos_id, req->'assignments') END AS assignments,
+      CASE WHEN (req->>'statuses') IS NULL THEN NULL ELSE
+        organ.dossier_status_list_json(prm_token, dos_id, NULL, req->'statuses') END AS statuses
+      FROM organ.dossier_list(prm_token, prm_grouped, prm_external, prm_grp_id, prm_assigned_only)
+      ) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_list_json(
+  prm_token integer, 
+  prm_grouped boolean, 
+  prm_external boolean, 
+  prm_grp_id integer, 
+  prm_assigned_only boolean,
+  req json)
+ IS 'Returns information about a list of dossiers accessible by the user';

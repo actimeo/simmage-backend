@@ -109,9 +109,13 @@ class dossierStatusTest extends PHPUnit_Framework_TestCase {
     self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'preadmission', '01/12/2015');
     self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'admission', '01/01/2016');
     self::$base->organ->dossier_status_change($this->token, $dosId, $orgId2, 'present', '01/02/2016');
-    $list = self::$base->organ->dossier_status_list($this->token, $dosId, '01/04/2016');
+    $req = [
+	    'org_id' => true,
+	    'dst_value' => true
+	    ];
+    $list = self::$base->organ->dossier_status_list_json($this->token, $dosId, null, json_encode($req));
     $list2 = array_reduce($list, function($pot, $item) { 
-	$pot[$item['org_id']] = $item['dst_value'];
+	$pot[$item->org_id] = $item->dst_value;
 	return $pot;
 	}, []);
     ksort($list2);

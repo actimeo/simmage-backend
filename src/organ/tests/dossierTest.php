@@ -13,6 +13,31 @@ class dossierTest extends PHPUnit_Framework_TestCase {
   private static $pgPort;
   private static $pgDatabase;
 
+  // PRIVATE
+  private static function sortedDossiersIds($list) {
+    $ids = array_map(function($a) { return $a['dos_id']; },
+		     $list);
+    sort($ids);
+    return $ids;
+  }
+
+  private static function refereeDossiersIds($list) {
+    $filtered = array_filter($list, function($a) { return $a['dos_referee_functions']; });
+    return dossierTest::sortedDossiersIds($filtered);
+  }
+
+  private static function sortedDossiersIdsJson($list) {
+    $ids = array_map(function($a) { return $a->dos_id; },
+		     $list);
+    sort($ids);
+    return $ids;
+  }
+
+  private static function refereeDossiersIdsJson($list) {
+    $filtered = array_filter($list, function($a) { return $a->dos_referee_functions; });
+    return dossierTest::sortedDossiersIdsJson($filtered);
+  }
+
   public static function setUpBeforeClass() {
 
     // Get connection params
@@ -265,9 +290,13 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $grpId3 = self::$base->organ->group_add($this->token, $orgId, $grp_name3, $grp_desc3, false, 'organization');
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId3));
-    $grps = self::$base->organ->dossier_assignment_list($this->token, $dosId);
+    $req = [
+	    'grp_id' => true,
+	    'grp_name' => true
+	    ];
+    $grps = self::$base->organ->dossier_assignment_list_json($this->token, $dosId, json_encode($req));
     $this->assertEquals(array($grp_name1, $grp_name3), 
-			array_map(function ($r) { return $r['grp_name']; }, $grps));
+			array_map(function ($r) { return $r->grp_name; }, $grps));
   }
 
   public function testDossierListRestricted() {
@@ -364,18 +393,6 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     // Still 0 for other participant not assigned
     $dosList5 = self::$base->organ->dossier_list($token3, false, false, null, true);
     $this->assertNull($dosList5);
-  }
-
-  private static function sortedDossiersIds($list) {
-    $ids = array_map(function($a) { return $a['dos_id']; },
-		     $list);
-    sort($ids);
-    return $ids;
-  }
-
-  private static function refereeDossiersIds($list) {
-    $filtered = array_filter($list, function($a) { return $a['dos_referee_functions']; });
-    return dossierTest::sortedDossiersIds($filtered);
   }
 
   public function testDossierListReferee() {
@@ -499,6 +516,150 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     
     $this->assertEquals([$dosId5], 
 			dossierTest::refereeDossiersIds($list4));
+  }
+
+  public function testDossierListJson() {
+    $fname1 = 'firstname1';
+    $lname1 = 'lastname1';
+    $bdate1 = '03/10/2016';
+    $dosId1 = self::$base->organ->dossier_add_individual($this->token, $fname1, $lname1, $bdate1, 'male', false);
+    $this->assertGreaterThan(0, $dosId1);
+    $fname2 = 'firstname2';
+    $lname2 = 'lastname2';
+    $bdate2 = '03/10/2016';
+    $dosId2 = self::$base->organ->dossier_add_individual($this->token, $fname2, $lname2, $bdate2, 'male', false);
+    $this->assertGreaterThan($dosId1, $dosId2);
+    $fname3 = 'firstname3';
+    $lname3 = 'lastname3';
+    $bdate3 = '03/10/2016';
+    $dosId3 = self::$base->organ->dossier_add_individual($this->token, $fname3, $lname3, $bdate3, 'male', false);
+    $this->assertGreaterThan($dosId2, $dosId3);
+    $fname4 = 'firstname4';
+    $lname4 = 'lastname4';
+    $bdate4 = '03/10/2016';
+    $dosId4 = self::$base->organ->dossier_add_individual($this->token, $fname4, $lname4, $bdate4, 'male', false);
+    $this->assertGreaterThan($dosId3, $dosId4);
+    $fname5 = 'firstname5';
+    $lname5 = 'lastname5';
+    $bdate5 = '03/10/2016';
+    $dosId5 = self::$base->organ->dossier_add_individual($this->token, $fname5, $lname5, $bdate5, 'male', false);
+    $this->assertGreaterThan($dosId4, $dosId5);
+    $fname6 = 'firstname6';
+    $lname6 = 'lastname6';
+    $bdate6 = '03/10/2016';
+    $dosId6 = self::$base->organ->dossier_add_individual($this->token, $fname6, $lname6, $bdate6, 'male', false);
+    $this->assertGreaterThan($dosId4, $dosId5);
+
+
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+    $this->assertGreaterThan(0, $orgId);
+
+    self::$base->organ->dossier_status_change($this->token, $dosId1, $orgId, 'present', '01/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId2, $orgId, 'present', '05/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId3, $orgId, 'present', '10/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId4, $orgId, 'present', '15/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId5, $orgId, 'present', '20/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId6, $orgId, 'present', '20/09/2016');
+
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, 'group 1', 'grp desc 1', false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, 'group 2', 'grp desc 2', false, 'organization');
+    $this->assertGreaterThan(0, $grpId1);
+    $this->assertGreaterThan($grpId1, $grpId2);
+
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup 1', null, '{present}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup 2', null, '{present}');
+
+    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1, $grpId2));
+    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId1, array($grpId1));
+    self::$base->organ->dossier_assignment_add($this->token, $dosId2, array($grpId1));
+    self::$base->organ->dossier_assignment_add($this->token, $dosId3, array($grpId1));
+    self::$base->organ->dossier_assignment_add($this->token, $dosId4, array($grpId1));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId5, array($grpId2));
+    self::$base->organ->dossier_assignment_add($this->token, $dosId6, array($grpId2));
+
+
+    $login1 = 'sfgjqsfjkgh';
+    $parId1 = self::$base->organ->participant_add($this->token, 'Michel', 'PARIS');
+    self::$base->login->user_add($this->token, $login1, null, $parId1, null);
+    $pwd1 = self::$base->login->user_get_temporary_pwd($this->token, $login1);
+    $usr1 = self::$base->login->user_login($login1, $pwd1, null, null);
+    $token1 = $usr1['usr_token'];
+    self::$base->login->user_usergroup_set($this->token, $login1, $ugr1);
+
+    $login2 = 'zaertyuiopa';
+    $parId2 = self::$base->organ->participant_add($this->token, 'Pierre', 'MARTIN');
+    self::$base->login->user_add($this->token, $login2, null, $parId2, null);   
+    $pwd2 = self::$base->login->user_get_temporary_pwd($this->token, $login2);
+    $usr2 = self::$base->login->user_login($login2, $pwd2, null, null);
+    $token2 = $usr2['usr_token'];
+    self::$base->login->user_usergroup_set($this->token, $login2, $ugr2);
+    
+    self::$base->organ->participant_assignment_add($this->token, $grpId1, $parId1);
+    self::$base->organ->participant_assignment_add($this->token, $grpId2, $parId2);
+
+    self::$base->organ->referee_add($this->token, $grpId1, $dosId1, $parId1, 'a function');
+    self::$base->organ->referee_add($this->token, $grpId1, $dosId2, $parId1, 'a function');
+
+    self::$base->organ->referee_add($this->token, $grpId2, $dosId5, $parId2, 'a function');
+
+    // dossiers accessible via usergroup for user1
+    $req = [
+	    'dos_id' => true,
+	    'dos_firstname' => true,
+            'dos_lastname' => true,
+            'dos_birthdate' => true,
+            'dos_gender' => true,
+            'dos_grouped' => true,
+            'dos_external' => true,
+            'dos_groupname' => true,
+            'dos_referee_functions' => true,
+	    'assignments' => [
+			      'grp_id' => true,
+			      'grp_name' => true
+			      ],
+	    'statuses' => [
+			   'org_id' => true,
+			   'org_name' => true,
+			   'dst_value' => true
+			   ]
+	    ];
+    // dossiers accessible via usergroup for user1
+    $list1 = self::$base->organ->dossier_list_json($token1, false, false, null, false, json_encode($req));
+    $this->assertEquals(6, count($list1));
+    $this->assertEquals([$dosId1, $dosId2, $dosId3, $dosId4, $dosId5, $dosId6], 
+			dossierTest::sortedDossiersIdsJson($list1));
+    $this->assertEquals([$dosId1, $dosId2], 
+			dossierTest::refereeDossiersIdsJson($list1));
+
+    // dossiers accessible via usergroup for user2
+    $list2 = self::$base->organ->dossier_list_json($token2, false, false, null, false, json_encode($req));
+    $this->assertEquals(2, count($list2));
+    $this->assertEquals([$dosId5, $dosId6], 
+			dossierTest::sortedDossiersIdsJson($list2));
+
+    $this->assertEquals([$dosId5], 
+			dossierTest::refereeDossiersIdsJson($list2));
+    
+    // dossiers accessible via group for user1
+    $list3 = self::$base->organ->dossier_list_json($token1, false, false, null, true, json_encode($req));
+    $this->assertEquals(4, count($list3));
+    $this->assertEquals([$dosId1, $dosId2, $dosId3, $dosId4], 
+			dossierTest::sortedDossiersIdsJson($list3));
+   
+    $this->assertEquals([$dosId1, $dosId2], 
+			dossierTest::refereeDossiersIdsJson($list3));
+    
+    // dossiers accessible via group for user2
+    $list4 = self::$base->organ->dossier_list_json($token2, false, false, null, true, json_encode($req));
+    $this->assertEquals(2, count($list4));
+    $this->assertEquals([$dosId5, $dosId6], 
+			dossierTest::sortedDossiersIdsJson($list4));
+    
+    $this->assertEquals([$dosId5], 
+			dossierTest::refereeDossiersIdsJson($list4));
   }
 }
 ?>

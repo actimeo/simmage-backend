@@ -54,6 +54,8 @@ COMMENT ON COLUMN login.user.par_id IS 'Participant attached to the user';
 COMMENT ON COLUMN login.user.ugr_id IS 'Usergroup of the user, or null for an admin-only user';
 COMMENT ON COLUMN login.user.usr_token IS 'Token id returned after authentication';
 COMMENT ON COLUMN login.user.usr_token_creation_date IS 'Token creation date for validity';
+COMMENT ON COLUMN login.user.usr_last_connection_date IS '';
+COMMENT ON COLUMN login.user.usr_last_connection_ip IS '';
 
 COMMENT ON TABLE login.usergroup IS 'Usergroup, defining rights for users';
 COMMENT ON COLUMN login.usergroup.ugr_id IS 'Unique identifier';
