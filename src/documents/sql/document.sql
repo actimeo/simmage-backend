@@ -4,7 +4,7 @@ CREATE TYPE documents.document_status
 CREATE TABLE documents.document (
   doc_id SERIAL PRIMARY KEY,
   par_id_responsible integer REFERENCES organ.participant,
-  dty_id integer NOT NULL REFERENCES documents.document_type,
+  dty_id integer REFERENCES documents.document_type,
   doc_title text NOT NULL,
   doc_description text NOT NULL,
   doc_status documents.document_status NOT NULL,

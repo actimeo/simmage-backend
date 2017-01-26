@@ -88,6 +88,38 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0, $id);
   }  
 
+  public function testDocumentOtherTypeAdd() {
+    $par_id_responsible = null;
+    $title = 'a document title';
+    $desc = "";
+    $status = 'done';
+
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $id = self::$base->documents->document_add($this->token, $par_id_responsible,
+					       null, $title, $desc, $status,
+					       null, null, null, // dates
+					       null, // file
+					       [ $top_id1, $top_id2 ], [ $dosId ]
+					       );
+    $this->assertGreaterThan(0, $id);
+  }
+
   public function testDocumentGet() {
     $name = 'a document type';
     $indiv = true;
@@ -114,6 +146,8 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
+    self::$base->documents->document_type_update_details($this->token, $dty_id, $name, true, array($top_id1, $top_id2), null);
+
     $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
 					       $dty_id, $title, $desc, $status, 
 					       null, null, null, // dates
@@ -134,6 +168,50 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $dossiers = self::$base->documents->document_dossier_list($this->token, $id);
     $this->assertEquals([ $dosId ], array_map(function ($d) { return $d['dos_id']; }, $dossiers));
   }  
+
+  public function testDocumentOtherTypeGet() {
+    $par_id_responsible = null;
+    $title = 'a document title';
+    $desc = "";
+    $status = 'done';
+
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $id = self::$base->documents->document_add($this->token, $par_id_responsible,
+					       null, $title, $desc, $status,
+					       null, null, null, // dates
+					       null, // file
+					       [ $top_id1, $top_id2 ], [ $dosId ]
+					       );
+    $doc = self::$base->documents->document_get($this->token, $id);
+    $this->assertEquals($doc['doc_id'], $id);
+    $this->assertEquals($doc['par_id_responsible'], $par_id_responsible);
+    $this->assertEquals($doc['dty_id'], null);
+    $this->assertEquals($doc['doc_title'], $title);
+    $this->assertEquals($doc['doc_description'], $desc);
+    $this->assertEquals($doc['doc_status'], $status);
+
+    $topics = self::$base->documents->document_topic_list($this->token, $id);
+    $this->assertEquals([ $top_id1, $top_id2 ], array_map(function ($t) { return $t['top_id']; }, $topics));
+
+    $dossiers = self::$base->documents->document_dossier_list($this->token, $id);
+    $this->assertEquals([ $dosId ], array_map(function ($d) { return $d['dos_id']; }, $dossiers));
+  }
 
   public function testDocumentGetUnknown() {
     $name = 'a document type';
@@ -196,6 +274,8 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $lname = 'lastname';
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    self::$base->documents->document_type_update_details($this->token, $dty_id, $name, true, array($top_id1, $top_id2), null);
 
     $id = self::$base->documents->document_add($this->token, $par_id_responsible, 
 					       $dty_id, $title, $desc, $status, 

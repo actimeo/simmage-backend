@@ -150,13 +150,19 @@ class documenttypeTest extends PHPUnit_Framework_TestCase {
     self::$base->documents->document_type_set_topics($this->token, $id2, [ $top1, $top3 ]);
 
     $dtys = self::$base->documents->document_type_filter($this->token, NULL);
-    $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
+    $this->assertEquals(null, $dtys);
+
+    $dtys = self::$base->documents->document_type_filter($this->token, []);
+    $this->assertEquals(null, $dtys);
 
     $dtys = self::$base->documents->document_type_filter($this->token, [$top2]);
     $this->assertEquals(array($id1), array_map(function($x) { return $x['dty_id']; }, $dtys));
 
     $dtys = self::$base->documents->document_type_filter($this->token, [$top1]);
     $this->assertEquals(array($id1, $id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
+
+    $dtys = self::$base->documents->document_type_filter($this->token, [$top1, $top3]);
+    $this->assertEquals(array($id2), array_map(function($x) { return $x['dty_id']; }, $dtys));
   }  
 
   public function testDocumentTypeSetTopics() {

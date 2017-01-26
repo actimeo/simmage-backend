@@ -17,8 +17,16 @@ VOLATILE
 AS $$
 DECLARE
   new_id integer;
+  topics integer[];
 BEGIN
   PERFORM login._token_assert(prm_token, null);
+
+  IF prm_dty_id IS NOT NULL THEN
+    SELECT array_agg(top_id) INTO topics FROM documents.document_type_topic WHERE dty_id = prm_dty_id;
+  ELSE
+    topics = prm_topics;
+  END IF;
+
   INSERT INTO documents.document (
     par_id_responsible, 
     dty_id, 
@@ -41,7 +49,7 @@ BEGIN
     prm_file
    ) RETURNING doc_id INTO new_id;
 
-  PERFORM documents.document_set_topics(prm_token, new_id, prm_topics);
+  PERFORM documents.document_set_topics(prm_token, new_id, topics);
   PERFORM documents.document_set_dossiers(prm_token, new_id, prm_dossiers);
   RETURN new_id;
 END;
@@ -71,10 +79,17 @@ RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
 AS $$
+DECLARE
+  topics integer[];
 BEGIN
   PERFORM login._token_assert(prm_token, null);
   IF NOT EXISTS (SELECT 1 FROM documents.document WHERE doc_id = prm_doc_id) THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+  IF prm_dty_id IS NOT NULL THEN
+    SELECT array_agg(top_id) INTO topics FROM documents.document_type_topic WHERE dty_id = prm_dty_id;
+  ELSE
+    topics = prm_topics;
   END IF;
   UPDATE documents.document SET
     par_id_responsible = prm_par_id_responsible,
@@ -88,7 +103,7 @@ BEGIN
     doc_file = prm_file
     WHERE doc_id = prm_doc_id;
 
-  PERFORM documents.document_set_topics(prm_token, prm_doc_id, prm_topics);
+  PERFORM documents.document_set_topics(prm_token, prm_doc_id, topics);
   PERFORM documents.document_set_dossiers(prm_token, prm_doc_id, prm_dossiers);
 END;
 $$;
