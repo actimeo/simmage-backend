@@ -6,12 +6,14 @@ CREATE TABLE documents.document (
   par_id_responsible integer REFERENCES organ.participant,
   dty_id integer REFERENCES documents.document_type,
   doc_title text NOT NULL,
-  doc_description text NOT NULL,
+  doc_description text,
   doc_status documents.document_status NOT NULL,
   doc_obtainment_date date,
   doc_execution_date date,
   doc_validity_date date,
-  doc_file text
+  doc_file text,
+  doc_author integer NOT NULL REFERENCES organ.participant,
+  doc_creation_date timestamp with time zone
 );
 
 CREATE TABLE documents.document_topic (

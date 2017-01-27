@@ -351,4 +351,79 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $list = self::$base->documents->document_status_list();
     $this->assertEquals($list[0], 'todo');
   }
+
+  public function testDocumentParticipantList() {
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'Firstname', 'Lastname', '21/12/1963', 'male', false);
+
+    $name = 'a document type';
+    $indiv = true;
+    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
+    
+    $par = self::$base->execute_sql("SELECT par_id FROM login.user WHERE usr_token = ".$this->token);
+    $par1 = self::$base->organ->participant_add($this->token, 'Pierre' ,'Dupont');
+    $par2 = self::$base->organ->participant_add($this->token, 'Jacques' ,'Martin');
+    $par3 = self::$base->organ->participant_add($this->token, 'Marie' ,'Poppins');
+
+    $login1 = 'anotherlogin1';
+    $pwd1 = 'arandomsecurepassword';
+
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			      .$login1."', pgcrypto.crypt('"
+			      .$pwd1."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+			      .$par1.");");
+
+    $res = self::$base->login->user_login($login1, $pwd1, null, null);
+    $token1 = $res['usr_token'];
+
+    self::$base->documents->document_add($this->token, $par, 
+						    $dty_id, 'un document', 'une description', 'done', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+						    );
+    self::$base->documents->document_add($token1, $par, 
+						    $dty_id, 'un document', 'une description', 'done', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1, $top2 ], [ $dosId ]
+						    );
+    self::$base->documents->document_add($this->token, $par1, 
+						    $dty_id, 'un document', 'une description', 'done', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top2 ], [ $dosId ]
+						    );
+    self::$base->documents->document_add($token1, $par2, 
+						    $dty_id, 'un document', 'une description', 'done', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+						    );
+    self::$base->documents->document_add($this->token, $par3, 
+						    $dty_id, 'un document', 'une description', 'done', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1, $top2 ], [ ]
+					    );
+
+    $req = ['doc_id' => true,
+	    'doc_title' => true,
+	    'par_id_responsible' => true,
+	    'author' => [ 'par_id' => true,
+			  'par_firstname' => true,
+			  'par_lastname' => true ],
+	    'topics' => [ 'top_id' => true,
+			  'top_name' => true ],
+	    'dossiers' => [ 'dos_id' => true,
+			    'dos_firstname' => true,
+			    'dos_lastname' => true ]
+		    ];
+
+    $list = self::$base->documents->document_participant_list($token1, json_encode($req));
+
+    $this->assertEquals(4, count($list));
+  }
 }

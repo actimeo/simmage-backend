@@ -18,6 +18,7 @@ AS $$
 DECLARE
   new_id integer;
   topics integer[];
+  author_id integer;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
 
@@ -26,6 +27,8 @@ BEGIN
   ELSE
     topics = prm_topics;
   END IF;
+
+  SELECT par_id INTO author_id FROM login.user WHERE usr_token = prm_token;
 
   INSERT INTO documents.document (
     par_id_responsible, 
@@ -36,7 +39,9 @@ BEGIN
     doc_obtainment_date,
     doc_execution_date,
     doc_validity_date,
-    doc_file
+    doc_file,
+    doc_author,
+    doc_creation_date
    ) VALUES (
     prm_par_id_responsible, 
     prm_dty_id, 
@@ -46,7 +51,9 @@ BEGIN
     prm_obtainment_date,
     prm_execution_date,
     prm_validity_date,
-    prm_file
+    prm_file,
+    author_id,
+    CURRENT_TIMESTAMP
    ) RETURNING doc_id INTO new_id;
 
   PERFORM documents.document_set_topics(prm_token, new_id, topics);
@@ -308,6 +315,11 @@ BEGIN
     CASE WHEN (req->>'doc_execution_date') IS NULL THEN NULL ELSE doc_execution_date END as doc_execution_date, 
     CASE WHEN (req->>'doc_validity_date') IS NULL THEN NULL ELSE doc_validity_date END as doc_validity_date, 
     CASE WHEN (req->>'doc_file') IS NULL THEN NULL ELSE doc_file END as doc_file,
+    CASE WHEN (req->>'doc_creation_date') IS NULL THEN NULL ELSE doc_creation_date END as doc_creation_date,
+    CASE WHEN (req->>'author') IS NULL THEN NULL ELSE
+      organ.participant_json(prm_token, doc_author, req->'author') END as author,
+    CASE WHEN (req->>'responsible') IS NULL THEN NULL ELSE
+      organ.participant_json(prm_token, par_id_responsible, req->'responsible') END as responsible,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       documents.document_topic_json(prm_token, doc_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
@@ -384,3 +396,23 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION documents.document_status_list() IS 'Returns the list of document statuses';
+
+CREATE OR REPLACE FUNCTION documents.document_participant_list(prm_token integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  RETURN documents.document_json(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT doc_id FROM documents.document
+      LEFT JOIN documents.document_dossier USING(doc_id)
+      WHERE doc_author = participant OR par_id_responsible = participant OR document_dossier.doc_id IS NULL
+      )), req);
+END;
+$$;
+COMMENT ON FUNCTION documents.document_participant_list(prm_token integer, req json) IS 'Returns the notes attributed to or created by the current user';
