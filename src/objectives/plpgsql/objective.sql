@@ -1,10 +1,11 @@
 CREATE OR REPLACE FUNCTION objectives.objective_add(
   prm_token integer, 
   prm_name text,
-  prm_open boolean,
-  prm_deadline date,
+  prm_status objectives.objective_status,
+  prm_start_date date,
+  prm_end_date date,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossier integer)
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -13,21 +14,21 @@ DECLARE
   new_id integer;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
-  INSERT INTO objectives.objective (obj_name, obj_open, obj_deadline)
-    VALUES (prm_name, prm_open, prm_deadline)
+  INSERT INTO objectives.objective (obj_name, dos_id, obj_status, obj_start_date, obj_end_date)
+    VALUES (prm_name, prm_dossier, prm_status, prm_start_date, prm_end_date)
     RETURNING obj_id INTO new_id;
   PERFORM objectives.objective_set_topics(prm_token, new_id, prm_topics);
-  PERFORM objectives.objective_set_dossiers(prm_token, new_id, prm_dossiers);
   RETURN new_id;
 END;
 $$;
 COMMENT ON FUNCTION objectives.objective_add(
   prm_token integer,
   prm_name text,
-  prm_open boolean,
-  prm_deadline date,
+  prm_status objectives.objective_status,
+  prm_start_date date,
+  prm_end_date date,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossier integer)
  IS 'Add a new objective';
 
 CREATE OR REPLACE FUNCTION objectives.objective_set_topics(
@@ -64,40 +65,6 @@ $$;
 COMMENT ON FUNCTION objectives.objective_set_topics(prm_token integer, prm_obj_id integer, prm_top_ids integer[])
 IS 'Set topics of a objective';
 
-CREATE OR REPLACE FUNCTION objectives.objective_set_dossiers(
-  prm_token integer,
-  prm_obj_id integer,
-  prm_dos_ids integer[])
-RETURNS VOID
-LANGUAGE plpgsql
-VOLATILE
-AS $$
-DECLARE
-  t integer;
-BEGIN
-  PERFORM login._token_assert(prm_token, null);
-  IF NOT EXISTS (SELECT 1 FROM objectives.objective WHERE obj_id = prm_obj_id) THEN
-    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
-  END IF;
-
-  IF prm_dos_ids ISNULL THEN
-    DELETE FROM objectives.objective_dossier WHERE obj_id = prm_obj_id;
-    RETURN;
-  END IF;
-
-  DELETE FROM objectives.objective_dossier WHERE obj_id = prm_obj_id AND dos_id <> ALL(prm_dos_ids);
-
-  FOREACH t IN ARRAY prm_dos_ids
-  LOOP
-    IF NOT EXISTS (SELECT 1 FROM objectives.objective_dossier WHERE obj_id = prm_obj_id AND dos_id = t) THEN
-      INSERT INTO objectives.objective_dossier (obj_id, dos_id) VALUES (prm_obj_id, t);
-    END IF;
-  END LOOP;
-END;
-$$;
-COMMENT ON FUNCTION objectives.objective_set_dossiers(prm_token integer, prm_obj_id integer, prm_dos_ids integer[])
-IS 'Set dossiers of a objective';
-
 CREATE OR REPLACE FUNCTION objectives.objective_get(prm_token integer, prm_obj_id integer)
 RETURNS objectives.objective
 LANGUAGE plpgsql
@@ -116,6 +83,47 @@ END;
 $$;
 COMMENT ON FUNCTION objectives.objective_get(prm_token integer, prm_obj_id integer) IS 'Returns information about a objective';
 
+CREATE OR REPLACE FUNCTION objectives.objective_update(
+  prm_token integer,
+  prm_obj_id integer,
+  prm_name text,
+  prm_status objectives.objective_status,
+  prm_start_date date,
+  prm_end_date date,
+  prm_topics integer[],
+  prm_dossier integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM objectives.objective WHERE obj_id = prm_obj_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  UPDATE objectives.objective SET
+    obj_name = prm_name,
+    obj_status = prm_status,
+    obj_start_date = prm_start_date,
+    obj_end_date = prm_end_date,
+    dos_id = prm_dossier
+    WHERE obj_id = prm_obj_id;
+
+  PERFORM objectives.objective_set_topics(prm_token, prm_obj_id, prm_topics);
+END;
+$$;
+COMMENT ON FUNCTION objectives.objective_update(
+  prm_token integer,
+  prm_obj_id integer,
+  prm_name text,
+  prm_status objectives.objective_status,
+  prm_start_date date,
+  prm_end_date date,
+  prm_topics integer[],
+  prm_dossier integer)
+IS 'Update an objective';
+
 CREATE OR REPLACE FUNCTION objectives.objective_topic_list(prm_token integer, prm_obj_id integer)
 RETURNS SETOF organ.topic
 LANGUAGE plpgsql
@@ -130,21 +138,6 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION objectives.objective_topic_list(prm_token integer, prm_obj_id integer) IS 'Retunrs the topics of a objective';
-
-CREATE OR REPLACE FUNCTION objectives.objective_dossier_list(prm_token integer, prm_obj_id integer)
-RETURNS SETOF organ.dossier
-LANGUAGE plpgsql
-STABLE
-AS $$
-BEGIN
-  PERFORM login._token_assert(prm_token, null);
-  RETURN QUERY SELECT dossier.* FROM organ.dossier
-    INNER JOIN objectives.objective_dossier USING (dos_id)
-    WHERE obj_id = prm_obj_id
-    ORDER BY dos_id;
-END;
-$$;
-COMMENT ON FUNCTION objectives.objective_dossier_list(prm_token integer, prm_obj_id integer) IS 'Retunrs the dossiers of a objective';
 
 -- 
 -- JSON
@@ -194,9 +187,8 @@ BEGIN
       CASE WHEN (req->>'dos_external') IS NULL THEN NULL ELSE dos_external END as dos_external, 
       CASE WHEN (req->>'dos_groupname') IS NULL THEN NULL ELSE dos_groupname END as dos_groupname 
       FROM organ.dossier
-      INNER JOIN objectives.objective_dossier USING (dos_id) 
-      WHERE obj_id = prm_obj_id
-      ORDER BY dos_id) d;
+      INNER JOIN objectives.objective USING(dos_id)
+      WHERE obj_id = prm_obj_id) d;
   RETURN ret;
 END;
 $$;
@@ -215,12 +207,13 @@ BEGIN
   FROM (SELECT 
     CASE WHEN (req->>'obj_id') IS NULL THEN NULL ELSE obj_id END as obj_id, 
     CASE WHEN (req->>'obj_name') IS NULL THEN NULL ELSE obj_name END as obj_name, 
-    CASE WHEN (req->>'obj_open') IS NULL THEN NULL ELSE obj_open END as obj_open, 
-    CASE WHEN (req->>'obj_deadline') IS NULL THEN NULL ELSE obj_deadline END as obj_deadline, 
+    CASE WHEN (req->>'obj_status') IS NULL THEN NULL ELSE obj_status END as obj_status,
+    CASE WHEN (req->>'obj_start_date') IS NULL THEN NULL ELSE obj_start_date END as obj_start_date,
+    CASE WHEN (req->>'obj_end_date') IS NULL THEN NULL ELSE obj_end_date END as obj_end_date,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       objectives.objective_topic_json(prm_token, obj_id, req->'topics') END as topics,
-    CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
-      objectives.objective_dossier_json(prm_token, obj_id, req->'dossiers') END as dossiers
+    CASE WHEN (req->>'dossier') IS NULL THEN NULL ELSE
+      objectives.objective_dossier_json(prm_token, obj_id, req->'dossier') END as dossier
     FROM objectives.objective 
       WHERE obj_id = ANY(prm_obj_ids)
   ) d;
@@ -248,12 +241,11 @@ BEGIN
     INNER JOIN objectives.objective_topic USING(obj_id)
     INNER JOIN objectives.objectivesview_topic USING(top_id)
     INNER JOIN objectives.objectivesview USING(obv_id)
-    INNER JOIN objectives.objective_dossier USING(obj_id)
     INNER JOIN organ.dossiers_authorized_for_user(prm_token) 
-      ON dossiers_authorized_for_user = objective_dossier.dos_id
+      ON dossiers_authorized_for_user = objective.dos_id
     WHERE obv_id = prm_obv_id AND
       (prm_grp_id IS NULL OR 
-       prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = objective_dossier.dos_id)
+       prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = objective.dos_id)
     ))), req);
 END;
 $$;
@@ -263,3 +255,20 @@ COMMENT ON FUNCTION objectives.objective_in_view_list(
   prm_grp_id integer, 
   req json)
  IS 'Returns the objectives visible in a objectives view';
+
+CREATE OR REPLACE FUNCTION objectives.objective_delete(prm_token integer, prm_obj_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM objectives.objective WHERE obj_id = prm_obj_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  DELETE FROM objectives.objective_topic WHERE obj_id = prm_obj_id;
+  DELETE FROM objectives.objective WHERE obj_id = prm_obj_id;
+END;
+$$;
+COMMENT ON FUNCTION objectives.objective_delete(prm_token integer, prm_obj_id integer) IS 'Delete an objective and its links with any topic';

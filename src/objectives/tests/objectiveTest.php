@@ -72,8 +72,8 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
     
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 true, '01/01/2018',
-						 [ $top_id1, $top_id2 ], [ $dosId ]
+						 'waiting', '01/01/2017', '01/01/2018',
+						 [ $top_id1, $top_id2 ], $dosId
 						 );
     $this->assertGreaterThan(0, $id);
   }  
@@ -97,17 +97,14 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 true, '01/01/2018',
-						 [ $top_id1, $top_id2 ], [ $dosId ]
+						 'waiting', '01/01/2017', '01/01/2018',
+						 [ $top_id1, $top_id2 ], $dosId
 						 );
     $doc = self::$base->objectives->objective_get($this->token, $id);
     $this->assertEquals($doc['obj_id'], $id);
 
     $topics = self::$base->objectives->objective_topic_list($this->token, $id);
     $this->assertEquals([ $top_id1, $top_id2 ], array_map(function ($t) { return $t['top_id']; }, $topics));
-
-    $dossiers = self::$base->objectives->objective_dossier_list($this->token, $id);
-    $this->assertEquals([ $dosId ], array_map(function ($d) { return $d['dos_id']; }, $dossiers));
   }  
 
   public function testObjectiveGetUnknown() {
@@ -129,8 +126,8 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 true, '01/01/2018', 
-						 [ $top_id1, $top_id2 ], [ $dosId ]
+						 'waiting', '01/01/2017', '01/01/2018',
+						 [ $top_id1, $top_id2 ], $dosId
 				       );
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     $doc = self::$base->objectives->objective_get($this->token, $id + 1);
@@ -155,14 +152,14 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $id = self::$base->objectives->objective_add($this->token, 'a objective', 
-						 true, '01/01/2018', 
-						 [ $top_id1, $top_id2 ], [ $dosId ]
+						 'waiting', '01/01/2017', '01/01/2018',
+						 [ $top_id1, $top_id2 ], $dosId
 						 );
     $req = [ 'obj_id' => true,
 	     'obj_name' => true,
 	     'topics' => [ 'top_id' => true,
 			   'top_name' => true ],
-	     'dossiers' => [ 'dos_id' => true,
+	     'dossier' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
     $nots_json = self::$base->objectives->objective_json($this->token, [ $id ], json_encode($req));
@@ -171,7 +168,7 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($id, $json->obj_id);
     $this->assertEquals('a objective', $json->obj_name);
     $this->assertEquals(2, count($json->topics));
-    $this->assertEquals(1, count($json->dossiers));
+    $this->assertEquals($dosId, $json->dossier[0]->dos_id);
   }
 
   public function testObjectiveInObjectivesView() {
@@ -186,20 +183,20 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
     $doc_id1 = self::$base->objectives->objective_add($this->token, 'a objective', 
-						      true, '01/01/2018',
-						      [ $top1 ], [ $dosId ]
+						      'waiting', '01/01/2017', '01/01/2018',
+						      [ $top1 ], $dosId
 						      );
 
     $doc_id2 = self::$base->objectives->objective_add($this->token, 'another objective', 
-						      true, '01/01/2018',
-						      [ $top1, $top2 ], [ $dosId ]
+						      'waiting', '01/01/2017', '01/01/2018',
+						      [ $top1, $top2 ], $dosId
 						      );
 
     $req = [ 'doc_id' => true,
 	     'obj_name' => true,
 	     'topics' => [ 'top_id' => true,
 			   'top_name' => true ],
-	     'dossiers' => [ 'dos_id' => true,
+	     'dossier' => [ 'dos_id' => true,
 			     'dos_firstname' => true,
 			     'dos_lastname' => true ] ];
     $ret = self::$base->objectives->objective_in_view_list($this->token, $obv_id, NULL, json_encode($req));
@@ -214,5 +211,39 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     
     $tops = self::$base->objectives->objectivesview_get_topics($this->token, $id);
     $this->assertEquals(2, count($tops));
+  }
+
+  public function testObjectiveUpdate() {
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $id = self::$base->objectives->objective_add($this->token, 'a objective',
+						 'waiting', '01/01/2017', '01/01/2018',
+						 [ $top_id1, $top_id2 ], $dosId
+						 );
+    $this->assertGreaterThan(0, $id);
+
+    self::$base->objectives->objective_update($this->token, $id, 'a renamed objective',
+					      'started', '01/02/2017', '31/12/2018',
+					      [ $top_id1, $top_id2 ], $dosId
+				      );
+
+
+    $obj = self::$base->objectives->objective_get($this->token, $id);
+    $this->assertEquals('a renamed objective', $obj['obj_name']);
   }
 }
