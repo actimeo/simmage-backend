@@ -154,5 +154,27 @@ class ResourceTest extends PHPUnit_Framework_TestCase {
 			   'top_name' => true ],
 	     ];
     $ret = self::$base->resources->resource_in_view_list($this->token, $res_id, json_encode($req));
-  } 
+  }
+
+  public function testResourceUpdate() {
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $id = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+
+    self::$base->resources->resource_update($this->token, $id, 'an edited resource', [ $top_id1, $top_id2 ]);
+
+    $res = self::$base->resources->resource_get($this->token, $id);
+
+    $this->assertEquals('an edited resource', $res['res_name']);
+  }
 }

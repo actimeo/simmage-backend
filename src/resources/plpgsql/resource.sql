@@ -75,6 +75,43 @@ END;
 $$;
 COMMENT ON FUNCTION resources.resource_get(prm_token integer, prm_res_id integer) IS 'Returns information about a resource';
 
+CREATE OR REPLACE FUNCTION resources.resource_update(prm_token integer, prm_res_id integer, prm_name text, prm_top_ids integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM resources.resource WHERE res_id = prm_res_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  UPDATE resources.resource SET
+    res_name = prm_name
+    WHERE res_id = prm_res_id;
+
+  PERFORM resources.resource_set_topics(prm_token, prm_res_id, prm_top_ids);
+END;
+$$;
+COMMENT ON FUNCTION resources.resource_update(prm_token integer, prm_res_id integer, prm_name text, prm_top_ids integer[]) IS 'Update a resource informations';
+
+CREATE OR REPLACE FUNCTION resources.resource_delete(prm_token integer, prm_res_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM resources.resource WHERE res_id = prm_res_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  DELETE FROM resources.resource_topic WHERE res_id = prm_res_id;
+  DELETE FROM resources.resource WHERE res_id = prm_res_id;
+END;
+$$;
+COMMENT ON FUNCTION resources.resource_delete(prm_token integer, prm_res_id integer) IS 'Delete a resource';
+
 CREATE OR REPLACE FUNCTION resources.resource_topic_list(prm_token integer, prm_res_id integer)
 RETURNS SETOF organ.topic
 LANGUAGE plpgsql
