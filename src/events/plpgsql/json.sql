@@ -87,10 +87,14 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
-    FROM (SELECT ety_id, ety_name, ety_category, ety_individual_name FROM events.event_type ev
-	  WHERE (select array_agg(top_id) from events.event_type_topic top where ev.ety_id = top.ety_id) @> prm_top_ids
-	  AND ety_category = prm_category
-	  ORDER BY ety_name) d;
+    FROM (SELECT ety_id, ety_name, ety_category, ety_individual_name,
+	  ARRAY(SELECT DISTINCT top_id FROM events.event_type_topic top WHERE ev.ety_id = top.ety_id) AS topics
+	  FROM events.event_type ev
+	  INNER JOIN events.event_type_topic USING(ety_id)
+	  WHERE ety_category = prm_category
+	  AND event_type_topic.top_id = ANY (prm_top_ids)
+	  ORDER BY ety_name) d
+	  WHERE prm_top_ids <@ d.topics;
   RETURN ret;
 END;
 $$;

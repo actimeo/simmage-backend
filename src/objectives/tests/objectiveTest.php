@@ -246,4 +246,9 @@ class ObjectiveTest extends PHPUnit_Framework_TestCase {
     $obj = self::$base->objectives->objective_get($this->token, $id);
     $this->assertEquals('a renamed objective', $obj['obj_name']);
   }
+
+  function testObjectiveStatusList() {
+    $list = self::$base->objectives->objective_status_list();
+    $this->assertEquals($list[0], 'waiting');
+  }
 }

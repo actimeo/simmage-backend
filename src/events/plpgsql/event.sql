@@ -15,7 +15,9 @@ CREATE OR REPLACE FUNCTION events.event_add(
   prm_mocctime text,
   prm_occrepeat integer,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossiers integer[],
+  prm_participants integer[],
+  prm_resources integer[])
 RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
@@ -27,10 +29,17 @@ DECLARE
   st_date date;
   fdnm_date date;
   get_id boolean := true;
+  topics integer[];
 BEGIN
   PERFORM login._token_assert(prm_token, null);
   loop_id := 0;
   IF NOT prm_recurent THEN prm_occrepeat := 1; END IF;
+
+  IF prm_ety_id IS NOT NULL THEN
+    SELECT array_agg(top_id) INTO topics FROM events.event_type_topic WHERE ety_id = prm_ety_id;
+  ELSE
+    topics = prm_topics;
+  END IF;
 
   WHILE loop_id < prm_occrepeat LOOP
     INSERT INTO events.event (
@@ -60,8 +69,10 @@ BEGIN
       get_id := false;
     END IF;
 
-    PERFORM events.event_set_topics(prm_token, new_id, prm_topics);
+    PERFORM events.event_set_topics(prm_token, new_id, topics);
     PERFORM events.event_set_dossiers(prm_token, new_id, prm_dossiers);
+    PERFORM events.event_set_participants(prm_token, new_id, prm_participants);
+    PERFORM events.event_set_resources(prm_token, new_id, prm_resources);
     loop_id := loop_id + 1;
 
     IF prm_recurent THEN
@@ -117,7 +128,9 @@ COMMENT ON FUNCTION events.event_add(
   prm_mocctime text,
   prm_occrepeat integer,
   prm_topics integer[], 
-  prm_dossiers integer[])
+  prm_dossiers integer[],
+  prm_participants integer[],
+  prm_resources integer[])
  IS 'Add a new event';
 
 CREATE OR REPLACE FUNCTION events.event_set_topics(
@@ -188,6 +201,74 @@ $$;
 COMMENT ON FUNCTION events.event_set_dossiers(prm_token integer, prm_eve_id integer, prm_dos_ids integer[])
 IS 'Set dossiers of a event';
 
+CREATE OR REPLACE FUNCTION events.event_set_participants(
+  prm_token integer,
+  prm_eve_id integer,
+  prm_par_ids integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  t integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM events.event WHERE eve_id = prm_eve_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  IF prm_par_ids ISNULL THEN
+    DELETE FROM events.event_participant WHERE eve_id = prm_eve_id;
+    RETURN;
+  END IF;
+
+  DELETE FROM events.event_participant WHERE eve_id = prm_eve_id AND par_id <> ALL(prm_par_ids);
+
+  FOREACH t IN ARRAY prm_par_ids
+  LOOP
+    IF NOT EXISTS (SELECT 1 FROM events.event_participant WHERE eve_id = prm_eve_id AND par_id = t) THEN
+      INSERT INTO events.event_participant (eve_id, par_id) VALUES (prm_eve_id, t);
+    END IF;
+  END LOOP;
+END;
+$$;
+COMMENT ON FUNCTION events.event_set_participants(prm_token integer, prm_eve_id integer, prm_par_ids integer[])
+IS 'Set participants for an event';
+
+CREATE OR REPLACE FUNCTION events.event_set_resources(
+  prm_token integer,
+  prm_eve_id integer,
+  prm_res_ids integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  t integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM events.event WHERE eve_id = prm_eve_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  IF prm_res_ids ISNULL THEN
+    DELETE FROM events.event_resource WHERE eve_id = prm_eve_id;
+    RETURN;
+  END IF;
+
+  DELETE FROM events.event_resource WHERE eve_id = prm_eve_id AND res_id <> ALL(prm_res_ids);
+
+  FOREACH t IN ARRAY prm_res_ids
+  LOOP
+    IF NOT EXISTS (SELECT 1 FROM events.event_resource WHERE eve_id = prm_eve_id AND res_id = t) THEN
+      INSERT INTO events.event_resource (eve_id, res_id) VALUES (prm_eve_id, t);
+    END IF;
+  END LOOP;
+END;
+$$;
+COMMENT ON FUNCTION events.event_set_resources(prm_token integer, prm_eve_id integer, prm_res_ids integer[])
+IS 'Set resources for an event';
+
 CREATE OR REPLACE FUNCTION events.event_get(prm_token integer, prm_eve_id integer)
 RETURNS events.event
 LANGUAGE plpgsql
@@ -205,6 +286,86 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION events.event_get(prm_token integer, prm_eve_id integer) IS 'Returns information about a event';
+
+CREATE OR REPLACE FUNCTION events.event_update(
+  prm_token integer,
+  prm_eve_id integer,
+  prm_title text,
+  prm_ety_id integer,
+  prm_duration events.event_duration,
+  prm_start_time timestamp with time zone,
+  prm_end_time timestamp with time zone,
+  prm_place text,
+  prm_cost money,
+  prm_description text,
+  prm_sumup text,
+  prm_recurent boolean,
+  prm_occurence text,
+  prm_docctime integer,
+  prm_mocctime text,
+  prm_occrepeat integer,
+  prm_topics integer[],
+  prm_dossiers integer[],
+  prm_participants integer[],
+  prm_resources integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  topics integer[];
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM events.event WHERE eve_id = prm_eve_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  IF prm_ety_id IS NOT NULL THEN
+    SELECT array_agg(top_id) INTO topics FROM events.event_type_topic WHERE ety_id = prm_ety_id;
+  ELSE
+    topics = prm_topics;
+  END IF;
+
+  UPDATE events.event SET
+      eve_title = prm_title,
+      ety_id = prm_ety_id,
+      eve_duration = prm_duration,
+      eve_start_time = prm_start_time,
+      eve_end_time = prm_end_time,
+      eve_place = prm_place,
+      eve_cost = prm_cost,
+      eve_description = prm_description,
+      eve_sumup = prm_sumup
+    WHERE eve_id = prm_eve_id;
+
+    PERFORM events.event_set_topics(prm_token, prm_eve_id, topics);
+    PERFORM events.event_set_dossiers(prm_token, prm_eve_id, prm_dossiers);
+    PERFORM events.event_set_participants(prm_token, prm_eve_id, prm_participants);
+    PERFORM events.event_set_resources(prm_token, prm_eve_id, prm_resources);
+END;
+$$;
+COMMENT ON FUNCTION events.event_update(
+  prm_token integer,
+  prm_eve_id integer,
+  prm_title text,
+  prm_ety_id integer,
+  prm_duration events.event_duration,
+  prm_start_time timestamp with time zone,
+  prm_end_time timestamp with time zone,
+  prm_place text,
+  prm_cost money,
+  prm_description text,
+  prm_sumup text,
+  prm_recurent boolean,
+  prm_occurence text,
+  prm_docctime integer,
+  prm_mocctime text,
+  prm_occrepeat integer,
+  prm_topics integer[],
+  prm_dossiers integer[],
+  prm_participants integer[],
+  prm_resources integer[])
+IS 'Update an event';
 
 CREATE OR REPLACE FUNCTION events.event_topic_list(prm_token integer, prm_eve_id integer)
 RETURNS SETOF organ.topic
@@ -235,6 +396,36 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION events.event_dossier_list(prm_token integer, prm_eve_id integer) IS 'Retunrs the dossiers of a event';
+
+CREATE OR REPLACE FUNCTION events.event_participant_list(prm_token integer, prm_eve_id integer)
+RETURNS SETOF organ.participant
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN QUERY SELECT participant.* FROM organ.participant
+    INNER JOIN events.event_participant USING (par_id)
+    WHERE eve_id = prm_eve_id
+    ORDER BY par_id;
+END;
+$$;
+COMMENT ON FUNCTION events.event_participant_list(prm_token integer, prm_eve_id integer) IS 'Retunrs the participants of a event';
+
+CREATE OR REPLACE FUNCTION events.event_resource_list(prm_token integer, prm_eve_id integer)
+RETURNS SETOF resources.resource
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN QUERY SELECT resource.* FROM resources.resource
+    INNER JOIN events.event_resource USING (res_id)
+    WHERE eve_id = prm_eve_id
+    ORDER BY res_id;
+END;
+$$;
+COMMENT ON FUNCTION events.event_resource_list(prm_token integer, prm_eve_id integer) IS 'Retunrs the resources of a event';
 
 -- 
 -- JSON
@@ -292,6 +483,52 @@ END;
 $$;
 COMMENT ON FUNCTION events.event_topic_json(prm_token integer, prm_eve_id integer, req json) IS 'Returns the topics of an event as json';
 
+CREATE OR REPLACE FUNCTION events.event_participant_json(prm_token integer, prm_eve_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'par_id') IS NULL THEN NULL ELSE par_id END as par_id,
+      CASE WHEN (req->>'par_firstname') IS NULL THEN NULL ELSE par_firstname END as par_firstname,
+      CASE WHEN (req->>'par_lastname') IS NULL THEN NULL ELSE par_lastname END as par_lastname,
+      CASE WHEN (req->>'par_email') IS NULL THEN NULL ELSE par_email END as par_email
+      FROM organ.participant
+      INNER JOIN events.event_participant USING (par_id)
+      WHERE eve_id = prm_eve_id
+      ORDER BY par_id) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION events.event_participant_json(prm_token integer, prm_eve_id integer, req json) IS 'Returns the participants of an event as json';
+
+CREATE OR REPLACE FUNCTION events.event_resource_json(prm_token integer, prm_eve_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+   ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'res_id') IS NULL THEN NULL ELSE res_id END as res_id,
+      CASE WHEN (req->>'res_name') IS NULL THEN NULL ELSE res_name END as res_name
+      FROM resources.resource
+      INNER JOIN events.event_resource USING (res_id)
+      WHERE eve_id = prm_eve_id
+      ORDER BY res_id) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION events.event_resource_json(prm_token integer, prm_eve_id integer, req json) IS 'Retunrs the resources of an event as json';
+
 CREATE OR REPLACE FUNCTION events.event_json(prm_token integer, prm_eve_ids integer[], req json)
 RETURNS json
 LANGUAGE plpgsql
@@ -306,7 +543,8 @@ BEGIN
     CASE WHEN (req->>'eve_id') IS NULL THEN NULL ELSE eve_id END as eve_id, 
     CASE WHEN (req->>'eve_title') IS NULL THEN NULL ELSE eve_title END as eve_title, 
     CASE WHEN (req->>'ety_id') IS NULL THEN NULL ELSE ety_id END as ety_id, 
-    CASE WHEN (req->>'ety_name') IS NULL THEN NULL ELSE ety_name END as ety_name, 
+    CASE WHEN (req->>'ety_name') IS NULL THEN NULL ELSE ety_name END as ety_name,
+    CASE WHEN (req->>'ety_category') IS NULL THEN NULL ELSE ety_category END as ety_categoryn,
     CASE WHEN (req->>'eve_duration') IS NULL THEN NULL ELSE eve_duration END as eve_duration, 
     CASE WHEN (req->>'eve_start_time') IS NULL THEN NULL ELSE eve_start_time END as eve_start_time, 
     CASE WHEN (req->>'eve_end_time') IS NULL THEN NULL ELSE eve_end_time END as eve_end_time, 
@@ -317,7 +555,11 @@ BEGIN
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       events.event_topic_json(prm_token, eve_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
-      events.event_dossier_json(prm_token, eve_id, req->'dossiers') END as dossiers
+      events.event_dossier_json(prm_token, eve_id, req->'dossiers') END as dossiers,
+    CASE WHEN (req->>'participants') IS NULL THEN NULL ELSE
+      events.event_participant_json(prm_token, eve_id, req->'participants') END as participants,
+    CASE WHEN (req->>'resources') IS NULL THEN NULL ELSE
+      events.event_resource_json(prm_token, eve_id, req->'resources') END as resources
     FROM events.event 
       LEFT JOIN events.event_type USING(ety_id)
       WHERE eve_id = ANY(prm_eve_ids)
@@ -362,6 +604,26 @@ COMMENT ON FUNCTION events.event_in_view_list(
   req json)
  IS 'Returns the events visible in a events view';
 
+CREATE OR REPLACE FUNCTION events.event_delete(prm_token integer, prm_eve_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  IF NOT EXISTS (SELECT 1 FROM events.event WHERE eve_id = prm_eve_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  DELETE FROM events.event_resource WHERE eve_id = prm_eve_id;
+  DELETE FROM events.event_participant WHERE eve_id = prm_eve_id;
+  DELETE FROM events.event_dossier WHERE eve_id = prm_eve_id;
+  DELETE FROM events.event_topic WHERE eve_id = prm_eve_id;
+  DELETE FROM events.event WHERE eve_id = prm_eve_id;
+END;
+$$;
+COMMENT ON FUNCTION events.event_delete(prm_token integer, prm_eve_id integer) IS 'Delete an event and remove all its links with other objects';
+
 CREATE OR REPLACE FUNCTION events.event_duration_list()
 RETURNS SETOF events.event_duration
 LANGUAGE plpgsql
@@ -372,3 +634,21 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION events.event_duration_list() IS 'Returns the list of event durations';
+
+CREATE OR REPLACE FUNCTION events.event_user_participant_list(prm_token integer, req json)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  RETURN events.event_json(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT eve_id FROM events.event_participant
+      WHERE par_id = participant)), req);
+END;
+$$;
+COMMENT ON FUNCTION events.event_user_participant_list(prm_token integer, req json) IS 'Returns all events the user is supposed to attend';
