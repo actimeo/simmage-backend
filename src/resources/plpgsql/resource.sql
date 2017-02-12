@@ -205,3 +205,22 @@ COMMENT ON FUNCTION resources.resource_in_view_list(
   prm_rev_id integer, 
   req json)
  IS 'Returns the resources visible in a resources view';
+
+CREATE OR REPLACE FUNCTION resources.resource_participant_list(prm_token integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  RETURN resources.resource_json(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT res_id FROM events.event_resource
+      INNER JOIN events.event_participant USING(eve_id)
+      WHERE events.event_participant.par_id = participant)), req);
+END;
+$$;
+COMMENT ON FUNCTION resources.resource_participant_list(prm_token integer, req json) IS 'Returns the resources to be used in events the user must attend to';

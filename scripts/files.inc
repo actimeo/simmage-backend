@@ -6,8 +6,6 @@ FILES="$FILES $BASE/organ/sql/organ.sql $BASE/organ/plpgsql/*.sql $BASE/organ/sq
 
 FILES="$FILES $BASE/login/sql/auth.sql $BASE/login/plpgsql/*.sql $BASE/login/sql/comments.sql"
 
-FILES="$FILES $BASE/events/sql/eventtype.sql $BASE/events/sql/eventsviews.sql $BASE/events/sql/event.sql $BASE/events/plpgsql/*.sql $BASE/events/sql/comments.sql"
-
 FILES="$FILES $BASE/documents/sql/documenttype.sql $BASE/documents/sql/documentsviews.sql $BASE/documents/sql/document.sql"
 FILES="$FILES $BASE/documents/plpgsql/*.sql $BASE/documents/sql/comments.sql"
 
@@ -21,5 +19,7 @@ FILES="$FILES $BASE/resources/plpgsql/*.sql $BASE/resources/sql/comments.sql"
 
 FILES="$FILES $BASE/objectives/sql/objectivesviews.sql $BASE/objectives/sql/objective.sql"
 FILES="$FILES $BASE/objectives/plpgsql/*.sql $BASE/objectives/sql/comments.sql"
+
+FILES="$FILES $BASE/events/sql/eventtype.sql $BASE/events/sql/eventsviews.sql $BASE/events/sql/event.sql $BASE/events/plpgsql/*.sql $BASE/events/sql/comments.sql"
 
 FILES="$FILES $BASE/pgdoc/sql/schema.sql $BASE/pgdoc/plpgsql/*.sql"

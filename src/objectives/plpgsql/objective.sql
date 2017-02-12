@@ -272,3 +272,14 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION objectives.objective_delete(prm_token integer, prm_obj_id integer) IS 'Delete an objective and its links with any topic';
+
+CREATE OR REPLACE FUNCTION objectives.objective_status_list()
+RETURNS SETOF objectives.objective_status
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::objectives.objective_status));
+END;
+$$;
+COMMENT ON FUNCTION objectives.objective_status_list() IS 'REturn the list of objective statuses';
