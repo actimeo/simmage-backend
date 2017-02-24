@@ -20,9 +20,10 @@ BEGIN
   INSERT INTO notes.note (not_text, not_creation_date, not_event_date, not_object, not_author)
     VALUES (prm_text, CURRENT_TIMESTAMP, prm_event_date, prm_object, author_id)
     RETURNING not_id INTO new_id;
+
   PERFORM notes.note_set_topics(prm_token, new_id, prm_topics);
   PERFORM notes.note_set_dossiers(prm_token, new_id, prm_dossiers);
-  PERFORM notes.note_set_recipients(prm_token, new_id, false, prm_recipients_info);
+  PERFORM notes.note_set_recipients(prm_token, new_id, false, (SELECT array_agg(ids) FROM unnest(prm_recipients_info) ids WHERE ids <> all(prm_recipients_action)));
   PERFORM notes.note_set_recipients(prm_token, new_id, true, prm_recipients_action);
   RETURN new_id;
 END;
