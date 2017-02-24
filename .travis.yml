@@ -13,7 +13,7 @@ services:
 - postgresql
 addons:
   ssh_known_hosts: maya.elol.fr
-  postgresql: '9.3'
+  postgresql: '9.4'
 install:
 - composer install
 - ./scripts/install.sh
