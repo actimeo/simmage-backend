@@ -290,32 +290,34 @@ class NoteTest extends PHPUnit_Framework_TestCase {
     $token1 = $res['usr_token'];
 
     self::$base->notes->note_add($this->token, 'a note',
-				  '21/12/2016', 'an object',
+				  '21/12/2016 14:00:00', 'an object',
 					[ $top_id1, $top_id2 ], [ $dos_id ],
 					[ $par1, $par2 ], [ $par3 ]);
 
     self::$base->notes->note_add($token1, 'a note',
-				  '21/12/2016', 'an object',
+				  '25/12/2016 15:00:00', 'an object',
 					[ $top_id1, $top_id2 ], [ $dos_id ],
 					[ $par1 ], [ $par3, $par ]);
 
     self::$base->notes->note_add($token1, 'a note',
-				  '21/12/2016', 'an object',
+				  '22/12/2016 14:00:00', 'an object',
 					[ $top_id1, $top_id2 ], [ $dos_id ],
 					[ ], [ ]);
 
     self::$base->notes->note_add($token1, 'a note',
-				  '21/12/2016', 'an object',
+				  '16/12/2016 14:00:00', 'an object',
 					[ $top_id1 ], [ $dos_id ],
 					[ $par ], [ ]);
 
     self::$base->notes->note_add($this->token, 'a note',
-				  '21/12/2016', 'an object',
+				  '19/12/2016 14:00:00', 'an object',
 					[ $top_id1, $top_id2 ], [ $dos_id ],
 					[ $par3 ], [ $par ]);
 
     $req = [ 'not_id' => true,
 	     'not_text' => true,
+	     'not_creation_date' => true,
+	     'not_event_date' => true,
 	     'author' => [ 'par_id' => true,
 			   'par_firstname' => true,
 			   'par_lastname' => true ],
@@ -330,9 +332,51 @@ class NoteTest extends PHPUnit_Framework_TestCase {
 			       'nor_for_action' => true ]
 	     ];
 
-    $list = self::$base->notes->note_participant_list($token1, json_encode($req));
+    $list = self::$base->notes->note_participant_list($token1, 'not_event_date', true, json_encode($req));
 
     $this->assertEquals(4, count($list));
+  }
+
+  public function testNoteAcknowledgeReceipt() {
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'Firstname', 'Lastname', '21/12/1963', 'male', false);
+
+    $par = self::$base->execute_sql('SELECT par_id FROM login.user WHERE usr_token = '.$this->token);
+    $par1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
+
+    $login1 = 'flebeleb';
+    $pwd1 = 'glaglagzlgazfadaa';
+
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+	    .$login1."', pgcrypto.crypt('"
+	    .$pwd1."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+	    .$par1.");");
+
+    $res = self::$base->login->user_login($login1, $pwd1, null, null);
+    $token1 = $res['usr_token'];
+
+    self::$base->notes->note_add($this->token, 'a note',
+				  '21/12/2016 14:00:00', 'an object',
+				  [ $top_id1, $top_id2 ], [ $dosId ],
+				  [ $par1 ], [ ]);
+
+    $req = ['not_id' => true,
+	    'not_text' => true,
+	    'recipients' => [ 'par_id' => true,
+			      'nor_acknowledge_receipt' => true ]
+          ];
+
+    $note = self::$base->notes->note_participant_list($token1, 'not_event_date', true, json_encode($req))[0];
+
+    $this->assertEquals(false, $note->recipients[0]->nor_acknowledge_receipt);
+
+    self::$base->notes->note_user_acknowledge_receipt($token1, $note->not_id);
+
+    $noteAck = self::$base->notes->note_participant_list($token1, 'not_event_date', true, json_encode($req))[0];
+
+    $this->assertEquals(true, $noteAck->recipients[0]->nor_acknowledge_receipt);
   }
 
 }

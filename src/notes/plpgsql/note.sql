@@ -237,15 +237,19 @@ STABLE
 AS $$
 DECLARE
   ret json;
+  participant integer;
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
   FROM (SELECT 
     CASE WHEN (req->>'not_id') IS NULL THEN NULL ELSE not_id END as not_id, 
     CASE WHEN (req->>'not_text') IS NULL THEN NULL ELSE not_text END as not_text, 
-    CASE WHEN (req->>'not_creation_date') IS NULL THEN NULL ELSE not_creation_date END as not_creation_date, 
-    CASE WHEN (req->>'not_event_date') IS NULL THEN NULL ELSE not_event_date END as not_event_date, 
-    CASE WHEN (req->>'not_object') IS NULL THEN NULL ELSE not_object END as not_object, 
+    CASE WHEN (req->>'not_creation_date') IS NULL THEN NULL ELSE public._json_date_format(not_creation_date) END as not_creation_date,
+    CASE WHEN (req->>'not_event_date') IS NULL THEN NULL ELSE public._json_date_format(not_event_date) END as not_event_date,
+    CASE WHEN (req->>'not_object') IS NULL THEN NULL ELSE not_object END as not_object,
+    CASE WHEN (req->>'nor_acknowledge_receipt') IS NULL THEN NULL ELSE
+      (SELECT nor_acknowledge_receipt FROM notes.note_recipient WHERE par_id = participant AND note_recipient.not_id = note.not_id) END as nor_acknowledge_receipt,
     CASE WHEN (req->>'author') IS NULL THEN NULL ELSE 
       organ.participant_json(prm_token, not_author, req->'author') END AS author,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
@@ -253,9 +257,15 @@ BEGIN
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
       notes.note_dossier_json(prm_token, not_id, req->'dossiers') END as dossiers,
     CASE WHEN (req->>'recipients') IS NULL THEN NULL ELSE
-      notes.note_recipients_json(prm_token, not_id, req->'recipients') END as recipients
-    FROM notes.note 
+      notes.note_recipients_json(prm_token, not_id, req->'recipients', null) END as recipients,
+    CASE WHEN (req->>'recipients_info') IS NULL THEN NULL ELSE
+      notes.note_recipients_json(prm_token, not_id, req->'recipients_info', false) END as recipients_info,
+    CASE WHEN (req->>'recipients_action') IS NULL THEN NULL ELSE
+      notes.note_recipients_json(prm_token, not_id, req->'recipients_action', true) END as recipients_action
+    FROM notes.note
+    JOIN unnest(prm_not_ids) WITH ORDINALITY t(not_id, ord) USING (not_id)
       WHERE not_id = ANY(prm_not_ids)
+      ORDER BY t.ord
   ) d;
   RETURN ret;
 END;
@@ -366,7 +376,7 @@ END;
 $$;
 COMMENT ON FUNCTION notes.note_get_recipients(prm_token integer, prm_not_id integer, prm_for_action boolean) IS 'Get recipients for a note for information or action';
 
-CREATE OR REPLACE FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json)
+CREATE OR REPLACE FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json, prm_for_action boolean)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -382,16 +392,18 @@ BEGIN
       CASE WHEN (req->>'par_firstname') IS NULL THEN NULL ELSE  par_firstname END as par_firstname, 
       CASE WHEN (req->>'par_lastname') IS NULL THEN NULL ELSE  par_lastname END as par_lastname, 
       CASE WHEN (req->>'par_email') IS NULL THEN NULL ELSE par_email END as par_email,
-      CASE WHEN (req->>'nor_for_action') IS NULL THEN NULL ELSE nor_for_action END as nor_for_action
+      CASE WHEN (req->>'nor_for_action') IS NULL THEN NULL ELSE nor_for_action END as nor_for_action,
+      CASE WHEN (req->>'nor_acknowledge_receipt') IS NULL THEN NULL ELSE nor_acknowledge_receipt END as nor_acknowledge_receipt
       FROM notes.note_recipient INNER JOIN organ.participant USING(par_id)
-      WHERE not_id = prm_not_id) d;
+      WHERE not_id = prm_not_id
+      AND CASE WHEN prm_for_action IS NULL THEN TRUE ELSE nor_for_action = prm_for_action END) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json) 
- IS 'Returns the recipients for a note as json';
+COMMENT ON FUNCTION notes.note_recipients_json(prm_token integer, prm_not_id integer, req json, prm_for_action boolean)
+ IS 'Returns the recipients for a note as json, either all recipients or depending on for_action field';
 
-CREATE OR REPLACE FUNCTION notes.note_participant_list(prm_token integer, req json)
+CREATE OR REPLACE FUNCTION notes.note_participant_list(prm_token integer, prm_column_ordering text, prm_desc boolean, req json)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -403,10 +415,47 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
   RETURN notes.note_json(prm_token, (SELECT ARRAY(
-    SELECT DISTINCT not_id FROM notes.note
-      LEFT OUTER JOIN notes.note_recipient USING(not_id)
-      WHERE note.not_author = participant OR note_recipient.par_id = participant
-	)), req);
+      SELECT *
+      FROM public._format_retrieve_ids(participant, 'notes', prm_column_ordering, CASE prm_desc WHEN TRUE THEN 'DESC' ELSE 'ASC' END)
+    )), req);
 END;
 $$;
-COMMENT ON FUNCTION notes.note_participant_list(prm_token integer, req json) IS 'Return the notes created or destinated to the current logged user';
+COMMENT ON FUNCTION notes.note_participant_list(prm_token integer, prm_column_ordering text, prm_desc boolean, req json) IS 'Return the notes created or destinated to the current logged user';
+
+DROP FUNCTION IF EXISTS notes._retrieve_notes_participant(prm_par_id integer);
+DROP TYPE IF EXISTS notes.notes_retrieved;
+CREATE TYPE notes.notes_retrieved AS (
+  not_id integer,
+  not_creation_date timestamp with time zone,
+  not_event_date timestamp with time zone
+);
+
+CREATE FUNCTION notes._retrieve_notes_participant(prm_par_id integer)
+RETURNS SETOF notes.notes_retrieved
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+    SELECT DISTINCT ON (not_id) not_id,
+      not_creation_date,
+      CASE WHEN not_event_date IS NULL THEN not_creation_date ELSE not_event_date END as not_event_date
+    FROM notes.note
+    LEFT OUTER JOIN notes.note_recipient USING(not_id)
+    WHERE note.not_author = prm_par_id or note_recipient.par_id = prm_par_id;
+END;
+$$;
+COMMENT ON FUNCTION notes._retrieve_notes_participant(prm_par_id integer) IS 'Returns the list of notes related to a participant';
+
+CREATE OR REPLACE FUNCTION notes.note_user_acknowledge_receipt(prm_token integer, prm_not_id integer)
+RETURNS VOID
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  UPDATE notes.note_recipient SET nor_acknowledge_receipt = TRUE WHERE not_id = prm_not_id AND par_id = participant;
+END;
+$$;
+COMMENT ON FUNCTION notes.note_user_acknowledge_receipt(prm_token integer, prm_not_id integer) IS 'The user asserted that he read the note';

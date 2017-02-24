@@ -35,6 +35,9 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('events', 'event_duration_list'),
 			 array('objectives', 'objective_status_list'),
 			 array('organ', '_participant_dossier_referee_list'),
+			 array('public', '_json_date_format'),
+			 array('public', '_format_retrieve_ids'),
+			 array('notes', '_retrieve_notes_participant'),
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {

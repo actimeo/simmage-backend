@@ -1,5 +1,7 @@
 FILES="$PGBASE/sql/*.sql $PGBASE/plpgsql/*.sql"
 
+FILES="$FILES $BASE/public/plpgsql/*.sql"
+
 FILES="$FILES $BASE/portal/sql/portal.sql $BASE/portal/plpgsql/*.sql $BASE/portal/sql/comments.sql"
 
 FILES="$FILES $BASE/organ/sql/organ.sql $BASE/organ/plpgsql/*.sql $BASE/organ/sql/comments.sql"

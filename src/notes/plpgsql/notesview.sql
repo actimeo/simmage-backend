@@ -146,7 +146,7 @@ BEGIN
   RETURN QUERY
     SELECT *
     FROM organ.topic
-    WHERE top_id = ANY(SELECT top_id FROM notes.notesview_topic WHERE nov_id = prm_id);
+    WHERE top_id = ANY(SELECT top_id FROM notes.notesview_topic WHERE prm_id IS NULL OR prm_id = 0 OR nov_id = prm_id);
 END;
 $$;
 COMMENT ON FUNCTION notes.notesview_get_topics(prm_token integer, prm_id integer) IS 'Return the list of topics associated to a view';

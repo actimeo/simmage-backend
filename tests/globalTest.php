@@ -19,6 +19,9 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('login', '_user_token_create'),
 			 array('organ', '_dossier_link_get_inverted_relationship'),
 			 array('organ', '_participant_dossier_referee_list'),
+			 array('public', '_json_date_format'),
+			 array('public', '_format_retrieve_ids'),
+			 array('notes', '_retrieve_notes_participant'),
 			 );
   
   public function __construct($name = NULL, array $data = array(), $dataName = '') {
@@ -66,7 +69,7 @@ order by nspname, proname";
   /**
    * @dataProvider proceduresList
    */
-  public function testAssertTokenInProcedure($schema, $proc) {
+  public function testFunctionHasBeenTested($schema, $proc) {
     $path = getcwd() . DIRECTORY_SEPARATOR . '.traces' . DIRECTORY_SEPARATOR . $schema . DIRECTORY_SEPARATOR . $proc;
     $this->assertTrue(file_exists($path), 'procedure '. $schema.'->'.$proc.' should have been tested');
   }

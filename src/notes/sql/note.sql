@@ -24,5 +24,6 @@ CREATE TABLE notes.note_recipient (
   not_id integer NOT NULL REFERENCES notes.note,
   par_id integer NOT NULL REFERENCES organ.participant,
   nor_for_action boolean NOT NULL,
-  nor_done boolean DEFAULT FALSE
+  nor_done boolean DEFAULT FALSE,
+  nor_acknowledge_receipt boolean DEFAULT FALSE
 );
