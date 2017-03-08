@@ -191,7 +191,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $usergroupName = 'A user group';
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
     
-    self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA2, $grpIdA1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, array($grpIdA2, $grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
 				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
@@ -201,7 +201,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 				     'grp_mandatory' => false, 'grp_orientation' => 'organization')), 
 			$grpIds);
     
-    self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
 				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
@@ -214,18 +214,18 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
 				     'grp_mandatory' => false, 'grp_orientation' => 'organization')),
 			$grpIds);
     
-    self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdA1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, array($grpIdA1));
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(array (array('grp_id'=>$grpIdA1, 'org_id' => $orgIdA, 
 				     'grp_name'=>$grpNameA1, 'grp_description' => $grpDescA1, 
 				     'grp_mandatory' => false, 'grp_orientation' => 'organization')),
 			$grpIds);
     
-    self::$base->login->usergroup_set_groups($this->token, $ugr, array());
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, array());
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(null, $grpIds);
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr, null);
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, null);
     $grpIds = self::$base->login->usergroup_group_list($this->token, $ugr);
     $this->assertEquals(null, $grpIds);
   }
@@ -323,7 +323,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
     
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
-    self::$base->login->usergroup_set_groups($this->token, $ugr, 
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, 
 					     array($grpIdA2, $grpIdA1, $grpIdB1));
   }
 
@@ -372,7 +372,7 @@ class usergroupTest extends PHPUnit_Framework_TestCase {
     $usergroupName = 'A user group';
     $ugr = self::$base->login->usergroup_add($this->token, $usergroupName, null, '{preadmission, admission, present, left}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr, array($grpIdB1, $grpIdA1, $grpIdA2));
 
     self::$base->login->usergroup_set_portals($this->token, $ugr, array($porId3, $porId1, $porId2));
 

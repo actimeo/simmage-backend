@@ -108,7 +108,7 @@ $$;
 COMMENT ON FUNCTION login.usergroup_set_portals(prm_token integer, prm_ugr_id integer, prm_por_ids integer[]) 
 IS 'Set authorized portals for a user group';
 
-CREATE OR REPLACE FUNCTION login.usergroup_set_groups(
+CREATE OR REPLACE FUNCTION login.usergroup_set_group_dossiers(
   prm_token integer, 
   prm_ugr_id integer, 
   prm_grp_ids integer[])
@@ -135,22 +135,66 @@ BEGIN
   END IF;
   -- If list is NULL, remove all relations
   IF prm_grp_ids ISNULL THEN
-    DELETE FROM login.usergroup_group WHERE ugr_id = prm_ugr_id;
+    DELETE FROM login.usergroup_group_dossiers WHERE ugr_id = prm_ugr_id;
     RETURN;
   END IF;
   -- Delete relations present in DB not present in list
-  DELETE FROM login.usergroup_group WHERE ugr_id = prm_ugr_id AND grp_id <> ALL(prm_grp_ids);
+  DELETE FROM login.usergroup_group_dossiers WHERE ugr_id = prm_ugr_id AND grp_id <> ALL(prm_grp_ids);
   -- Add relations in list not yet in DB
   FOREACH t IN ARRAY prm_grp_ids
   LOOP
-    IF NOT EXISTS (SELECT 1 FROM login.usergroup_group WHERE ugr_id = prm_ugr_id AND grp_id = t) THEN
-      INSERT INTO login.usergroup_group (ugr_id, grp_id) VALUES (prm_ugr_id, t);
+    IF NOT EXISTS (SELECT 1 FROM login.usergroup_group_dossiers WHERE ugr_id = prm_ugr_id AND grp_id = t) THEN
+      INSERT INTO login.usergroup_group_dossiers (ugr_id, grp_id) VALUES (prm_ugr_id, t);
     END IF;
   END LOOP;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_set_groups(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[]) 
-IS 'Set authorized groups for a user group';
+COMMENT ON FUNCTION login.usergroup_set_group_dossiers(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[]) 
+IS 'Set authorized groups for enabling an user in an usergroup to view the dossiers';
+
+CREATE OR REPLACE FUNCTION login.usergroup_set_group_participants(
+  prm_token integer, 
+  prm_ugr_id integer, 
+  prm_grp_ids integer[])
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  t integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, '{users}');
+  -- Raise an exception if some group belongs to an external organization
+  IF EXISTS (SELECT 1 FROM organ.organization
+               INNER JOIN organ.group USING(org_id)
+               WHERE grp_id = ANY (prm_grp_ids)
+               AND NOT org_internal) THEN
+    RAISE EXCEPTION 'Groups should belong to internal organizations' 
+      USING ERRCODE = 'data_exception';
+  END IF;
+
+  -- Raise an exception if entity does not exist
+  IF NOT EXISTS (SELECT 1 FROM login.usergroup WHERE ugr_id = prm_ugr_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+  -- If list is NULL, remove all relations
+  IF prm_grp_ids ISNULL THEN
+    DELETE FROM login.usergroup_group_participants WHERE ugr_id = prm_ugr_id;
+    RETURN;
+  END IF;
+  -- Delete relations present in DB not present in list
+  DELETE FROM login.usergroup_group_participants WHERE ugr_id = prm_ugr_id AND grp_id <> ALL(prm_grp_ids);
+  -- Add relations in list not yet in DB
+  FOREACH t IN ARRAY prm_grp_ids
+  LOOP
+    IF NOT EXISTS (SELECT 1 FROM login.usergroup_group_participants WHERE ugr_id = prm_ugr_id AND grp_id = t) THEN
+      INSERT INTO login.usergroup_group_participants (ugr_id, grp_id) VALUES (prm_ugr_id, t);
+    END IF;
+  END LOOP;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_set_group_participants(prm_token integer, prm_ugr_id integer, prm_grp_ids integer[]) 
+IS 'Set authorized groups for an user in an usergroup to see profiles of other participants';
 
 CREATE OR REPLACE FUNCTION login.usergroup_set_topics(
   prm_token integer,
@@ -242,7 +286,7 @@ AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT "group".* FROM organ.group
-    INNER JOIN login.usergroup_group USING (grp_id)
+    INNER JOIN login.usergroup_group_dossiers USING (grp_id)
     WHERE ugr_id = prm_ugr_id
     ORDER BY grp_name;
 END;
@@ -275,7 +319,8 @@ VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, '{users}');
-  DELETE FROM login.usergroup_group WHERE ugr_id = prm_ugr_id;
+  DELETE FROM login.usergroup_group_dossiers WHERE ugr_id = prm_ugr_id;
+  DELETE FROM login.usergroup_group_participants WHERE ugr_id = prm_ugr_id;
   DELETE FROM login.usergroup_portal WHERE ugr_id = prm_ugr_id;
   DELETE FROM login.usergroup_topic WHERE ugr_id = prm_ugr_id;
   DELETE FROM login.usergroup WHERE ugr_id = prm_ugr_id;

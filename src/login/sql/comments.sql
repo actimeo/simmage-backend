@@ -63,10 +63,15 @@ COMMENT ON COLUMN login.usergroup.ugr_name IS 'Usergroup name';
 COMMENT ON COLUMN login.usergroup.ugr_rights IS '';
 COMMENT ON COLUMN login.usergroup.ugr_statuses IS '';
 
-COMMENT ON TABLE login.usergroup_group IS 'Groups that users from a usergroup can view';
-COMMENT ON COLUMN login.usergroup_group.ugg_id IS 'Unique identifier';
-COMMENT ON COLUMN login.usergroup_group.ugr_id IS 'Usergroup identifier';
-COMMENT ON COLUMN login.usergroup_group.grp_id IS 'Group identifier';
+COMMENT ON TABLE login.usergroup_group_dossiers IS 'Dossiers from groups that users from a usergroup can view';
+COMMENT ON COLUMN login.usergroup_group_dossiers.uggd_id IS 'Unique identifier';
+COMMENT ON COLUMN login.usergroup_group_dossiers.ugr_id IS 'Usergroup identifier';
+COMMENT ON COLUMN login.usergroup_group_dossiers.grp_id IS 'Group identifier';
+
+COMMENT ON TABLE login.usergroup_group_participants IS 'Participants from groups that users from a usergroup can view';
+COMMENT ON COLUMN login.usergroup_group_participants.uggp_id IS 'Unique identifier';
+COMMENT ON COLUMN login.usergroup_group_participants.ugr_id IS 'Usergroup identifier';
+COMMENT ON COLUMN login.usergroup_group_participants.grp_id IS 'Group identifier';
 
 COMMENT ON TABLE login.usergroup_portal IS 'Permissions for users from group to use portals';
 COMMENT ON COLUMN login.usergroup_portal.ugp_id IS 'Unique identifier';

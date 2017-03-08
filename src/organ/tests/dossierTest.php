@@ -344,8 +344,8 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId1, array($grpId1, $grpId2));
     self::$base->organ->dossier_assignment_add($this->token, $dosId2, array($grpId1, $grpId2));
@@ -379,7 +379,7 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(4, count($dosList2));
 
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId1, $grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId1, $grpId2));
 
     // Get dossiers from participant assigned groups (participant is not yet assigned to groups)
     $dosList3 = self::$base->organ->dossier_list($token2, false, false, null, true);
@@ -446,8 +446,8 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup 1', null, '{present}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup 2', null, '{present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1, $grpId2));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1, $grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId1, array($grpId1));
     self::$base->organ->dossier_assignment_add($this->token, $dosId2, array($grpId1));
@@ -569,8 +569,8 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup 1', null, '{present}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup 2', null, '{present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1, $grpId2));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1, $grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId1, array($grpId1));
     self::$base->organ->dossier_assignment_add($this->token, $dosId2, array($grpId1));

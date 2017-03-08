@@ -7,7 +7,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   RETURN QUERY SELECT dos_id FROM organ.dossier
     INNER JOIN organ.dossier_assignment USING(dos_id)
-    INNER JOIN login.usergroup_group USING(grp_id)
+    INNER JOIN login.usergroup_group_dossiers USING(grp_id)
     INNER JOIN login.user USING(ugr_id)
     INNER JOIN login.usergroup USING(ugr_id)
     INNER JOIN organ.dossier_status USING(dos_id)

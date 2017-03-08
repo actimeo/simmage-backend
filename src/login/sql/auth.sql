@@ -29,8 +29,15 @@ CREATE TABLE login.usergroup_portal (
   UNIQUE (ugr_id, por_id)
 );
 
-CREATE TABLE login.usergroup_group (
-  ugg_id serial PRIMARY KEY,
+CREATE TABLE login.usergroup_group_dossiers (
+  uggd_id serial PRIMARY KEY,
+  ugr_id integer NOT NULL REFERENCES login.usergroup,
+  grp_id integer NOT NULL REFERENCES organ.group,
+  UNIQUE (ugr_id, grp_id)
+);
+
+CREATE TABLE login.usergroup_group_participants (
+  uggp_id serial PRIMARY KEY,
   ugr_id integer NOT NULL REFERENCES login.usergroup,
   grp_id integer NOT NULL REFERENCES organ.group,
   UNIQUE (ugr_id, grp_id)

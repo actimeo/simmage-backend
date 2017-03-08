@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION login.usergroup_group_json(prm_token integer, prm_ugr_id integer, req json)
+CREATE OR REPLACE FUNCTION login.usergroup_group_dossiers_json(prm_token integer, prm_ugr_id integer, req json)
 RETURNS json
 LANGUAGE plpgsql
 STABLE
@@ -13,12 +13,35 @@ BEGIN
       CASE WHEN (req->>'grp_name') IS NULL THEN NULL ELSE  grp_name END as grp_name, 
       CASE WHEN (req->>'grp_description') IS NULL THEN NULL ELSE grp_description END as grp_description
       FROM organ.group 
-      INNER JOIN login.usergroup_group USING (grp_id) 
+      INNER JOIN login.usergroup_group_dossiers USING (grp_id) 
       WHERE ugr_id = prm_ugr_id) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION login.usergroup_group_json(prm_token integer, prm_ugr_id integer, req json) 
+COMMENT ON FUNCTION login.usergroup_group_dossiers_json(prm_token integer, prm_ugr_id integer, req json) 
+ IS 'Returns the groups authorized for a usergroup as json';
+
+CREATE OR REPLACE FUNCTION login.usergroup_group_participants_json(prm_token integer, prm_ugr_id integer, req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'grp_id') IS NULL THEN NULL ELSE grp_id END as grp_id, 
+      CASE WHEN (req->>'grp_name') IS NULL THEN NULL ELSE  grp_name END as grp_name, 
+      CASE WHEN (req->>'grp_description') IS NULL THEN NULL ELSE grp_description END as grp_description
+      FROM organ.group 
+      INNER JOIN login.usergroup_group_participants USING (grp_id) 
+      WHERE ugr_id = prm_ugr_id) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION login.usergroup_group_participants_json(prm_token integer, prm_ugr_id integer, req json) 
  IS 'Returns the groups authorized for a usergroup as json';
 
 CREATE OR REPLACE FUNCTION login.usergroup_portal_json(prm_token integer, prm_ugr_id integer, req json)
@@ -90,8 +113,10 @@ BEGIN
     CASE WHEN (req->>'ugr_name') IS NULL THEN NULL ELSE ugr_name END as ugr_name, 
     CASE WHEN (req->>'ugr_rights') IS NULL THEN NULL ELSE ugr_rights END as ugr_rights, 
     CASE WHEN (req->>'ugr_statuses') IS NULL THEN NULL ELSE ugr_statuses END as ugr_statuses, 
-    CASE WHEN (req->>'groups') IS NULL THEN NULL ELSE
-      login.usergroup_group_json(prm_token, ugr_id, req->'groups') END as groups,
+    CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
+      login.usergroup_group_dossiers_json(prm_token, ugr_id, req->'dossiers') END as dossiers,
+    CASE WHEN (req->>'participants') IS NULL THEN NULL ELSE
+      login.usergroup_group_participants_json(prm_token, ugr_id, req->'participants') END as participants,
     CASE WHEN (req->>'portals') IS NULL THEN NULL ELSE
       login.usergroup_portal_json(prm_token, ugr_id, req->'portals') END as portals,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE

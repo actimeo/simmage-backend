@@ -280,8 +280,8 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
 
@@ -343,8 +343,8 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
 
@@ -404,8 +404,8 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
     $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
 
-    self::$base->login->usergroup_set_groups($this->token, $ugr1, array($grpId1));
-    self::$base->login->usergroup_set_groups($this->token, $ugr2, array($grpId2));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
 
     self::$base->organ->dossier_assignment_add($this->token, $dosId, array($grpId1, $grpId2));
 
