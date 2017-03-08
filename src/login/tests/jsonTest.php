@@ -145,7 +145,7 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     
     $req = [ 'ugr_id' => true,
 	     'ugr_name' => true,
-	     'dossiers' => [ 'grp_id' => true,
+	     'groups_dossiers' => [ 'grp_id' => true,
 			   'grp_name' => true ],
 	     'portals' => [ 'por_id' => true,
 			    'por_name' => true,
@@ -191,7 +191,7 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     
     $req = [ 'ugr_id' => true,
 	     'ugr_name' => true,
-	     'dossiers' => [ 'grp_id' => true,
+	     'groups_dossiers' => [ 'grp_id' => true,
 			   'grp_name' => true ],
 	     'portals' => [ 'por_id' => true,
 			    'por_name' => true,
@@ -200,53 +200,53 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
     $res = json_decode(json_encode($json), true);
     $this->assertEquals($ugr1, $res['ugr_id']);
     $this->assertEquals($usergroupName1, $res['ugr_name']);
-    $this->assertNotNull($res['dossiers']);
+    $this->assertNotNull($res['groups_dossiers']);
     $this->assertNotNull($res['portals']);
 
     $req = [ 'ugr_id' => true,
 	     'ugr_name' => null,
-	     'dossiers' => null,
+	     'groups_dossiers' => null,
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode(json_encode($json), true);
     $this->assertEquals($ugr1, $res['ugr_id']);
     $this->assertNull($res['ugr_name']);
-    $this->assertNull($res['dossiers']);
+    $this->assertNull($res['groups_dossiers']);
     $this->assertNull($res['portals']);
 
     $req = [ 'ugr_id' => null,
 	     'ugr_name' => true,
-	     'dossiers' => null,
+	     'groups_dossiers' => null,
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode(json_encode($json), true);
     $this->assertNull($res['ugr_id']);
     $this->assertEquals($usergroupName1, $res['ugr_name']);
-    $this->assertNull($res['dossiers']);
+    $this->assertNull($res['groups_dossiers']);
     $this->assertNull($res['portals']);
 
     $req = [ 'ugr_id' => null,
 	     'ugr_name' => null,
-	     'dossiers' => [ 'grp_id' => true,
+	     'groups_dossiers' => [ 'grp_id' => true,
 			   'grp_name' => true ],	 
 	     'portals' => null ];
     $json = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $res = json_decode(json_encode($json), true);
     $this->assertNull($res['ugr_id']);
     $this->assertNull($res['ugr_name']);
-    $this->assertNotNull($res['dossiers']);
+    $this->assertNotNull($res['groups_dossiers']);
     $this->assertNull($res['portals']);
 
     $req = [ 'ugr_id' => null,
 	     'ugr_name' => null,
-	     'dossiers' => null,
+	     'groups_dossiers' => null,
 	     'portals' => [ 'por_id' => true,
 			    'por_name' => true,
 			    'por_description' => true ] ];
     $res = self::$base->login->usergroup_json($this->token, $ugr1, json_encode($req));
     $this->assertNull($res->ugr_id);
     $this->assertNull($res->ugr_name);
-    $this->assertNull($res->dossiers);
+    $this->assertNull($res->groups_dossiers);
     $this->assertNotNull($res->portals);
   }
 
@@ -310,7 +310,7 @@ class loginJsonTest extends PHPUnit_Framework_TestCase {
 			    'ugr_id' => true, 
 			    'ugr_rights' => true,
 			    'portals' => [ 'por_id' => true ],
-			    'dossiers' => [ 'grp_id' => true ],
+			    'groups_dossiers' => [ 'grp_id' => true ],
 			    'topics' => [
 					 'top_id' => true,
 					 'top_name' => true,
