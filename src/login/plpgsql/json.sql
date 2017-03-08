@@ -113,10 +113,10 @@ BEGIN
     CASE WHEN (req->>'ugr_name') IS NULL THEN NULL ELSE ugr_name END as ugr_name, 
     CASE WHEN (req->>'ugr_rights') IS NULL THEN NULL ELSE ugr_rights END as ugr_rights, 
     CASE WHEN (req->>'ugr_statuses') IS NULL THEN NULL ELSE ugr_statuses END as ugr_statuses, 
-    CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
-      login.usergroup_group_dossiers_json(prm_token, ugr_id, req->'dossiers') END as dossiers,
-    CASE WHEN (req->>'participants') IS NULL THEN NULL ELSE
-      login.usergroup_group_participants_json(prm_token, ugr_id, req->'participants') END as participants,
+    CASE WHEN (req->>'groups_dossiers') IS NULL THEN NULL ELSE
+      login.usergroup_group_dossiers_json(prm_token, ugr_id, req->'groups_dossiers') END as groups_dossiers,
+    CASE WHEN (req->>'groups_participants') IS NULL THEN NULL ELSE
+      login.usergroup_group_participants_json(prm_token, ugr_id, req->'groups_participants') END as groups_participants,
     CASE WHEN (req->>'portals') IS NULL THEN NULL ELSE
       login.usergroup_portal_json(prm_token, ugr_id, req->'portals') END as portals,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
