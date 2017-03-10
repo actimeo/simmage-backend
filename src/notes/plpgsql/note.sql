@@ -39,25 +39,21 @@ COMMENT ON FUNCTION notes.note_add(
   prm_recipients_action integer[])
  IS 'Add a new note';
 
-CREATE OR REPLACE FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
-	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[],
-	prm_recipients_info integer[], prm_recipients_action integer[])
+CREATE OR REPLACE FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_recipients_info integer[], prm_recipients_action integer[])
 RETURNS VOID
 LANGUAGE plpgsql
 VOLATILE
 AS $$
 BEGIN
   PERFORM login._token_assert(prm_token, null);
-  UPDATE notes.note SET not_text = prm_text, not_event_date = prm_event_date, not_object = prm_object WHERE not_id = prm_not_id;
-  PERFORM notes.note_set_topics(prm_token, prm_not_id, prm_topics);
-  PERFORM notes.note_set_dossiers(prm_token, prm_not_id, prm_dossiers);
+  IF NOT EXISTS (SELECT 1 FROM notes.note WHERE not_id = prm_not_id) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
   PERFORM notes.note_set_recipients(prm_token, prm_not_id, false, prm_recipients_info);
   PERFORM notes.note_set_recipients(prm_token, prm_not_id, true, prm_recipients_action);
 END;
 $$;
-COMMENT ON FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_text text,
-	prm_event_date timestamp with time zone, prm_object text, prm_topics integer[], prm_dossiers integer[],
-	prm_recipients_info integer[], prm_recipients_action integer[]) IS 'Update a note';
+COMMENT ON FUNCTION notes.note_update(prm_token integer, prm_not_id integer, prm_recipients_info integer[], prm_recipients_action integer[]) IS 'Update a note';
 
 CREATE OR REPLACE FUNCTION notes.note_set_topics(
   prm_token integer,
@@ -338,16 +334,8 @@ BEGIN
   END IF;
 
   IF prm_par_ids ISNULL THEN
-    DELETE FROM notes.note_recipient 
-      WHERE not_id = prm_not_id
-      AND nor_for_action = prm_for_action;
     RETURN;
   END IF;
-
-  DELETE FROM notes.note_recipient 
-    WHERE not_id = prm_not_id 
-    AND nor_for_action = prm_for_action
-    AND par_id <> ALL(prm_par_ids);
 
   FOREACH p IN ARRAY prm_par_ids
   LOOP
