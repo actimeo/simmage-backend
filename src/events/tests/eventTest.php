@@ -469,6 +469,17 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $par_id1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
     $par_id2 = self::$base->organ->participant_add($this->token, 'Marc', 'Antoine');
 
+    $login1 = 'daslogin';
+    $pwd1 = 'einsekurepass';
+
+    self::$base->execute_sql("insert into login.user (usr_login, usr_salt, usr_rights, par_id) values ('"
+			      .$login1."', pgcrypto.crypt('"
+			      .$pwd1."', pgcrypto.gen_salt('bf', 8)), '{organization}', "
+			      .$par_id1.");");
+
+    $res = self::$base->login->user_login($login1, $pwd1, null, null);
+    $token1 = $res['usr_token'];
+
     $resId1 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId2 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId3 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
@@ -476,35 +487,35 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    $ide1 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
 					 );
 
-    $ide2 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
 	  				 );
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
 					);
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
 					 );
 
-    $ide5 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -517,6 +528,6 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     $list = self::$base->events->event_user_participant_list($this->token, json_encode($req));
 
-    $this->assertEquals(3, count($list));
+    $this->assertEquals(4, count($list));
   }
 }
