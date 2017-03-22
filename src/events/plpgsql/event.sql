@@ -30,6 +30,7 @@ DECLARE
   fdnm_date date;
   get_id boolean := true;
   topics integer[];
+  author_id integer;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
   loop_id := 0;
@@ -41,27 +42,33 @@ BEGIN
     topics = prm_topics;
   END IF;
 
+  SELECT par_id INTO author_id FROM login.user WHERE usr_token = prm_token;
+
   WHILE loop_id < prm_occrepeat LOOP
     INSERT INTO events.event (
-      eve_title, 
-      ety_id, 
-      eve_duration, 
-      eve_start_time, 
-      eve_end_time, 
-      eve_place, 
-      eve_cost, 
-      eve_description, 
-      eve_sumup
+      eve_title,
+      ety_id,
+      eve_duration,
+      eve_start_time,
+      eve_end_time,
+      eve_place,
+      eve_cost,
+      eve_description,
+      eve_sumup,
+      eve_author,
+      eve_creation_date
     ) VALUES (
-      prm_title, 
-      prm_ety_id, 
-      prm_duration, 
-      prm_start_time, 
-      prm_end_time, 
-      prm_place, 
-      prm_cost, 
-      prm_description, 
-      prm_sumup
+      prm_title,
+      prm_ety_id,
+      prm_duration,
+      prm_start_time,
+      prm_end_time,
+      prm_place,
+      prm_cost,
+      prm_description,
+      prm_sumup,
+      author_id,
+      CURRENT_TIMESTAMP
     ) RETURNING eve_id INTO new_id;
     
     IF get_id = true THEN
@@ -112,22 +119,22 @@ END;
 $$;
 
 COMMENT ON FUNCTION events.event_add(
-  prm_token integer, 
-  prm_title text, 
-  prm_ety_id integer, 
-  prm_duration events.event_duration, 
-  prm_start_time timestamp with time zone, 
-  prm_end_time timestamp with time zone, 
-  prm_place text, 
-  prm_cost money, 
-  prm_description text, 
-  prm_sumup text, 
+  prm_token integer,
+  prm_title text,
+  prm_ety_id integer,
+  prm_duration events.event_duration,
+  prm_start_time timestamp with time zone,
+  prm_end_time timestamp with time zone,
+  prm_place text,
+  prm_cost money,
+  prm_description text,
+  prm_sumup text,
   prm_recurent boolean,
   prm_occurence text,
   prm_docctime integer,
   prm_mocctime text,
   prm_occrepeat integer,
-  prm_topics integer[], 
+  prm_topics integer[],
   prm_dossiers integer[],
   prm_participants integer[],
   prm_resources integer[])
@@ -540,18 +547,21 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
   FROM (SELECT 
-    CASE WHEN (req->>'eve_id') IS NULL THEN NULL ELSE eve_id END as eve_id, 
-    CASE WHEN (req->>'eve_title') IS NULL THEN NULL ELSE eve_title END as eve_title, 
-    CASE WHEN (req->>'ety_id') IS NULL THEN NULL ELSE ety_id END as ety_id, 
+    CASE WHEN (req->>'eve_id') IS NULL THEN NULL ELSE eve_id END as eve_id,
+    CASE WHEN (req->>'eve_title') IS NULL THEN NULL ELSE eve_title END as eve_title,
+    CASE WHEN (req->>'ety_id') IS NULL THEN NULL ELSE ety_id END as ety_id,
     CASE WHEN (req->>'ety_name') IS NULL THEN NULL ELSE ety_name END as ety_name,
-    CASE WHEN (req->>'ety_category') IS NULL THEN NULL ELSE ety_category END as ety_categoryn,
-    CASE WHEN (req->>'eve_duration') IS NULL THEN NULL ELSE eve_duration END as eve_duration, 
-    CASE WHEN (req->>'eve_start_time') IS NULL THEN NULL ELSE eve_start_time END as eve_start_time, 
-    CASE WHEN (req->>'eve_end_time') IS NULL THEN NULL ELSE eve_end_time END as eve_end_time, 
-    CASE WHEN (req->>'eve_place') IS NULL THEN NULL ELSE eve_place END as eve_place, 
-    CASE WHEN (req->>'eve_cost') IS NULL THEN NULL ELSE eve_cost END as eve_cost, 
-    CASE WHEN (req->>'eve_description') IS NULL THEN NULL ELSE eve_description END as eve_description, 
-    CASE WHEN (req->>'eve_sumup') IS NULL THEN NULL ELSE eve_sumup END as eve_sumup, 
+    CASE WHEN (req->>'ety_category') IS NULL THEN NULL ELSE ety_category END as ety_category,
+    CASE WHEN (req->>'eve_duration') IS NULL THEN NULL ELSE eve_duration END as eve_duration,
+    CASE WHEN (req->>'eve_start_time') IS NULL THEN NULL ELSE eve_start_time END as eve_start_time,
+    CASE WHEN (req->>'eve_end_time') IS NULL THEN NULL ELSE eve_end_time END as eve_end_time,
+    CASE WHEN (req->>'eve_place') IS NULL THEN NULL ELSE eve_place END as eve_place,
+    CASE WHEN (req->>'eve_cost') IS NULL THEN NULL ELSE eve_cost END as eve_cost,
+    CASE WHEN (req->>'eve_description') IS NULL THEN NULL ELSE eve_description END as eve_description,
+    CASE WHEN (req->>'eve_sumup') IS NULL THEN NULL ELSE eve_sumup END as eve_sumup,
+    CASE WHEN (req->>'eve_creation_date') IS NULL THEN NULL ELSE eve_creation_date END as eve_creation_date,
+    CASE WHEN (req->>'author') IS NULL THEN NULL ELSE
+      organ.participant_json(prm_token, eve_author, req->'author') END as author,
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       events.event_topic_json(prm_token, eve_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
@@ -647,8 +657,9 @@ BEGIN
   PERFORM login._token_assert(prm_token, null);
   SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
   RETURN events.event_json(prm_token, (SELECT ARRAY(
-    SELECT DISTINCT eve_id FROM events.event_participant
-      WHERE par_id = participant)), req);
+    SELECT DISTINCT eve_id FROM events.event
+      LEFT JOIN events.event_participant USING(eve_id)
+      WHERE eve_author = participant OR par_id = participant)), req);
 END;
 $$;
 COMMENT ON FUNCTION events.event_user_participant_list(prm_token integer, req json) IS 'Returns all events the user is supposed to attend';

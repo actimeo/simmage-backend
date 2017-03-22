@@ -16,7 +16,9 @@ CREATE TABLE events.event (
   eve_place text,
   eve_cost money,
   eve_description text,
-  eve_sumup text
+  eve_sumup text,
+  eve_author integer NOT NULL REFERENCES organ.participant,
+  eve_creation_date timestamp with time zone
 );
 
 CREATE TABLE events.event_topic (
