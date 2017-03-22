@@ -108,12 +108,18 @@ STABLE
 AS $$
 DECLARE
   ret json;
+  categories events.event_category[];
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
+  IF prm_evv_id IS NULL THEN
+    SELECT ARRAY(SELECT * FROM events.event_category_list()) INTO categories;
+  ELSE
+    SELECT evv_categories INTO categories FROM events.eventsview WHERE evv_id = prm_evv_id;
+  END IF;
   SELECT array_to_json(array_agg(row_to_json(d)))
   INTO ret
   FROM (SELECT t.cat, events.event_type_filter_json(prm_token, t.cat, prm_top_ids) as events
-	FROM (SELECT unnest(evv_categories) as cat FROM events.eventsview WHERE evv_id = prm_evv_id) as t ) d;
+      FROM (SELECT unnest(categories) as cat) as t) d;
   RETURN ret;
 END;
 $$;
