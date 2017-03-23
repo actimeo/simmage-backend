@@ -349,7 +349,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
 
   public function testDocumentStatusList() {
     $list = self::$base->documents->document_status_list();
-    $this->assertEquals($list[0], 'todo');
+    $this->assertEquals($list[0], 'scheduled');
   }
 
   public function testDocumentParticipantList() {
