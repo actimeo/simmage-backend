@@ -242,8 +242,8 @@ BEGIN
   FROM (SELECT 
     CASE WHEN (req->>'not_id') IS NULL THEN NULL ELSE not_id END as not_id, 
     CASE WHEN (req->>'not_text') IS NULL THEN NULL ELSE not_text END as not_text, 
-    CASE WHEN (req->>'not_creation_date') IS NULL THEN NULL ELSE public._json_date_format(not_creation_date) END as not_creation_date,
-    CASE WHEN (req->>'not_event_date') IS NULL THEN NULL ELSE public._json_date_format(not_event_date) END as not_event_date,
+    CASE WHEN (req->>'not_creation_date') IS NULL THEN NULL ELSE not_creation_date END as not_creation_date,
+    CASE WHEN (req->>'not_event_date') IS NULL THEN NULL ELSE not_event_date END as not_event_date,
     CASE WHEN (req->>'not_object') IS NULL THEN NULL ELSE not_object END as not_object,
     CASE WHEN (req->>'nor_acknowledge_receipt') IS NULL THEN NULL ELSE
       (SELECT nor_acknowledge_receipt FROM notes.note_recipient WHERE par_id = participant AND note_recipient.not_id = note.not_id) END as nor_acknowledge_receipt,
