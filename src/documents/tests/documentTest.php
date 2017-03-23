@@ -60,7 +60,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -92,7 +92,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -127,7 +127,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -173,7 +173,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -220,7 +220,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -256,7 +256,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible = null;
     $title = 'a document title';
     $desc = "";
-    $status = 'done';
+    $status = 'available';
 
     $top_name1 = 'topic 1';
     $top_desc1 = 'topic 1 description';
@@ -318,7 +318,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible1 = null;
     $title1 = 'a document title';
     $desc1 = "";
-    $status1 = 'done';
+    $status1 = 'available';
     $doc_id1 = self::$base->documents->document_add($this->token, $par_id_responsible1, 
 						    $dty_id, $title1, $desc1, $status1, 
 						    null, null, null, // dates
@@ -329,7 +329,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $par_id_responsible2 = null;
     $title2 = 'a document title';
     $desc2 = "";
-    $status2 = 'done';
+    $status2 = 'available';
     $doc_id2 = self::$base->documents->document_add($this->token, $par_id_responsible2, 
 						    $dty_id, $title2, $desc2, $status2, 
 						    null, null, null, // dates
@@ -379,31 +379,31 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
     $token1 = $res['usr_token'];
 
     self::$base->documents->document_add($this->token, $par, 
-						    $dty_id, 'un document', 'une description', 'done', 
+						    $dty_id, 'un document', 'une description', 'available', 
 						    null, null, null, // dates
 						    null, // file
 						    [ $top1 ], [ $dosId ]
 						    );
     self::$base->documents->document_add($token1, $par, 
-						    $dty_id, 'un document', 'une description', 'done', 
+						    $dty_id, 'un document', 'une description', 'available', 
 						    null, null, null, // dates
 						    null, // file
 						    [ $top1, $top2 ], [ $dosId ]
 						    );
     self::$base->documents->document_add($this->token, $par1, 
-						    $dty_id, 'un document', 'une description', 'done', 
+						    $dty_id, 'un document', 'une description', 'available', 
 						    null, null, null, // dates
 						    null, // file
 						    [ $top2 ], [ $dosId ]
 						    );
     self::$base->documents->document_add($token1, $par2, 
-						    $dty_id, 'un document', 'une description', 'done', 
+						    $dty_id, 'un document', 'une description', 'available', 
 						    null, null, null, // dates
 						    null, // file
 						    [ $top1 ], [ $dosId ]
 						    );
     self::$base->documents->document_add($this->token, $par3, 
-						    $dty_id, 'un document', 'une description', 'done', 
+						    $dty_id, 'un document', 'une description', 'available', 
 						    null, null, null, // dates
 						    null, // file
 						    [ $top1, $top2 ], [ ]

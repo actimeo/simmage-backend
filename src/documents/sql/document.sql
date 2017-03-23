@@ -1,5 +1,5 @@
 CREATE TYPE documents.document_status 
-  as ENUM ('todo', 'requested', 'done');
+  as ENUM ('scheduled', 'in progress', 'available');
 
 CREATE TABLE documents.document (
   doc_id SERIAL PRIMARY KEY,
