@@ -101,8 +101,7 @@ BEGIN
   ELSE
     topics = prm_topics;
   END IF;
-
-  
+ 
   SELECT par_id_responsible INTO old_responsible FROM documents.document WHERE doc_id = prm_doc_id;
 
   UPDATE documents.document SET
@@ -117,9 +116,7 @@ BEGIN
     doc_file = prm_file
     WHERE doc_id = prm_doc_id;
 
-  IF prm_status != 'available' THEN
     new_responsible := prm_par_id_responsible;
-  END IF;
 
   PERFORM documents.document_set_topics(prm_token, prm_doc_id, topics);
   PERFORM documents.document_set_dossiers(prm_token, prm_doc_id, prm_dossiers);
