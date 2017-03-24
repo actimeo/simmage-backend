@@ -13,7 +13,7 @@ COMMENT ON COLUMN documents.document.dty_id IS '';
 COMMENT ON COLUMN documents.document.doc_title IS '';
 COMMENT ON COLUMN documents.document.doc_description IS '';
 COMMENT ON COLUMN documents.document.doc_status IS '';
-COMMENT ON COLUMN documents.document.doc_obtainment_date IS '';
+COMMENT ON COLUMN documents.document.doc_deadline IS '';
 COMMENT ON COLUMN documents.document.doc_execution_date IS '';
 COMMENT ON COLUMN documents.document.doc_validity_date IS '';
 COMMENT ON COLUMN documents.document.doc_file IS '';

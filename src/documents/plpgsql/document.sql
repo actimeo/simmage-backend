@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION documents.document_add(
   prm_title text, 
   prm_description text, 
   prm_status documents.document_status, 
-  prm_obtainment_date date, 
+  prm_deadline date,
   prm_execution_date date, 
   prm_validity_date date, 
   prm_file text, 
@@ -31,24 +31,24 @@ BEGIN
   SELECT par_id INTO author_id FROM login.user WHERE usr_token = prm_token;
 
   INSERT INTO documents.document (
-    par_id_responsible, 
-    dty_id, 
+    par_id_responsible,
+    dty_id,
     doc_title,
     doc_description,
     doc_status,
-    doc_obtainment_date,
+    doc_deadline,
     doc_execution_date,
     doc_validity_date,
     doc_file,
     doc_author,
     doc_creation_date
    ) VALUES (
-    prm_par_id_responsible, 
-    prm_dty_id, 
+    prm_par_id_responsible,
+    prm_dty_id,
     prm_title,
     prm_description,
     prm_status,
-    prm_obtainment_date,
+    prm_deadline,
     prm_execution_date,
     prm_validity_date,
     prm_file,
@@ -62,24 +62,24 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION documents.document_add(
-  prm_token integer, 
-  prm_par_id_responsible integer, 
-  prm_dty_id integer, 
-  prm_title text, 
-  prm_description text, 
-  prm_status documents.document_status, 
-  prm_obtainment_date date, 
-  prm_execution_date date, 
-  prm_validity_date date, 
-  prm_file text, 
-  prm_topics integer[], 
+  prm_token integer,
+  prm_par_id_responsible integer,
+  prm_dty_id integer,
+  prm_title text,
+  prm_description text,
+  prm_status documents.document_status,
+  prm_deadline date,
+  prm_execution_date date,
+  prm_validity_date date,
+  prm_file text,
+  prm_topics integer[],
   prm_dossiers integer[])
  IS 'Add a new document';
 
 CREATE OR REPLACE FUNCTION documents.document_update(
   prm_token integer, prm_doc_id integer, prm_par_id_responsible integer, prm_dty_id integer,
   prm_title text, prm_description text, prm_status documents.document_status,
-  prm_obtainment_date date, prm_execution_date date, prm_validity_date date,
+  prm_deadline date, prm_execution_date date, prm_validity_date date,
   prm_file text, prm_topics integer[], prm_dossiers integer[]
 )
 RETURNS VOID
@@ -104,7 +104,7 @@ BEGIN
     doc_title = prm_title,
     doc_description = prm_description,
     doc_status = prm_status,
-    doc_obtainment_date = prm_obtainment_date,
+    doc_deadline = prm_deadline,
     doc_execution_date = prm_execution_date,
     doc_validity_date = prm_validity_date,
     doc_file = prm_file
@@ -117,7 +117,7 @@ $$;
 COMMENT ON FUNCTION documents.document_update(
   prm_token integer, prm_doc_id integer, prm_par_id_responsible integer, prm_dty_id integer,
   prm_title text, prm_description text, prm_status documents.document_status,
-  prm_obtainment_date date, prm_execution_date date, prm_validity_date date,
+  prm_deadline date, prm_execution_date date, prm_validity_date date,
   prm_file text, prm_topics integer[], prm_dossiers integer[]
 ) IS 'update a document informations';
 
@@ -303,17 +303,17 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
-  FROM (SELECT 
-    CASE WHEN (req->>'doc_id') IS NULL THEN NULL ELSE doc_id END as doc_id, 
-    CASE WHEN (req->>'par_id_responsible') IS NULL THEN NULL ELSE par_id_responsible END as par_id_responsible, 
-    CASE WHEN (req->>'dty_id') IS NULL THEN NULL ELSE dty_id END as dty_id, 
-    CASE WHEN (req->>'dty_name') IS NULL THEN NULL ELSE dty_name END as dty_name, 
-    CASE WHEN (req->>'doc_title') IS NULL THEN NULL ELSE doc_title END as doc_title, 
-    CASE WHEN (req->>'doc_description') IS NULL THEN NULL ELSE doc_description END as doc_description, 
-    CASE WHEN (req->>'doc_status') IS NULL THEN NULL ELSE doc_status END as doc_status, 
-    CASE WHEN (req->>'doc_obtainment_date') IS NULL THEN NULL ELSE doc_obtainment_date END as doc_obtainment_date, 
-    CASE WHEN (req->>'doc_execution_date') IS NULL THEN NULL ELSE doc_execution_date END as doc_execution_date, 
-    CASE WHEN (req->>'doc_validity_date') IS NULL THEN NULL ELSE doc_validity_date END as doc_validity_date, 
+  FROM (SELECT
+    CASE WHEN (req->>'doc_id') IS NULL THEN NULL ELSE doc_id END as doc_id,
+    CASE WHEN (req->>'par_id_responsible') IS NULL THEN NULL ELSE par_id_responsible END as par_id_responsible,
+    CASE WHEN (req->>'dty_id') IS NULL THEN NULL ELSE dty_id END as dty_id,
+    CASE WHEN (req->>'dty_name') IS NULL THEN NULL ELSE dty_name END as dty_name,
+    CASE WHEN (req->>'doc_title') IS NULL THEN NULL ELSE doc_title END as doc_title,
+    CASE WHEN (req->>'doc_description') IS NULL THEN NULL ELSE doc_description END as doc_description,
+    CASE WHEN (req->>'doc_status') IS NULL THEN NULL ELSE doc_status END as doc_status,
+    CASE WHEN (req->>'doc_deadline') IS NULL THEN NULL ELSE doc_deadline END as doc_deadline,
+    CASE WHEN (req->>'doc_execution_date') IS NULL THEN NULL ELSE doc_execution_date END as doc_execution_date,
+    CASE WHEN (req->>'doc_validity_date') IS NULL THEN NULL ELSE doc_validity_date END as doc_validity_date,
     CASE WHEN (req->>'doc_file') IS NULL THEN NULL ELSE doc_file END as doc_file,
     CASE WHEN (req->>'doc_creation_date') IS NULL THEN NULL ELSE doc_creation_date END as doc_creation_date,
     CASE WHEN (req->>'author') IS NULL THEN NULL ELSE
@@ -324,7 +324,7 @@ BEGIN
       documents.document_topic_json(prm_token, doc_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
       documents.document_dossier_json(prm_token, doc_id, req->'dossiers') END as dossiers
-    FROM documents.document 
+    FROM documents.document
       LEFT JOIN documents.document_type USING(dty_id)
       WHERE doc_id = ANY(prm_doc_ids)
   ) d;

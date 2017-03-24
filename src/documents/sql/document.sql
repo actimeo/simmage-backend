@@ -8,7 +8,7 @@ CREATE TABLE documents.document (
   doc_title text NOT NULL,
   doc_description text,
   doc_status documents.document_status NOT NULL,
-  doc_obtainment_date date,
+  doc_deadline date,
   doc_execution_date date,
   doc_validity_date date,
   doc_file text,
