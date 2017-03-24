@@ -27,3 +27,11 @@ CREATE TABLE documents.document_dossier (
   dos_id integer NOT NULL REFERENCES organ.dossier,
   CONSTRAINT document_dossier_pkey PRIMARY KEY(doc_id, dos_id)
 );
+
+CREATE TABLE documents.document_responsible_attribution (
+  doc_id integer NOT NULL REFERENCES documents.document,
+  par_id_responsible integer REFERENCES organ.participant,
+  dra_attribution_date timestamp with time zone NOT NULL,
+  dra_achievement_date timestamp with time zone,
+  CONSTRAINT document_responsible_attribution_pkey PRIMARY KEY(doc_id, par_id_responsible, dra_attribution_date)
+);

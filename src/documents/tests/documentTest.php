@@ -426,4 +426,72 @@ class DocumentTest extends PHPUnit_Framework_TestCase {
 
     $this->assertEquals(4, count($list));
   }
+
+  public function testDocumentGetResponsibleHistory() {
+
+    $top1 = self::$base->organ->topic_add($this->token, 'topic 1', 'desc 1', 'health', '#000000');
+    $top2 = self::$base->organ->topic_add($this->token, 'topic 2', 'desc 2', 'health', '#000000');
+
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'Firstname', 'Lastname', '21/12/1963', 'male', false);
+
+    $name = 'a document type';
+    $indiv = true;
+    $dty_id = self::$base->documents->document_type_add($this->token, $name, $indiv);
+    
+    $par = self::$base->execute_sql("SELECT par_id FROM login.user WHERE usr_token = ".$this->token);
+    $par1 = self::$base->organ->participant_add($this->token, 'Pierre' ,'Dupont');
+    $par2 = self::$base->organ->participant_add($this->token, 'Jacques' ,'Martin');
+    $par3 = self::$base->organ->participant_add($this->token, 'Marie' ,'Poppins');
+
+    $doc = self::$base->documents->document_add($this->token, $par1,
+						    $dty_id, 'un document', 'une description', 'scheduled',
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+						    );
+
+    self::$base->documents->document_update($this->token, $doc, $par1,
+						    $dty_id, 'un document', 'une description', 'in progress',
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+					    );
+
+    self::$base->documents->document_update($this->token, $doc, $par2,
+						    $dty_id, 'un document', 'une description', 'in progress',
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+					    );
+
+    self::$base->documents->document_update($this->token, $doc, $par3,
+						    $dty_id, 'un document', 'une description', 'in progress',
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+					    );
+
+    self::$base->documents->document_update($this->token, $doc, $par3,
+						    $dty_id, 'un document', 'une description', 'available', 
+						    null, null, null, // dates
+						    null, // file
+						    [ $top1 ], [ $dosId ]
+					    );
+
+    $req = ['doc_id' => true,
+	    'doc_title' => true,
+	    'par_id_responsible' => true,
+	    'responsible_history' => [
+				      'responsible' => [ 'par_id' => true,
+							 'par_firstname' => true,
+							 'par_lastname' => true ],
+				      'dra_attribution_date' => true,
+				      'dra_achievement_date' => true
+				     ]
+	  ];
+
+    $list = self::$base->documents->document_json($this->token, [$doc], json_encode($req));
+
+    $this->assertEquals(3, count($list[0]->responsible_history));
+  }
 }

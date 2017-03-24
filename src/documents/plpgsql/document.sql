@@ -58,6 +58,7 @@ BEGIN
 
   PERFORM documents.document_set_topics(prm_token, new_id, topics);
   PERFORM documents.document_set_dossiers(prm_token, new_id, prm_dossiers);
+  PERFORM documents.document_responsible_attribution_update(prm_token, new_id, NULL, prm_par_id_responsible);
   RETURN new_id;
 END;
 $$;
@@ -88,6 +89,8 @@ VOLATILE
 AS $$
 DECLARE
   topics integer[];
+  old_responsible integer;
+  new_responsible integer := null;
 BEGIN
   PERFORM login._token_assert(prm_token, null);
   IF NOT EXISTS (SELECT 1 FROM documents.document WHERE doc_id = prm_doc_id) THEN
@@ -98,6 +101,10 @@ BEGIN
   ELSE
     topics = prm_topics;
   END IF;
+
+  
+  SELECT par_id_responsible INTO old_responsible FROM documents.document WHERE doc_id = prm_doc_id;
+
   UPDATE documents.document SET
     par_id_responsible = prm_par_id_responsible,
     dty_id = prm_dty_id,
@@ -110,8 +117,15 @@ BEGIN
     doc_file = prm_file
     WHERE doc_id = prm_doc_id;
 
+  IF prm_status != 'available' THEN
+    new_responsible := prm_par_id_responsible;
+  END IF;
+
   PERFORM documents.document_set_topics(prm_token, prm_doc_id, topics);
   PERFORM documents.document_set_dossiers(prm_token, prm_doc_id, prm_dossiers);
+  IF new_responsible != old_responsible THEN
+    PERFORM documents.document_responsible_attribution_update(prm_token, prm_doc_id, old_responsible, new_responsible);
+  END IF;
 END;
 $$;
 COMMENT ON FUNCTION documents.document_update(
@@ -323,7 +337,9 @@ BEGIN
     CASE WHEN (req->>'topics') IS NULL THEN NULL ELSE
       documents.document_topic_json(prm_token, doc_id, req->'topics') END as topics,
     CASE WHEN (req->>'dossiers') IS NULL THEN NULL ELSE
-      documents.document_dossier_json(prm_token, doc_id, req->'dossiers') END as dossiers
+      documents.document_dossier_json(prm_token, doc_id, req->'dossiers') END as dossiers,
+    CASE WHEN (req->>'responsible_history') IS NULL THEN NULL ELSE
+      documents.document_responsible_history_json(prm_token, doc_id, req->'responsible_history') END as responsible_history
     FROM documents.document
       LEFT JOIN documents.document_type USING(dty_id)
       WHERE doc_id = ANY(prm_doc_ids)
@@ -379,6 +395,7 @@ BEGIN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
   END IF;
 
+  DELETE FROM documents.document_responsible_attribution WHERE doc_id = prm_doc_id;
   DELETE FROM documents.document_dossier WHERE doc_id = prm_doc_id;
   DELETE FROM documents.document_topic WHERE doc_id = prm_doc_id;
   DELETE FROM documents.document WHERE doc_id = prm_doc_id;
@@ -416,3 +433,57 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION documents.document_participant_list(prm_token integer, req json) IS 'Returns the notes attributed to or created by the current user';
+
+CREATE OR REPLACE FUNCTION documents.document_responsible_attribution_update(prm_token integer, prm_doc_id integer, prm_old_responsible integer, prm_new_responsible integer)
+RETURNS VOID
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+  attribution_ts timestamp with time zone;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  IF prm_old_responsible IS NOT NULL AND NOT EXISTS (SELECT 1 FROM documents.document_responsible_attribution WHERE doc_id = prm_doc_id AND par_id_responsible = prm_old_responsible) THEN
+    RAISE EXCEPTION USING ERRCODE = 'no_data_found';
+  END IF;
+
+  attribution_ts := CURRENT_TIMESTAMP;
+
+  IF prm_old_responsible IS NOT NULL THEN
+    UPDATE documents.document_responsible_attribution SET
+      dra_achievement_date = attribution_ts
+      WHERE doc_id = prm_doc_id
+      AND par_id_responsible = prm_old_responsible;
+  END IF;
+
+  IF prm_new_responsible IS NOT NULL THEN
+    INSERT INTO documents.document_responsible_attribution (doc_id, par_id_responsible, dra_attribution_date)
+      VALUES (prm_doc_id, prm_new_responsible, attribution_ts);
+  END IF;
+END;
+$$;
+COMMENT ON FUNCTION documents.document_responsible_attribution_update(prm_token integer, prm_doc_id integer, prm_old_responsible integer, prm_new_responsible integer) IS 'Makes an history of document responsibles attribution';
+
+CREATE OR REPLACE FUNCTION documents.document_responsible_history_json(prm_token integer, prm_doc_id integer, req json)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+  FROM (SELECT
+    CASE WHEN (req->>'responsible') IS NULL THEN NULL ELSE
+      organ.participant_json(prm_token, par_id_responsible, req->'responsible') END as responsible,
+    CASE WHEN (req->>'dra_attribution_date') IS NULL THEN NULL ELSE dra_attribution_date END as dra_attribution_date,
+    CASE WHEN (req->>'dra_achievement_date') IS NULL THEN NULL ELSE dra_achievement_date END as dra_achievement_date
+    FROM documents.document_responsible_attribution
+    WHERE doc_id = prm_doc_id
+    ORDER BY dra_attribution_date
+  ) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION documents.document_responsible_history_json(prm_token integer, prm_doc_id integer, req json) IS 'Returns the responsible history of a document';
