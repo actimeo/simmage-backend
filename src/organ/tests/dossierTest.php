@@ -669,5 +669,24 @@ class dossierTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals([$dosId5], 
 			dossierTest::refereeDossiersIdsJson($list4));
   }
+
+  /*public function testDossierGetInfoJsonIndividual() {
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';    
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+    $this->assertGreaterThan(0, $dosId);
+    $req = [ 'dos_firstname' => true,
+	     'dos_lastname' => true,
+	     'dos_birthdate' => true,
+	     'dos_gender' => true,
+	     'dos_grouped' => true,
+	     'dos_external' => true,
+	     'dos_groupname' => true
+	     ];
+    $res = self::$base->organ->dossier_info_json($this->token, $dosId, json_encode($req));
+    $this->assertEquals($fname, $res->dos_firstname);
+    }
+  */
 }
 ?>
