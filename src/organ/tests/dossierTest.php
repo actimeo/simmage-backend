@@ -670,10 +670,10 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 			dossierTest::refereeDossiersIdsJson($list4));
   }
 
-  /*public function testDossierGetInfoJsonIndividual() {
+  public function testDossierGetInfoJsonIndividual() {
     $fname = 'firstname';
     $lname = 'lastname';
-    $bdate = '01/09/2016';    
+    $bdate = '01/09/2010';
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
     $this->assertGreaterThan(0, $dosId);
     $req = [ 'dos_firstname' => true,
@@ -682,11 +682,12 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 	     'dos_gender' => true,
 	     'dos_grouped' => true,
 	     'dos_external' => true,
-	     'dos_groupname' => true
+	     'dos_groupname' => true,
+	     'age' => true
 	     ];
     $res = self::$base->organ->dossier_info_json($this->token, $dosId, json_encode($req));
+    print_r($res);
     $this->assertEquals($fname, $res->dos_firstname);
-    }
-  */
+  }
 }
 ?>

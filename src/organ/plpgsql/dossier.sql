@@ -492,7 +492,6 @@ COMMENT ON FUNCTION organ.dossier_related_json(
   req json)
  IS 'Returns information about the dossiers in relation with the given dossier';
 
-/*
 CREATE OR REPLACE FUNCTION organ.dossier_info_json(
   prm_token integer, 
   prm_dos_id integer,
@@ -511,6 +510,7 @@ BEGIN
       CASE WHEN (req->>'dos_firstname') IS NULL THEN NULL ELSE dos_firstname END as dos_firstname,
       CASE WHEN (req->>'dos_lastname') IS NULL THEN NULL ELSE dos_lastname END as dos_lastname,
       CASE WHEN (req->>'dos_birthdate') IS NULL THEN NULL ELSE dos_birthdate END as dos_birthdate,
+      CASE WHEN (req->>'age') IS NULL THEN NULL ELSE extract(YEAR FROM age(dos_birthdate)) END as age,
       CASE WHEN (req->>'dos_gender') IS NULL THEN NULL ELSE dos_gender END as dos_gender,
       CASE WHEN (req->>'dos_grouped') IS NULL THEN NULL ELSE dos_grouped END as dos_grouped,
       CASE WHEN (req->>'dos_external') IS NULL THEN NULL ELSE dos_external END as dos_external,
@@ -525,5 +525,3 @@ COMMENT ON FUNCTION organ.dossier_info_json(
   prm_token integer, 
   prm_dos_id integer,
   req json) IS 'Returns information about a dossier, to be displayed in a dossier view';
-*/
-
