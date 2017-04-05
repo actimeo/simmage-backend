@@ -686,7 +686,6 @@ class dossierTest extends PHPUnit_Framework_TestCase {
 	     'age' => true
 	     ];
     $res = self::$base->organ->dossier_info_json($this->token, $dosId, json_encode($req));
-    print_r($res);
     $this->assertEquals($fname, $res->dos_firstname);
   }
 }
