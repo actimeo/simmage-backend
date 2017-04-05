@@ -3,8 +3,7 @@ Portals are views of person data. Several portals can be created, depending on i
 
 A portal contains:
 - a main navigation, which will contain information about all persons,
-- and a navigation for each entity type (patient, staff, etc), which will contain information about 
-  a particular person of this type.
+- and a navigation for the dossiers.
 
 Each navigation is composed of sections containing menu entries.
 
@@ -36,7 +35,6 @@ COMMENT ON TABLE portal.personsection IS 'A view of a portal for an entity type 
 This table defines these sections.';
 COMMENT ON COLUMN portal.personsection.pse_id IS 'Unique identifier';
 COMMENT ON COLUMN portal.personsection.por_id IS 'Portal containing this section';
-COMMENT ON COLUMN portal.personsection.pse_entity IS 'Entity type for this view';
 COMMENT ON COLUMN portal.personsection.pse_name IS 'Section name';
 COMMENT ON COLUMN portal.personsection.pse_order IS 'Order of the section in the portal for the entity type';
 
