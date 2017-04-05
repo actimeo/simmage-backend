@@ -64,7 +64,12 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
 
     $pme_name = 'a person menu';
-    $pme_id = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name);
+    $pme_title = 'a dossier menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $pme_id = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     $this->assertGreaterThan(0, $pme_id);
   }
 
@@ -78,8 +83,15 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
     $pme_name1 = 'a first menu';
     $pme_name2 = 'a second menu';
-    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name1);
-    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name2);
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name1, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
+    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name2, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     $this->assertGreaterThan($id1, $id2);
   }
 
@@ -93,11 +105,18 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $por_id = self::$base->portal->portal_add($this->token, $por_name, $por_desc);
     
     $pse_name = 'a person section';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
 
     $pme_name = 'a first menu';
-    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pse_name);
-    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pse_name);
+    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pse_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
+    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pse_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
   }  
 
   /**
@@ -114,8 +133,15 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_id2 = self::$base->portal->personsection_add($this->token, $por_id, $pse_name2);
     
     $pme_name = 'a section';
-    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id1, $pme_name);
-    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id2, $pme_name);
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id1, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
+    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id2, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     $this->assertGreaterThan($id1, $id2);
   }  
 
@@ -128,7 +154,12 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
 
     $pme_name = 'a person menu';
-    $pme_id = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name);
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $pme_id = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(1, count($personmenus));
   }
@@ -143,8 +174,15 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
     $pme_name1 = 'a first menu';
     $pme_name2 = 'a second menu';
-    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name1);
-    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name2);
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name1, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
+    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name2, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
    
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(2, count($personmenus));
@@ -161,8 +199,15 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_id2 = self::$base->portal->personsection_add($this->token, $por_id, $pse_name2);
     
     $pme_name = 'a menu';
-    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id1, $pme_name);
-    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id2, $pme_name);
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id1 = self::$base->portal->personmenu_add($this->token, $pse_id1, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
+    $id2 = self::$base->portal->personmenu_add($this->token, $pse_id2, $pme_name, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
 
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id1);
     $this->assertEquals(1, count($personmenus));
@@ -183,8 +228,13 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pme_name[1] = 'a second menu';
     $pme_name[2] = 'a third menu';
     $pme_name[3] = 'a fourth menu';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i]);
+      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i], 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(4, count($personmenus));
@@ -198,12 +248,17 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $por_id = self::$base->portal->portal_add($this->token, 'a portal', 'a desc');
 
     $pse_name = 'a person section';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
 
     $name1 = 'a menu';
     $name2 = 'another menu';
     
-    $id = self::$base->portal->personmenu_add($this->token, $pse_id, $name1);
+    $id = self::$base->portal->personmenu_add($this->token, $pse_id, $name1, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     self::$base->portal->personmenu_rename($this->token, $id, $name2);
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(1, count($personmenus));
@@ -223,8 +278,14 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
 
     $pse_name = 'a person section';
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
+
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     
-    $id = self::$base->portal->personmenu_add($this->token, $pse_id, $name1);
+    $id = self::$base->portal->personmenu_add($this->token, $pse_id, $name1, 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     self::$base->portal->personmenu_rename($this->token, $id+1, $name2);
   }
 
@@ -234,7 +295,12 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_name = 'a person section';
     $pse_id = self::$base->portal->personsection_add($this->token, $por_id, $pse_name);
 
-    $id = self::$base->portal->personmenu_add($this->token, $pse_id, 'a menu');
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id = self::$base->portal->personmenu_add($this->token, $pse_id, 'a menu', 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(1, count($personmenus));
     self::$base->portal->personmenu_delete($this->token, $id);
@@ -254,7 +320,12 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pse_name = 'a person section';
     $pse_id = self::$base->portal->personsection_add($this->token, $por, $pse_name);
 
-    $id = self::$base->portal->personmenu_add($this->token, $pse_id, 'a menu');
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
+    $id = self::$base->portal->personmenu_add($this->token, $pse_id, 'a menu', 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     self::$base->portal->personmenu_delete($this->token, $id+1);
   }
 
@@ -270,8 +341,13 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pme_name[1] = '2';
     $pme_name[2] = '3';
     $pme_name[3] = '4';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i]);
+      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i], 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(4, count($personmenus));
@@ -293,8 +369,13 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pme_name[1] = '2';
     $pme_name[2] = '3';
     $pme_name[3] = '4';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i]);
+      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i], 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(4, count($personmenus));
@@ -316,8 +397,13 @@ class personmenuTest extends PHPUnit_Framework_TestCase {
     $pme_name[1] = '2';
     $pme_name[2] = '3';
     $pme_name[3] = '4';
+    $pme_title = 'a main menu title';
+    $pme_content_type = 'events';
+    $pme_content_id = 1;
     for ($i=0; $i<4; $i++)
-      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i]);
+      $id[$i] = self::$base->portal->personmenu_add($this->token, $pse_id, $pme_name[$i], 
+						$pme_title, 'group', 
+						$pme_content_type, $pme_content_id);
     
     $personmenus = self::$base->portal->personmenu_list($this->token, $pse_id);
     $this->assertEquals(4, count($personmenus));
