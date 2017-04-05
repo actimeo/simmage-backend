@@ -75,7 +75,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -115,7 +115,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     $resId = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -161,7 +161,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -197,7 +197,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->events->event_type_update_details($this->token, $ety_id, 'incident', $name, $indiv, array($top_id1, $top_id2), array($org));
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -234,14 +234,14 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $eve_id1 = self::$base->events->event_add($this->token, 'a title 1', $ety_id, 'standard', 
+    $eve_id1 = self::$base->events->event_add($this->token, 'a title 1', $ety_id, 'standard', 'confirmed', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
 					      false, null, null, null, 0,
 					      [ $top_id1, $top_id2 ], [ $dosId ], [], []
 					      );
 
-    $eve_id2 = self::$base->events->event_add($this->token, 'a title 2', $ety_id, 'standard', 
+    $eve_id2 = self::$base->events->event_add($this->token, 'a title 2', $ety_id, 'standard', 'confirmed', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
 					      false, null, null, null, 0,
@@ -287,7 +287,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '01/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'daily', 3, null, 5,
@@ -350,7 +350,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'monthly', null, 'day', 5,
@@ -411,7 +411,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'monthly', null, 'weekday', 5,
@@ -487,35 +487,35 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
 					 );
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
 	  				 );
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
 					);
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
 					 );
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -530,4 +530,5 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     $this->assertEquals(4, count($list));
   }
+
 }
