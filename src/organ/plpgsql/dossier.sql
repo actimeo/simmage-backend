@@ -491,3 +491,37 @@ COMMENT ON FUNCTION organ.dossier_related_json(
   prm_dos_id integer, 
   req json)
  IS 'Returns information about the dossiers in relation with the given dossier';
+
+CREATE OR REPLACE FUNCTION organ.dossier_info_json(
+  prm_token integer, 
+  prm_dos_id integer,
+  req json)
+RETURNS json
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT row_to_json(d) INTO ret
+    FROM (SELECT
+      CASE WHEN (req->>'dos_id') IS NULL THEN NULL ELSE dos_id END as dos_id, 
+      CASE WHEN (req->>'dos_firstname') IS NULL THEN NULL ELSE dos_firstname END as dos_firstname,
+      CASE WHEN (req->>'dos_lastname') IS NULL THEN NULL ELSE dos_lastname END as dos_lastname,
+      CASE WHEN (req->>'dos_birthdate') IS NULL THEN NULL ELSE dos_birthdate END as dos_birthdate,
+      CASE WHEN (req->>'age') IS NULL THEN NULL ELSE extract(YEAR FROM age(dos_birthdate)) END as age,
+      CASE WHEN (req->>'dos_gender') IS NULL THEN NULL ELSE dos_gender END as dos_gender,
+      CASE WHEN (req->>'dos_grouped') IS NULL THEN NULL ELSE dos_grouped END as dos_grouped,
+      CASE WHEN (req->>'dos_external') IS NULL THEN NULL ELSE dos_external END as dos_external,
+      CASE WHEN (req->>'dos_groupname') IS NULL THEN NULL ELSE dos_groupname END as dos_groupname
+      FROM organ.dossier WHERE dos_id = prm_dos_id
+      ) d;
+  RETURN ret;
+  
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_info_json(
+  prm_token integer, 
+  prm_dos_id integer,
+  req json) IS 'Returns information about a dossier, to be displayed in a dossier view';
