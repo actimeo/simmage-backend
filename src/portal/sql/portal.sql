@@ -53,9 +53,10 @@ CREATE TABLE personmenu (
   pse_id integer NOT NULL REFERENCES portal.personsection,
   pme_name text NOT NULL,
   pme_order integer NOT NULL CHECK (pme_order > 0),
+  pme_title text NOT NULL,
+  pme_icon text NOT NULL,
+  pme_content_type portal.mainmenu_content_type,
+  pme_content_id integer,
   UNIQUE(pse_id, pme_name),
   UNIQUE(pse_id, pme_order) 
 );
-
-
-

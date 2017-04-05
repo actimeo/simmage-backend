@@ -4,7 +4,14 @@ SET search_path = portal;
 -- PERSONMENU --
 ----------------
 
-CREATE OR REPLACE FUNCTION personmenu_add(prm_token integer, prm_pse_id integer, prm_name text)
+CREATE OR REPLACE FUNCTION personmenu_add(
+  prm_token integer, 
+  prm_pse_id integer, 
+  prm_name text,
+  prm_title text, 
+  prm_icon text,
+  prm_content_type portal.mainmenu_content_type, 
+  prm_content_id integer)
 RETURNS integer
 LANGUAGE plpgsql
 AS $$
@@ -14,13 +21,31 @@ DECLARE
 BEGIN
   PERFORM login._token_assert(prm_token, '{structure}');
   SELECT COALESCE(MAX(pme_order), 0) + 1 INTO new_order FROM portal.personmenu WHERE pse_id = prm_pse_id;
-  INSERT INTO portal.personmenu (pse_id, pme_name, pme_order)
-    VALUES (prm_pse_id, prm_name, new_order)
+  INSERT INTO portal.personmenu (
+    pse_id, 
+    pme_name, 
+    pme_order, 
+    pme_title, 
+    pme_icon, 
+    pme_content_type, 
+    pme_content_id)
+  VALUES (
+    prm_pse_id, 
+    prm_name, 
+    new_order, 
+    prm_title, 
+    prm_icon, 
+    prm_content_type, 
+    prm_content_id)
     RETURNING pme_id INTO ret;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION personmenu_add(prm_token integer, prm_pse_id integer, prm_name text) 
+COMMENT ON FUNCTION personmenu_add(prm_token integer, prm_pse_id integer, prm_name text,
+  prm_title text,
+  prm_icon text,
+  prm_content_type portal.mainmenu_content_type, 
+  prm_content_id integer) 
 IS 'Add a menu entry to a section of an entity view';
 
 CREATE OR REPLACE FUNCTION personmenu_list(prm_token integer, prm_pse_id integer)
