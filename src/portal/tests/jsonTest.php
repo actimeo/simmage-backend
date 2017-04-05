@@ -87,6 +87,17 @@ class portalJsonTest extends PHPUnit_Framework_TestCase {
     $mme_idA2 = self::$base->portal->mainmenu_add($this->token, $mse_idA, $mme_nameA2, 
 						  'title', 'group', null, null);
 
+    $pse_nameA = 'person section A';
+    $pse_idA = self::$base->portal->personsection_add($this->token, $por_id1, $pse_nameA);
+
+    $pme_nameA1 = 'person menu A.1';
+    $pme_idA1 = self::$base->portal->personmenu_add($this->token, $pse_idA, $pme_nameA1, 
+						    'title', 'group', null, null);
+
+    $pme_nameA2 = 'person menu A.2';
+    $pme_idA2 = self::$base->portal->personmenu_add($this->token, $pse_idA, $pme_nameA2, 
+						    'title', 'group', null, null);
+
     $req = [ 'mme_id' => true ];
     $json = self::$base->portal->mainmenu_json($this->token, $mse_idA, json_encode($req));
     $this->assertEquals(2, count($json));
@@ -166,5 +177,32 @@ class portalJsonTest extends PHPUnit_Framework_TestCase {
     $this->assertNotNull($json[1]->mainsections);
     $this->assertEquals(1, count($json[1]->mainsections));
     $this->assertNotNull($json[1]->mainsections[0]->mainmenus);
+    $this->assertNull($json[1]->personsections);
+
+    $req = [ 'por_id' => true,
+	     'por_name' => true,
+	     'mainsections' => [ 'mse_id' => true,
+				 'mse_name' => true,
+				 'mainmenus' => [ 'mme_id' => true,
+						  'mme_name' => true ]
+				 ],
+	     'personsections' => [ 'pse_id' => true,
+				 'pse_name' => true,
+				   'personmenus' => [ 'pme_id' => true,
+						      'pme_name' => true ]
+				 ]	     
+	     ];
+    $json = self::$base->portal->portal_json($this->token, null, json_encode($req));
+    $this->assertEquals(2, count($json));
+    $this->assertEquals($por_id2, $json[0]->por_id);
+    $this->assertEquals($por_id1, $json[1]->por_id);
+    $this->assertNotNull($json[1]->mainsections);
+    $this->assertEquals(1, count($json[1]->mainsections));
+    $this->assertNotNull($json[1]->mainsections[0]->mainmenus);
+
+    $this->assertNotNull($json[1]->personsections);
+    $this->assertEquals(1, count($json[1]->personsections));
+    $this->assertNotNull($json[1]->personsections[0]->personmenus);
+    $this->assertEquals(2, count($json[1]->personsections[0]->personmenus));
   }
 }
