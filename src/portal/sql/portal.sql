@@ -2,13 +2,6 @@ CREATE SCHEMA portal;
 
 SET search_path = portal;
 
-CREATE TYPE portal.entity AS ENUM (
-  'patient',
-  'staff',
-  'contact',
-  'family'
-);
-
 CREATE TYPE portal.mainmenu_content_type AS ENUM (
   'documents',
   'events',
@@ -49,21 +42,21 @@ CREATE TABLE mainmenu (
 CREATE TABLE personsection (
   pse_id serial PRIMARY KEY,  
   por_id integer NOT NULL REFERENCES portal.portal,
-  pse_entity portal.entity,
   pse_name text NOT NULL,
   pse_order integer NOT NULL CHECK (pse_order > 0) ,
-  UNIQUE(por_id, pse_entity, pse_name),
-  UNIQUE(por_id, pse_entity, pse_order)
+  UNIQUE(por_id, pse_name),
+  UNIQUE(por_id, pse_order)
 );
 
 CREATE TABLE personmenu (
   pme_id serial PRIMARY KEY,
   pse_id integer NOT NULL REFERENCES portal.personsection,
   pme_name text NOT NULL,
-  pme_order integer NOT NULL CHECK (pme_order > 0) ,
+  pme_order integer NOT NULL CHECK (pme_order > 0),
+  pme_title text NOT NULL,
+  pme_icon text NOT NULL,
+  pme_content_type portal.mainmenu_content_type,
+  pme_content_id integer,
   UNIQUE(pse_id, pme_name),
   UNIQUE(pse_id, pme_order) 
 );
-
-
-

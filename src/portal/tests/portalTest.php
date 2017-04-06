@@ -192,8 +192,8 @@ class portalTest extends PHPUnit_Framework_TestCase {
     $pse_name2 = 'a second section';
     $id1 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name1);
     $id2 = self::$base->portal->mainsection_add($this->token, $por_id, $mse_name2);
-    self::$base->portal->personsection_add($this->token, $por_id, 'patient', $pse_name1);
-    self::$base->portal->personsection_add($this->token, $por_id, 'staff', $pse_name2);
+    self::$base->portal->personsection_add($this->token, $por_id, $pse_name1);
+    self::$base->portal->personsection_add($this->token, $por_id, $pse_name2);
     self::$base->portal->portal_clean($this->token, $por_id);
     $this->setExpectedException('\actimeo\pgproc\PgProcException');
     self::$base->portal->portal_rename($this->token, $por_id, 'new name', 'new desc');

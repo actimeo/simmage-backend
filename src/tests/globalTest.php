@@ -20,7 +20,6 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('login', 'user_login'),
 			 array('login', 'user_login_json'),
 			 array('login', '_user_token_create'),
-			 array('portal', 'entity_list'),
 			 array('portal', 'mainview_element_type_list'),
 			 array('portal', 'param_list'),
 			 array('portal', 'personview_element_type_list'),
