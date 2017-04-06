@@ -324,4 +324,9 @@ class eventtypeTest extends PHPUnit_Framework_TestCase {
     $list = self::$base->events->event_duration_list();
     $this->assertEquals($list[0], 'standard');
   }
+
+  public function testEventStatusList() {
+    $list = self::$base->events->event_status_list();
+    $this->assertEquals($list[0], 'scheduled');
+  }
 }
