@@ -1,0 +1,382 @@
+# code,individual,external,birthdate,gender (0=m 1=f),firstname,lastname,groupname
+mjoly19970710,x,,10/07/1997,1,Mathilde,JOLY,
+aguillot19980427,x,,27/04/1998,1,Ambre,GUILLOT,
+rmoulin19910326,x,,26/03/1991,1,Romane,MOULIN,
+glecomte19910517,x,,17/05/1991,0,Gabriel,LECOMTE,
+jlemaitre19970803,x,,03/08/1997,1,Jade,LEMAITRE,
+hleblanc19910124,x,,24/01/1991,0,Hugo,LEBLANC,
+lmaillard19941202,x,,02/12/1994,0,Louis,MAILLARD,
+lbertin19920615,x,,15/06/1992,1,Lina,BERTIN,
+nmarty19960213,x,,13/02/1996,0,Noé,MARTY,
+gbouchet19991221,x,,21/12/1999,0,Gabin,BOUCHET,
+emeyer19930121,x,,21/01/1993,1,Eva,MEYER,
+tduval19950404,x,,04/04/1995,1,Théa,DUVAL,
+snoel19920222,x,,22/02/1992,1,Soline,NOEL,
+lpicard19950702,x,,02/07/1995,1,Léa,PICARD,
+ahubert19960912,x,,12/09/1996,1,Agathe,HUBERT,
+nmartinez19951109,x,,09/11/1995,0,Noé,MARTINEZ,
+lfournier19970213,x,,13/02/1997,1,Lily,FOURNIER,
+rphilippe19970124,x,,24/01/1997,0,Robin,PHILIPPE,
+rmarty19960327,x,,27/03/1996,0,Raphaël,MARTY,
+rmeunier19901028,x,,28/10/1990,1,Romane,MEUNIER,
+blévêque19941213,x,,13/12/1994,0,Baptiste,LÉVÊQUE,
+efernandez19950401,x,,01/04/1995,1,Eden,FERNANDEZ,
+nbenoit19981125,x,,25/11/1998,0,Naël,BENOIT,
+lbertrand19980107,x,,07/01/1998,1,Lola,BERTRAND,
+nbertin19950502,x,,02/05/1995,0,Nathan,BERTIN,
+lprevost19990402,x,,02/04/1999,1,Lilou,PREVOST,
+lleclerc19930807,x,,07/08/1993,0,Lucas,LECLERC,
+lclement19991219,x,,19/12/1999,1,Léna,CLEMENT,
+lhuet19900224,x,,24/02/1990,1,Lilou,HUET,
+vclement19980326,x,,26/03/1998,0,Valentin,CLEMENT,
+tbonnet19930305,x,,05/03/1993,0,Tom,BONNET,
+lcharles19970410,x,,10/04/1997,1,Lou,CHARLES,
+eetienne19990605,x,,05/06/1999,0,Enzo,ETIENNE,
+scarre19930513,x,,13/05/1993,0,Simon,CARRE,
+ephilippe19941019,x,,19/10/1994,1,Emma,PHILIPPE,
+eschmitt19960428,x,,28/04/1996,1,Eléna,SCHMITT,
+lgillet19930101,x,,01/01/1993,1,Lily,GILLET,
+mcollin19900912,x,,12/09/1990,1,Manon,COLLIN,
+tlaporte19920711,x,,11/07/1992,0,Tom,LAPORTE,
+lmartinez19900313,x,,13/03/1990,0,Liam,MARTINEZ,
+ldaniel19901111,x,,11/11/1990,0,Louka,DANIEL,
+tbenoit19930306,x,,06/03/1993,0,Théo,BENOIT,
+jlejeune19960420,x,,20/04/1996,1,Jade,LEJEUNE,
+lmarty19961025,x,,25/10/1996,0,Léo,MARTY,
+llouis19920201,x,,01/02/1992,1,Lilou,LOUIS,
+mguichard19920222,x,,22/02/1992,0,Maël,GUICHARD,
+ljoly19920603,x,,03/06/1992,1,Léa,JOLY,
+nperrin19971119,x,,19/11/1997,0,Naël,PERRIN,
+alambert19941109,x,,09/11/1994,0,Aaron,LAMBERT,
+abenoit19980526,x,,26/05/1998,0,Arthur,BENOIT,
+narnaud19930214,x,,14/02/1993,1,Nina,ARNAUD,
+cblanchard19960827,x,,27/08/1996,1,Charlotte,BLANCHARD,
+mphilippe19970820,x,,20/08/1997,1,Margaux,PHILIPPE,
+laubry19971120,x,,20/11/1997,0,Lucas,AUBRY,
+jarnaud19940515,x,,15/05/1994,1,Jeanne,ARNAUD,
+marnaud19980114,x,,14/01/1998,1,Mia,ARNAUD,
+cguyot19930801,x,,01/08/1993,1,Chloé,GUYOT,
+lcharles19960216,x,,16/02/1996,1,Lana,CHARLES,
+amoreau19930912,x,,12/09/1993,0,Antoine,MOREAU,
+enoel19980907,x,,07/09/1998,0,Eliott,NOEL,
+nrichard19900720,x,,20/07/1990,1,Nina,RICHARD,
+jdufour19931023,x,,23/10/1993,0,Jules,DUFOUR,
+sgermain19911027,x,,27/10/1991,1,Sarah,GERMAIN,
+jpayet19920412,x,,12/04/1992,1,Jade,PAYET,
+cpetit19910116,x,,16/01/1991,1,Chloé,PETIT,
+mperrier19940303,x,,03/03/1994,0,Maël,PERRIER,
+mmarie19941214,x,,14/12/1994,0,Malo,MARIE,
+mmartin19911216,x,,16/12/1991,0,Maxime,MARTIN,
+njoly19930902,x,,02/09/1993,1,Nina,JOLY,
+ireynaud19940207,x,,07/02/1994,1,Inès,REYNAUD,
+mgillet19990126,x,,26/01/1999,1,Manon,GILLET,
+gmuller19990417,x,,17/04/1999,0,Gabriel,MULLER,
+emoulin19980201,x,,01/02/1998,0,Ethan,MOULIN,
+jmorel19960212,x,,12/02/1996,1,Jade,MOREL,
+cduval19910912,x,,12/09/1991,1,Capucine,DUVAL,
+hmuller19910924,x,,24/09/1991,0,Hugo,MULLER,
+msimon19951126,x,,26/11/1995,1,Mia,SIMON,
+lmartinez19920223,x,,23/02/1992,0,Lenny,MARTINEZ,
+rbreton19920428,x,,28/04/1992,0,Raphaël,BRETON,
+mdupuy19950913,x,,13/09/1995,0,Mathys,DUPUY,
+mjacquet19980610,x,,10/06/1998,1,Mathilde,JACQUET,
+schevallier19911111,x,,11/11/1991,1,Sarah,CHEVALLIER,
+mroche19980322,x,,22/03/1998,0,Marius,ROCHE,
+lbesson19990625,x,,25/06/1999,1,Léna,BESSON,
+cmorel19930118,x,,18/01/1993,1,Capucine,MOREL,
+mgillet19960921,x,,21/09/1996,0,Mathéo,GILLET,
+cbailly19930328,x,,28/03/1993,1,Charlotte,BAILLY,
+mclement19931107,x,,07/11/1993,0,Marius,CLEMENT,
+apoirier19990626,x,,26/06/1999,0,Alexis,POIRIER,
+ngilbert19930322,x,,22/03/1993,0,Naël,GILBERT,
+# Fratries,,,,,,,
+fratrie_arnaud,,,,,,,Fratrie ARNAUD
+fratrie_benoit,,,,,,,Fratrie BENOIT
+fratrie_bertin,,,,,,,Fratrie BERTIN
+fratrie_charles,,,,,,,Fratrie CHARLES
+fratrie_clement,,,,,,,Fratrie CLEMENT
+fratrie_duval,,,,,,,Fratrie DUVAL
+fratrie_gillet,,,,,,,Fratrie GILLET
+fratrie_joly,,,,,,,Fratrie JOLY
+fratrie_martinez,,,,,,,Fratrie MARTINEZ
+fratrie_marty,,,,,,,Fratrie MARTY
+fratrie_morel,,,,,,,Fratrie MOREL
+fratrie_moulin,,,,,,,Fratrie MOULIN
+fratrie_muller,,,,,,,Fratrie MULLER
+fratrie_noel,,,,,,,Fratrie NOEL
+fratrie_philippe,,,,,,,Fratrie PHILIPPE
+# Fratries affectée directement,,,,,,,
+fratrie1,,,,,,,Fratrie 1
+fratrie2,,,,,,,Fratrie 2
+# Familles,,,,,,,
+famille_arnaud,,x,,,,,Famille ARNAUD
+famille_aubry,,x,,,,,Famille AUBRY
+famille_bailly,,x,,,,,Famille BAILLY
+famille_benoit,,x,,,,,Famille BENOIT
+famille_bertin,,x,,,,,Famille BERTIN
+famille_bertrand,,x,,,,,Famille BERTRAND
+famille_besson,,x,,,,,Famille BESSON
+famille_blanchard,,x,,,,,Famille BLANCHARD
+famille_bonnet,,x,,,,,Famille BONNET
+famille_bouchet,,x,,,,,Famille BOUCHET
+famille_breton,,x,,,,,Famille BRETON
+famille_carre,,x,,,,,Famille CARRE
+famille_charles,,x,,,,,Famille CHARLES
+famille_chevallier,,x,,,,,Famille CHEVALLIER
+famille_clement,,x,,,,,Famille CLEMENT
+famille_collin,,x,,,,,Famille COLLIN
+famille_daniel,,x,,,,,Famille DANIEL
+famille_dufour,,x,,,,,Famille DUFOUR
+famille_dupuy,,x,,,,,Famille DUPUY
+famille_duval,,x,,,,,Famille DUVAL
+famille_etienne,,x,,,,,Famille ETIENNE
+famille_fernandez,,x,,,,,Famille FERNANDEZ
+famille_fournier,,x,,,,,Famille FOURNIER
+famille_germain,,x,,,,,Famille GERMAIN
+famille_gilbert,,x,,,,,Famille GILBERT
+famille_gillet,,x,,,,,Famille GILLET
+famille_guichard,,x,,,,,Famille GUICHARD
+famille_guillot,,x,,,,,Famille GUILLOT
+famille_guyot,,x,,,,,Famille GUYOT
+famille_hubert,,x,,,,,Famille HUBERT
+famille_huet,,x,,,,,Famille HUET
+famille_jacquet,,x,,,,,Famille JACQUET
+famille_joly,,x,,,,,Famille JOLY
+famille_lambert,,x,,,,,Famille LAMBERT
+famille_laporte,,x,,,,,Famille LAPORTE
+famille_leblanc,,x,,,,,Famille LEBLANC
+famille_leclerc,,x,,,,,Famille LECLERC
+famille_lecomte,,x,,,,,Famille LECOMTE
+famille_lejeune,,x,,,,,Famille LEJEUNE
+famille_lemaitre,,x,,,,,Famille LEMAITRE
+famille_leveque,,x,,,,,Famille LÉVÊQUE
+famille_louis,,x,,,,,Famille LOUIS
+famille_maillard,,x,,,,,Famille MAILLARD
+famille_marie,,x,,,,,Famille MARIE
+famille_martin,,x,,,,,Famille MARTIN
+famille_martinez,,x,,,,,Famille MARTINEZ
+famille_marty,,x,,,,,Famille MARTY
+famille_meunier,,x,,,,,Famille MEUNIER
+famille_meyer,,x,,,,,Famille MEYER
+famille_moreau,,x,,,,,Famille MOREAU
+famille_morel,,x,,,,,Famille MOREL
+famille_moulin,,x,,,,,Famille MOULIN
+famille_muller,,x,,,,,Famille MULLER
+famille_noel,,x,,,,,Famille NOEL
+famille_payet,,x,,,,,Famille PAYET
+famille_perrier,,x,,,,,Famille PERRIER
+famille_perrin,,x,,,,,Famille PERRIN
+famille_petit,,x,,,,,Famille PETIT
+famille_philippe,,x,,,,,Famille PHILIPPE
+famille_picard,,x,,,,,Famille PICARD
+famille_poirier,,x,,,,,Famille POIRIER
+famille_prevost,,x,,,,,Famille PREVOST
+famille_reynaud,,x,,,,,Famille REYNAUD
+famille_richard,,x,,,,,Famille RICHARD
+famille_roche,,x,,,,,Famille ROCHE
+famille_schmitt,,x,,,,,Famille SCHMITT
+famille_simon,,x,,,,,Famille SIMON
+# Pères,,,,,,,
+pere_arnaud,x,x,01/01/1945,0,Steven,ARNAUD,
+pere_aubry,x,x,01/01/1945,0,Steven,AUBRY,
+pere_bailly,x,x,01/01/1945,0,Steven,BAILLY,
+pere_benoit,x,x,01/01/1945,0,Steven,BENOIT,
+pere_bertin,x,x,01/01/1945,0,Steven,BERTIN,
+pere_bertrand,x,x,01/01/1945,0,Steven,BERTRAND,
+pere_besson,x,x,01/01/1945,0,Steven,BESSON,
+pere_blanchard,x,x,01/01/1945,0,Steven,BLANCHARD,
+pere_bonnet,x,x,01/01/1945,0,Steven,BONNET,
+pere_bouchet,x,x,01/01/1945,0,Steven,BOUCHET,
+pere_breton,x,x,01/01/1945,0,Steven,BRETON,
+pere_carre,x,x,01/01/1945,0,Steven,CARRE,
+pere_charles,x,x,01/01/1945,0,Steven,CHARLES,
+pere_chevallier,x,x,01/01/1945,0,Steven,CHEVALLIER,
+pere_clement,x,x,01/01/1945,0,Steven,CLEMENT,
+pere_collin,x,x,01/01/1945,0,Steven,COLLIN,
+pere_daniel,x,x,01/01/1945,0,Steven,DANIEL,
+pere_dufour,x,x,01/01/1945,0,Steven,DUFOUR,
+pere_dupuy,x,x,01/01/1945,0,Steven,DUPUY,
+pere_duval,x,x,01/01/1945,0,Steven,DUVAL,
+pere_etienne,x,x,01/01/1945,0,Steven,ETIENNE,
+pere_fernandez,x,x,01/01/1945,0,Steven,FERNANDEZ,
+pere_fournier,x,x,01/01/1945,0,Steven,FOURNIER,
+pere_germain,x,x,01/01/1945,0,Steven,GERMAIN,
+pere_gilbert,x,x,01/01/1945,0,Steven,GILBERT,
+pere_gillet,x,x,01/01/1945,0,Steven,GILLET,
+pere_guichard,x,x,01/01/1945,0,Steven,GUICHARD,
+pere_guillot,x,x,01/01/1945,0,Steven,GUILLOT,
+pere_guyot,x,x,01/01/1945,0,Steven,GUYOT,
+pere_hubert,x,x,01/01/1945,0,Steven,HUBERT,
+pere_huet,x,x,01/01/1945,0,Steven,HUET,
+pere_jacquet,x,x,01/01/1945,0,Steven,JACQUET,
+pere_joly,x,x,01/01/1945,0,Steven,JOLY,
+pere_lambert,x,x,01/01/1945,0,Steven,LAMBERT,
+pere_laporte,x,x,01/01/1945,0,Steven,LAPORTE,
+pere_leblanc,x,x,01/01/1945,0,Steven,LEBLANC,
+pere_leclerc,x,x,01/01/1945,0,Steven,LECLERC,
+pere_lecomte,x,x,01/01/1945,0,Steven,LECOMTE,
+pere_lejeune,x,x,01/01/1945,0,Steven,LEJEUNE,
+pere_lemaitre,x,x,01/01/1945,0,Steven,LEMAITRE,
+pere_leveque,x,x,01/01/1945,0,Steven,LÉVÊQUE,
+pere_louis,x,x,01/01/1945,0,Steven,LOUIS,
+pere_maillard,x,x,01/01/1945,0,Steven,MAILLARD,
+pere_marie,x,x,01/01/1945,0,Steven,MARIE,
+pere_martin,x,x,01/01/1945,0,Steven,MARTIN,
+pere_martinez,x,x,01/01/1945,0,Steven,MARTINEZ,
+pere_marty,x,x,01/01/1945,0,Steven,MARTY,
+pere_meunier,x,x,01/01/1945,0,Steven,MEUNIER,
+pere_meyer,x,x,01/01/1945,0,Steven,MEYER,
+pere_moreau,x,x,01/01/1945,0,Steven,MOREAU,
+pere_morel,x,x,01/01/1945,0,Steven,MOREL,
+pere_moulin,x,x,01/01/1945,0,Steven,MOULIN,
+pere_muller,x,x,01/01/1945,0,Steven,MULLER,
+pere_noel,x,x,01/01/1945,0,Steven,NOEL,
+pere_payet,x,x,01/01/1945,0,Steven,PAYET,
+pere_perrier,x,x,01/01/1945,0,Steven,PERRIER,
+pere_perrin,x,x,01/01/1945,0,Steven,PERRIN,
+pere_petit,x,x,01/01/1945,0,Steven,PETIT,
+pere_philippe,x,x,01/01/1945,0,Steven,PHILIPPE,
+pere_picard,x,x,01/01/1945,0,Steven,PICARD,
+pere_poirier,x,x,01/01/1945,0,Steven,POIRIER,
+pere_prevost,x,x,01/01/1945,0,Steven,PREVOST,
+pere_reynaud,x,x,01/01/1945,0,Steven,REYNAUD,
+pere_richard,x,x,01/01/1945,0,Steven,RICHARD,
+pere_roche,x,x,01/01/1945,0,Steven,ROCHE,
+pere_schmitt,x,x,01/01/1945,0,Steven,SCHMITT,
+pere_simon,x,x,01/01/1945,0,Steven,SIMON,
+# Mères,,,,,,,
+mere_arnaud,x,x,01/01/1945,1,Sophie,ARNAUD,
+mere_aubry,x,x,01/01/1945,1,Sophie,AUBRY,
+mere_bailly,x,x,01/01/1945,1,Sophie,BAILLY,
+mere_benoit,x,x,01/01/1945,1,Sophie,BENOIT,
+mere_bertin,x,x,01/01/1945,1,Sophie,BERTIN,
+mere_bertrand,x,x,01/01/1945,1,Sophie,BERTRAND,
+mere_besson,x,x,01/01/1945,1,Sophie,BESSON,
+mere_blanchard,x,x,01/01/1945,1,Sophie,BLANCHARD,
+mere_bonnet,x,x,01/01/1945,1,Sophie,BONNET,
+mere_bouchet,x,x,01/01/1945,1,Sophie,BOUCHET,
+mere_breton,x,x,01/01/1945,1,Sophie,BRETON,
+mere_carre,x,x,01/01/1945,1,Sophie,CARRE,
+mere_charles,x,x,01/01/1945,1,Sophie,CHARLES,
+mere_chevallier,x,x,01/01/1945,1,Sophie,CHEVALLIER,
+mere_clement,x,x,01/01/1945,1,Sophie,CLEMENT,
+mere_collin,x,x,01/01/1945,1,Sophie,COLLIN,
+mere_daniel,x,x,01/01/1945,1,Sophie,DANIEL,
+mere_dufour,x,x,01/01/1945,1,Sophie,DUFOUR,
+mere_dupuy,x,x,01/01/1945,1,Sophie,DUPUY,
+mere_duval,x,x,01/01/1945,1,Sophie,DUVAL,
+mere_etienne,x,x,01/01/1945,1,Sophie,ETIENNE,
+mere_fernandez,x,x,01/01/1945,1,Sophie,FERNANDEZ,
+mere_fournier,x,x,01/01/1945,1,Sophie,FOURNIER,
+mere_germain,x,x,01/01/1945,1,Sophie,GERMAIN,
+mere_gilbert,x,x,01/01/1945,1,Sophie,GILBERT,
+mere_gillet,x,x,01/01/1945,1,Sophie,GILLET,
+mere_guichard,x,x,01/01/1945,1,Sophie,GUICHARD,
+mere_guillot,x,x,01/01/1945,1,Sophie,GUILLOT,
+mere_guyot,x,x,01/01/1945,1,Sophie,GUYOT,
+mere_hubert,x,x,01/01/1945,1,Sophie,HUBERT,
+mere_huet,x,x,01/01/1945,1,Sophie,HUET,
+mere_jacquet,x,x,01/01/1945,1,Sophie,JACQUET,
+mere_joly,x,x,01/01/1945,1,Sophie,JOLY,
+mere_lambert,x,x,01/01/1945,1,Sophie,LAMBERT,
+mere_laporte,x,x,01/01/1945,1,Sophie,LAPORTE,
+mere_leblanc,x,x,01/01/1945,1,Sophie,LEBLANC,
+mere_leclerc,x,x,01/01/1945,1,Sophie,LECLERC,
+mere_lecomte,x,x,01/01/1945,1,Sophie,LECOMTE,
+mere_lejeune,x,x,01/01/1945,1,Sophie,LEJEUNE,
+mere_lemaitre,x,x,01/01/1945,1,Sophie,LEMAITRE,
+mere_leveque,x,x,01/01/1945,1,Sophie,LÉVÊQUE,
+mere_louis,x,x,01/01/1945,1,Sophie,LOUIS,
+mere_maillard,x,x,01/01/1945,1,Sophie,MAILLARD,
+mere_marie,x,x,01/01/1945,1,Sophie,MARIE,
+mere_martin,x,x,01/01/1945,1,Sophie,MARTIN,
+mere_martinez,x,x,01/01/1945,1,Sophie,MARTINEZ,
+mere_marty,x,x,01/01/1945,1,Sophie,MARTY,
+mere_meunier,x,x,01/01/1945,1,Sophie,MEUNIER,
+mere_meyer,x,x,01/01/1945,1,Sophie,MEYER,
+mere_moreau,x,x,01/01/1945,1,Sophie,MOREAU,
+mere_morel,x,x,01/01/1945,1,Sophie,MOREL,
+mere_moulin,x,x,01/01/1945,1,Sophie,MOULIN,
+mere_muller,x,x,01/01/1945,1,Sophie,MULLER,
+mere_noel,x,x,01/01/1945,1,Sophie,NOEL,
+mere_payet,x,x,01/01/1945,1,Sophie,PAYET,
+mere_perrier,x,x,01/01/1945,1,Sophie,PERRIER,
+mere_perrin,x,x,01/01/1945,1,Sophie,PERRIN,
+mere_petit,x,x,01/01/1945,1,Sophie,PETIT,
+mere_philippe,x,x,01/01/1945,1,Sophie,PHILIPPE,
+mere_picard,x,x,01/01/1945,1,Sophie,PICARD,
+mere_poirier,x,x,01/01/1945,1,Sophie,POIRIER,
+mere_prevost,x,x,01/01/1945,1,Sophie,PREVOST,
+mere_reynaud,x,x,01/01/1945,1,Sophie,REYNAUD,
+mere_richard,x,x,01/01/1945,1,Sophie,RICHARD,
+mere_roche,x,x,01/01/1945,1,Sophie,ROCHE,
+mere_schmitt,x,x,01/01/1945,1,Sophie,SCHMITT,
+mere_simon,x,x,01/01/1945,1,Sophie,SIMON,
+# Oncles,,,,,,,
+oncle_arnaud,x,x,01/01/1945,0,Balthazar,ARNAUD,
+oncle_aubry,x,x,01/01/1945,0,Balthazar,AUBRY,
+oncle_bailly,x,x,01/01/1945,0,Balthazar,BAILLY,
+oncle_benoit,x,x,01/01/1945,0,Balthazar,BENOIT,
+oncle_bertin,x,x,01/01/1945,0,Balthazar,BERTIN,
+oncle_bertrand,x,x,01/01/1945,0,Balthazar,BERTRAND,
+oncle_besson,x,x,01/01/1945,0,Balthazar,BESSON,
+oncle_blanchard,x,x,01/01/1945,0,Balthazar,BLANCHARD,
+oncle_bonnet,x,x,01/01/1945,0,Balthazar,BONNET,
+oncle_bouchet,x,x,01/01/1945,0,Balthazar,BOUCHET,
+oncle_breton,x,x,01/01/1945,0,Balthazar,BRETON,
+oncle_carre,x,x,01/01/1945,0,Balthazar,CARRE,
+oncle_charles,x,x,01/01/1945,0,Balthazar,CHARLES,
+oncle_chevallier,x,x,01/01/1945,0,Balthazar,CHEVALLIER,
+oncle_clement,x,x,01/01/1945,0,Balthazar,CLEMENT,
+oncle_collin,x,x,01/01/1945,0,Balthazar,COLLIN,
+oncle_daniel,x,x,01/01/1945,0,Balthazar,DANIEL,
+oncle_dufour,x,x,01/01/1945,0,Balthazar,DUFOUR,
+oncle_dupuy,x,x,01/01/1945,0,Balthazar,DUPUY,
+oncle_duval,x,x,01/01/1945,0,Balthazar,DUVAL,
+oncle_etienne,x,x,01/01/1945,0,Balthazar,ETIENNE,
+oncle_fernandez,x,x,01/01/1945,0,Balthazar,FERNANDEZ,
+oncle_fournier,x,x,01/01/1945,0,Balthazar,FOURNIER,
+oncle_germain,x,x,01/01/1945,0,Balthazar,GERMAIN,
+oncle_gilbert,x,x,01/01/1945,0,Balthazar,GILBERT,
+oncle_gillet,x,x,01/01/1945,0,Balthazar,GILLET,
+oncle_guichard,x,x,01/01/1945,0,Balthazar,GUICHARD,
+oncle_guillot,x,x,01/01/1945,0,Balthazar,GUILLOT,
+oncle_guyot,x,x,01/01/1945,0,Balthazar,GUYOT,
+oncle_hubert,x,x,01/01/1945,0,Balthazar,HUBERT,
+oncle_huet,x,x,01/01/1945,0,Balthazar,HUET,
+oncle_jacquet,x,x,01/01/1945,0,Balthazar,JACQUET,
+oncle_joly,x,x,01/01/1945,0,Balthazar,JOLY,
+oncle_lambert,x,x,01/01/1945,0,Balthazar,LAMBERT,
+oncle_laporte,x,x,01/01/1945,0,Balthazar,LAPORTE,
+oncle_leblanc,x,x,01/01/1945,0,Balthazar,LEBLANC,
+oncle_leclerc,x,x,01/01/1945,0,Balthazar,LECLERC,
+oncle_lecomte,x,x,01/01/1945,0,Balthazar,LECOMTE,
+oncle_lejeune,x,x,01/01/1945,0,Balthazar,LEJEUNE,
+oncle_lemaitre,x,x,01/01/1945,0,Balthazar,LEMAITRE,
+oncle_leveque,x,x,01/01/1945,0,Balthazar,LÉVÊQUE,
+oncle_louis,x,x,01/01/1945,0,Balthazar,LOUIS,
+oncle_maillard,x,x,01/01/1945,0,Balthazar,MAILLARD,
+oncle_marie,x,x,01/01/1945,0,Balthazar,MARIE,
+oncle_martin,x,x,01/01/1945,0,Balthazar,MARTIN,
+oncle_martinez,x,x,01/01/1945,0,Balthazar,MARTINEZ,
+oncle_marty,x,x,01/01/1945,0,Balthazar,MARTY,
+oncle_meunier,x,x,01/01/1945,0,Balthazar,MEUNIER,
+oncle_meyer,x,x,01/01/1945,0,Balthazar,MEYER,
+oncle_moreau,x,x,01/01/1945,0,Balthazar,MOREAU,
+oncle_morel,x,x,01/01/1945,0,Balthazar,MOREL,
+oncle_moulin,x,x,01/01/1945,0,Balthazar,MOULIN,
+oncle_muller,x,x,01/01/1945,0,Balthazar,MULLER,
+oncle_noel,x,x,01/01/1945,0,Balthazar,NOEL,
+oncle_payet,x,x,01/01/1945,0,Balthazar,PAYET,
+oncle_perrier,x,x,01/01/1945,0,Balthazar,PERRIER,
+oncle_perrin,x,x,01/01/1945,0,Balthazar,PERRIN,
+oncle_petit,x,x,01/01/1945,0,Balthazar,PETIT,
+oncle_philippe,x,x,01/01/1945,0,Balthazar,PHILIPPE,
+oncle_picard,x,x,01/01/1945,0,Balthazar,PICARD,
+oncle_poirier,x,x,01/01/1945,0,Balthazar,POIRIER,
+oncle_prevost,x,x,01/01/1945,0,Balthazar,PREVOST,
+oncle_reynaud,x,x,01/01/1945,0,Balthazar,REYNAUD,
+oncle_richard,x,x,01/01/1945,0,Balthazar,RICHARD,
+oncle_roche,x,x,01/01/1945,0,Balthazar,ROCHE,
+oncle_schmitt,x,x,01/01/1945,0,Balthazar,SCHMITT,
+oncle_simon,x,x,01/01/1945,0,Balthazar,SIMON,

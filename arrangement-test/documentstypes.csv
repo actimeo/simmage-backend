@@ -1,0 +1,86 @@
+# code,type name,individual name,aide_a_la_personne,aide_financiere_directe,decideur,droits_de_sejour,education,emploi,entretien,equipement_personnel,famille,hebergement,justice,pedagogie,suivi_administratif,projet,psychologie,restauration,sante,social,transport,mecs
+type1,Assurance  responsabilité civile,,,,,,,,,X,,,,,X,,,,,,,X
+type2,Attestation de sécurité sociale,,,,,,,,,,,,,,,,,,X,,,X
+type3,Attestations,,,,,,,,,,,,,,X,,,,,,,X
+type4,Attestations,,,,,,,,,,,,,X,,,,,,,,X
+type5,Attestations,,,,X,,,,,,,,,,,,,,,,,X
+type6,Attestations,,,,,,,X,,,,,,,,,,,,,,X
+type7,Attestations,,,,,,,,,,,X,,,,,,,,,,X
+type8,Attestations,,,,,,,,,,,,X,,,,,,,,,X
+type9,Attestations d'assurance,,,,,,,,,,,,,,X,,,,,,,X
+type10,Autorisation de droit à l'image,,,,,,,,,,X,,,,X,,,,,,,X
+type11,Autorisation de soin,,,,,,,,,,X,,,,X,,,,,,,X
+type12,Autorisation de vaccination,,,,,,,,,,X,,,,X,,,,,,,X
+type13,Autorisations,,,,,,,,,,,,X,,,,,,,,,X
+type14,Autorisations,,,,,,,X,,,,,,,,,,,,,,X
+type15,Autre,,,,,,X,,,,,,,,,,,,,,,X
+type16,Autre,,,,,,,,,,,,X,,,,,,,,,X
+type17,Autre,,,,,,,,,,,,,X,,,,,,,,X
+type18,Autre,,,,,,,,,,X,,,,,,,,,,,X
+type19,Autre,,,,X,,,,,,,,,,,,,,,,,X
+type20,Autre,,,,,,,,,,,,,,X,,,,,,,X
+type21,Autre,,,,,,,,,,,,,,,X,,,,,,X
+type22,Autre,,,,,,,,,,,,,,,,,,X,,,X
+type23,Autre,,,,,,,,,,,,,,,,,,,X,,X
+type24,Autre,,,,,,,X,,,,,,,,,,,,,,X
+type25,Bilan de séjours,,,,,,,,,,,,,,,,,,,X,,X
+type26,Bilan psychologique,,,,,,,,,,,,,,,,X,,,,,X
+type27,Brevets et diplômes,,,,,,,,,,,,,X,,,,,,,,X
+type28,Bulletins scolaires et relevés de notes,,,,,,,,,,,,,X,,,,,,,,X
+type29,Carnet de vaccination / carnet de santé,,,,,,,,,,,,,,X,,,,X,,,X
+type30,Carte vitale / CMU,,,,,,,,,,,,,,X,,,,X,,,X
+type31,Contrat caution clés,,,,,,,,,,,X,,,X,,,,,,,X
+type32,Contrat de séjour / DIPC,,,,,,,,,,X,,,,X,,,,,,,X
+type33,Contrat état des lieux entrée/sortie,,,,,,,,,,,X,,,X,,,,,,,X
+type34,Contrat Jeune Majeur,,,,X,,,,,,,,,,X,,,,,,,X
+type35,Contrats/Conventions,,,,,,,,,,,,X,,,,,,,,,X
+type36,Contrats de travail / Conventions,,,,,,,X,,,,,,,,,,,,,,X
+type37,Contrat sortie libre,,,,,,,,,,,,,,,,,,,X,,X
+type38,Contrat vie collective,,,,,,X,,,,,X,,,X,,,,,,,X
+type39,Convocation,,,,,,,,,,,,X,,,,,,,,,X
+type40,Convocation ASE ou TE,,,,X,,,,,,,,,,X,,,,,,,X
+type41,Courrier,,,,,,,,,,,,,X,,,,,,,,X
+type42,Courrier partenaire,,,,,,,,,,,,,,,X,,,,,,X
+type43,Courriers,,,,,,,,,,,,,,X,,,,,,,X
+type44,CR audience juge,,,,X,,,,,,,,,,X,,,,,,,X
+type45,CR entretien individuel,,,,,,X,,,,,,,,,X,,,,,,X
+type46,CR et rapports psychologiques,,,,,,,,,,,,,,,,X,,,,,X
+type47,CR médicaux,,,,,,,,,,,,,,,,,,X,,,X
+type48,CR réunion ASE,,,,X,,,,,,,,,,X,,,,,,,X
+type49,CR réunion d'équipe,,,,,,X,,,,,,,,X,X,,,,,,X
+type50,CR réunion enfants/adolescents,,,,,,,,,,,,,,,,,,,X,,X
+type51,CR réunion institutionnel,,,,,,X,,,,,,,,X,X,,,,,,X
+type52,Documents MDPH,,,,,,,,,,,,,,X,,,,X,,,X
+type53,Evaluation de projet,,,,,,,,,,,,,,,X,,,,,,X
+type54,Évaluation de stage,,,,,,,X,,,,,,,,,,,,,,X
+type55,Feuille d'imposition,,,,,,,,,,X,,,,,,,,,,,X
+type56,Fiche d'AP,,,,,,,,,,,,,,,,,,,,,X
+type57,Fiche d'audience,,,,X,,,,,,,,,,,,,,,,,X
+type58,Fiche de projet,,,,,,,,,,X,,,,,X,,,,,,X
+type59,Formulaire d'indications en matière d'alimentation,,,,,,,,,,,,,,,,,X,,,,X
+type60,"Génogrammes, analyses et hypothèses",,,,,,X,,,,X,,,,,,,,,,,X
+type61,Inscription club sportif,,,,,,,,,,,,,,,,,,,X,,X
+type62,Livret de famille,,,,,,,,,,X,,,,X,,,,,,,X
+type63,Notes de synthèse,,,,,,X,,,,,X,X,,,,,,X,X,,X
+type64,Ordonnances de placement,,,,X,,,,,,,,,,X,,,,,,,X
+type65,Pièces d'identité,,,,,X,,,,,,,,,X,,,,,,,X
+type66,Planning des services,,,,,,,,X,,,,,,,,,,,,,X
+type67,Planning des services moyens,,,,,,,,,,,,,,,,,,,,,X
+type68,Planning des services petits,,,,,,,,,,,,,,,,,,,,,X
+type69,Planning horaire,,,,,,,,,,,,,X,,,,,,,,X
+type70,Plannings horaires,,,,,,,X,,,,,,,,,,,,,,X
+type71,Prises en charge ASE,,,,X,,,,,,,,,,,,,,,,,X
+type72,Projet d'activité ou de transfert,,,,,,,,,,,,,,,,,,,X,,X
+type73,Projet pour l'Enfant (P.E.),,,,X,,,,,,,,,,,,,,,,,X
+type74,Rapport de situation ASE ou TE,,,,X,,,,,,,,,,X,X,,,,,,X
+type75,Rapport d'incident,,,,,,X,,,,,,,,,,,,,,,X
+type76,Rapport d'incident,,,,,,,,,,,,,X,,,,,,,,X
+type77,Rapport d'incident,,,,,,,,,,,X,,,,,,,,,,X
+type78,Rapport d'incident,,,,,,,,,,,,,,,,,,,X,,X
+type79,Rapport d'incident,,,,,,,X,,,,,,,,,,,,,,X
+type80,Rapports de synthèse,,,,X,,,,,,,,,,X,X,,,,,,X
+type81,Recherche de mineur en fugue,,,,,,,,,,,,,,X,,,,,,,X
+type82,RIB,,,,,,,,,,,,,,X,,,,,,,X
+type83,Suivi de traitements médicaux,,,,,,,,,,,,,,,,,,X,,,X
+type84,Suivi médical consultations extérieures,,,,,,,,,,,,,,,,,,X,,,X
+type85,Titres de séjour,,,,,X,,,,,,,,,,,,,,,,X
