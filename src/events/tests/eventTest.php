@@ -75,7 +75,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -115,7 +115,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     $resId = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -161,7 +161,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -197,7 +197,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->events->event_type_update_details($this->token, $ety_id, 'incident', $name, $indiv, array($top_id1, $top_id2), array($org));
 
-    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 
+    $id = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed', 
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -234,14 +234,14 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $bdate = '01/09/2016';    
     $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
 
-    $eve_id1 = self::$base->events->event_add($this->token, 'a title 1', $ety_id, 'standard', 
+    $eve_id1 = self::$base->events->event_add($this->token, 'a title 1', $ety_id, 'standard', 'confirmed', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
 					      false, null, null, null, 0,
 					      [ $top_id1, $top_id2 ], [ $dosId ], [], []
 					      );
 
-    $eve_id2 = self::$base->events->event_add($this->token, 'a title 2', $ety_id, 'standard', 
+    $eve_id2 = self::$base->events->event_add($this->token, 'a title 2', $ety_id, 'standard', 'confirmed', 
 					      '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					      null, null, null, null,
 					      false, null, null, null, 0,
@@ -287,7 +287,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '01/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'daily', 3, null, 5,
@@ -350,7 +350,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'monthly', null, 'day', 5,
@@ -411,7 +411,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
 
     self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
 
-    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $firstId = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					      '16/01/2016 00:00:00', '31/12/2016 00:00:00',
 					      null, null, null, null,
 					      true, 'monthly', null, 'weekday', 5,
@@ -487,35 +487,35 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
 					 );
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
 	  				 );
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
 					);
 
-    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($token1, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
 					 );
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
@@ -529,5 +529,79 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $list = self::$base->events->event_user_participant_list($this->token, json_encode($req));
 
     $this->assertEquals(4, count($list));
+  }
+
+  function testEventsReportList() {
+    $name = 'a event type';
+    $indiv = true;
+    $ety_id = self::$base->events->event_type_add($this->token, 'incident', $name, $indiv);
+
+    $top_name1 = 'topic 1';
+    $top_desc1 = 'topic 1 description';
+    $top_icon1 = 'health';
+    $top_color1 = '#000000';
+    $top_id1 = self::$base->organ->topic_add($this->token, $top_name1, $top_desc1, $top_icon1, $top_color1);
+
+    $top_name2 = 'topic 2';
+    $top_desc2 = 'topic 2 description';
+    $top_icon2 = 'health';
+    $top_color2 = '#000000';
+    $top_id2 = self::$base->organ->topic_add($this->token, $top_name2, $top_desc2, $top_icon2, $top_color2);
+
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016'; 
+    $dosId = self::$base->organ->dossier_add_individual($this->token, $fname, $lname, $bdate, 'male', false);
+
+    $par_id = self::$base->execute_sql("SELECT par_id FROM login.user WHERE usr_token = ".$this->token)[0]['par_id'];
+    $par_id1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
+    $par_id2 = self::$base->organ->participant_add($this->token, 'Marc', 'Antoine');
+
+    $resId1 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId2 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId3 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId4 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+
+    $eve_id1 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '01/01/2016 04:00:00',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
+					 );
+
+    $eve_id2 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '10/03/2016 00:00:00', '11/03/2016 02:00:00',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
+	  				 );
+
+    $eve_id3 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
+					 '06/05/2016 00:00:00', '06/05/2016 00:00:00',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
+					);
+
+    $eve_id4 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
+					 '01/01/2016 00:00:00', '01/01/2016 00:00:00',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
+					 );
+
+    $eve_id5 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '15/08/2016 10:00:00', '15/08/2016 15:00:00',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId1, $resId6 ]
+					 );
+
+    $list = self::$base->events->event_report_list($this->token, [ $eve_id1, $eve_id2, $eve_id3, $eve_id4, $eve_id5 ]);
+
+    $this->assertEquals($list[0]->total_hours, 35);
+    $this->assertEquals($list[0]->total_days, 2);
   }
 }

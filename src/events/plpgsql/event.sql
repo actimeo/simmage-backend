@@ -2,7 +2,8 @@ CREATE OR REPLACE FUNCTION events.event_add(
   prm_token integer, 
   prm_title text, 
   prm_ety_id integer, 
-  prm_duration events.event_duration, 
+  prm_duration events.event_duration,
+  prm_status events.event_status,
   prm_start_time timestamp with time zone, 
   prm_end_time timestamp with time zone, 
   prm_place text, 
@@ -49,6 +50,7 @@ BEGIN
       eve_title,
       ety_id,
       eve_duration,
+      eve_status,
       eve_start_time,
       eve_end_time,
       eve_place,
@@ -61,6 +63,7 @@ BEGIN
       prm_title,
       prm_ety_id,
       prm_duration,
+      prm_status,
       prm_start_time,
       prm_end_time,
       prm_place,
@@ -70,7 +73,7 @@ BEGIN
       author_id,
       CURRENT_TIMESTAMP
     ) RETURNING eve_id INTO new_id;
-    
+
     IF get_id = true THEN
       ret := new_id;
       get_id := false;
@@ -123,6 +126,7 @@ COMMENT ON FUNCTION events.event_add(
   prm_title text,
   prm_ety_id integer,
   prm_duration events.event_duration,
+  prm_status events.event_status,
   prm_start_time timestamp with time zone,
   prm_end_time timestamp with time zone,
   prm_place text,
@@ -300,6 +304,7 @@ CREATE OR REPLACE FUNCTION events.event_update(
   prm_title text,
   prm_ety_id integer,
   prm_duration events.event_duration,
+  prm_status events.event_status,
   prm_start_time timestamp with time zone,
   prm_end_time timestamp with time zone,
   prm_place text,
@@ -323,6 +328,7 @@ DECLARE
   topics integer[];
 BEGIN
   PERFORM login._token_assert(prm_token, null);
+
   IF NOT EXISTS (SELECT 1 FROM events.event WHERE eve_id = prm_eve_id) THEN
     RAISE EXCEPTION USING ERRCODE = 'no_data_found';
   END IF;
@@ -337,18 +343,20 @@ BEGIN
       eve_title = prm_title,
       ety_id = prm_ety_id,
       eve_duration = prm_duration,
+      eve_status = prm_status,
       eve_start_time = prm_start_time,
       eve_end_time = prm_end_time,
       eve_place = prm_place,
       eve_cost = prm_cost,
       eve_description = prm_description,
       eve_sumup = prm_sumup
-    WHERE eve_id = prm_eve_id;
+    WHERE eve_id = e_id;
 
     PERFORM events.event_set_topics(prm_token, prm_eve_id, topics);
     PERFORM events.event_set_dossiers(prm_token, prm_eve_id, prm_dossiers);
     PERFORM events.event_set_participants(prm_token, prm_eve_id, prm_participants);
     PERFORM events.event_set_resources(prm_token, prm_eve_id, prm_resources);
+
 END;
 $$;
 COMMENT ON FUNCTION events.event_update(
@@ -357,6 +365,7 @@ COMMENT ON FUNCTION events.event_update(
   prm_title text,
   prm_ety_id integer,
   prm_duration events.event_duration,
+  prm_status events.event_status,
   prm_start_time timestamp with time zone,
   prm_end_time timestamp with time zone,
   prm_place text,
@@ -371,7 +380,7 @@ COMMENT ON FUNCTION events.event_update(
   prm_topics integer[],
   prm_dossiers integer[],
   prm_participants integer[],
-  prm_resources integer[])
+  prm_resources integer[]) 
 IS 'Update an event';
 
 CREATE OR REPLACE FUNCTION events.event_topic_list(prm_token integer, prm_eve_id integer)
@@ -553,6 +562,7 @@ BEGIN
     CASE WHEN (req->>'ety_name') IS NULL THEN NULL ELSE ety_name END as ety_name,
     CASE WHEN (req->>'ety_category') IS NULL THEN NULL ELSE ety_category END as ety_category,
     CASE WHEN (req->>'eve_duration') IS NULL THEN NULL ELSE eve_duration END as eve_duration,
+    CASE WHEN (req->>'eve_status') IS NULL THEN NULL ELSE eve_status END as eve_status,
     CASE WHEN (req->>'eve_start_time') IS NULL THEN NULL ELSE eve_start_time END as eve_start_time,
     CASE WHEN (req->>'eve_end_time') IS NULL THEN NULL ELSE eve_end_time END as eve_end_time,
     CASE WHEN (req->>'eve_place') IS NULL THEN NULL ELSE eve_place END as eve_place,
@@ -663,3 +673,88 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION events.event_user_participant_list(prm_token integer, req json) IS 'Returns all events the user is supposed to attend';
+
+CREATE OR REPLACE FUNCTION events.event_in_view_report_list(prm_token integer, prm_evv_id integer, prm_grp_id integer)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN events.event_report_list(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT eve_id FROM events.event
+      INNER JOIN events.event_topic USING(eve_id)
+      INNER JOIN events.eventsview_topic USING(top_id)
+      INNER JOIN events.eventsview USING(evv_id)
+      INNER JOIN events.evet_dossier USING(eve_id)
+      INNER JOIN organ.dossiers_authorized_for_user(prm_token)
+	ON dossiers_authorized_for_user = event_dossier.dos_id
+      WHERE evv_id = prm_evv_id	AND
+	(prm_grp_id IS NULL OR
+	 prm_grp_id = ANY(SELECT grp_id FROM organ.dossier_assignment WHERE dossier_assignment.dos_id = event_dossier.dos_id))
+    )));
+END;
+$$;
+COMMENT ON FUNCTION events.event_in_view_report_list(prm_token integer, prm_evv_id integer, prm_grp_id integer) IS 'Returns the sum of hours and/or days of any type of events visible in an event view';
+
+CREATE OR REPLACE FUNCTION events.event_report_list(prm_token integer, prm_eve_ids integer[])
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret json;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT array_to_json(array_agg(row_to_json(d))) INTO ret
+  FROM (SELECT
+    ety_category as category,
+    ety_name as type,
+    ARRAY(SELECT top_name FROM organ.topic
+      INNER JOIN events.event_type_topic evt USING(top_id)
+      WHERE evt.ety_id = eve.ety_id) as topics,
+    count(eve_id) as total_events,
+    sum(CASE WHEN eve_end_time IS NULL THEN 1 ELSE 
+	(CASE WHEN eve_duration = 'allday' THEN 0
+	  ELSE (EXTRACT(EPOCH FROM eve_end_time - eve_start_time) / 3600)::integer END)
+	END) as total_hours,
+    sum(CASE WHEN eve_duration = 'allday' THEN 1 ELSE 0 END) as total_days
+    FROM events.event eve
+    LEFT JOIN events.event_type USING(ety_id)
+    WHERE eve_id = ANY(prm_eve_ids)
+    GROUP BY category, type, ety_id
+  ) d;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION events.event_report_list(prm_token integer, prm_eve_ids integer[]) IS 'Return the amount of hours and/or days of any type of events';
+
+CREATE OR REPLACE FUNCTION events.event_user_participant_report_list(prm_token integer)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  participant integer;
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  SELECT par_id INTO participant FROM login.user WHERE usr_token = prm_token;
+  RETURN events.event_report_list(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT eve_id FROM events.event
+      LEFT JOIN events.event_participant USING(eve_id)
+      WHERE eve_author = participant OR par_id = participant
+  )));
+END;
+$$;
+COMMENT ON FUNCTION events.event_user_participant_report_list(prm_token integer) IS 'REturns the sum of hours and/or days of any type of events where an user is participating or has created';
+
+CREATE OR REPLACE FUNCTION events.event_status_list()
+RETURNS SETOF events.event_status
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  RETURN QUERY SELECT unnest(enum_range(null::events.event_status));
+END;
+$$;
+COMMENT ON FUNCTION events.event_status_list() IS 'Returns the list of event statuses';

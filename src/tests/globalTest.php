@@ -32,6 +32,7 @@ class globalTest extends PHPUnit_Framework_TestCase {
 			 array('login', 'usergroup_topic_right_list'),
 			 array('documents', 'document_status_list'),
 			 array('events', 'event_duration_list'),
+			 array('events', 'event_status_list'),
 			 array('objectives', 'objective_status_list'),
 			 array('organ', '_participant_dossier_referee_list'),
 			 array('public', '_json_date_format'),

@@ -1,12 +1,16 @@
 CREATE TYPE events.event_duration
   AS ENUM ('standard', 'ponctual', 'allday');
 
+CREATE TYPE events.event_status
+  AS ENUM ('scheduled', 'confirmed', 'canceled');
+
 CREATE TABLE events.event (
   eve_id serial PRIMARY KEY,
   eve_title text NOT NULL,
   ety_id integer REFERENCES events.event_type,
   -- dates
   eve_duration events.event_duration NOT NULL DEFAULT 'standard',
+  eve_status events.event_status NOT NULL DEFAULT 'confirmed',
   eve_start_time timestamp with time zone NOT NULL,
   eve_end_time timestamp with time zone,
   -- for synchronization

@@ -211,35 +211,35 @@ class ResourceTest extends PHPUnit_Framework_TestCase {
     $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    $ide1 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $ide1 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
 					 );
 
-    $ide2 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $ide2 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
 					 );
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
 					 );
 
-    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
 					 );
 
-    $ide5 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard',
+    $ide5 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
 					 null, null, null, null,
 					 false, null, null, null, 0,

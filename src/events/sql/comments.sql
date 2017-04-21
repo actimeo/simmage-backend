@@ -20,6 +20,7 @@ COMMENT ON COLUMN events.event.eve_id IS '';
 COMMENT ON COLUMN events.event.eve_title IS '';
 COMMENT ON COLUMN events.event.ety_id IS '';
 COMMENT ON COLUMN events.event.eve_duration IS '';
+COMMENT ON COLUMN events.event.eve_status IS '';
 COMMENT ON COLUMN events.event.eve_start_time IS '';
 COMMENT ON COLUMN events.event.eve_end_time IS '';
 COMMENT ON COLUMN events.event.eve_mod_date IS '';
