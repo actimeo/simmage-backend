@@ -28,6 +28,8 @@ DECLARE
   loop_id integer;
   ret integer;
   st_date date;
+  st_time integer;
+  evt_duration integer;
   fdnm_date date;
   get_id boolean := true;
   topics integer[];
@@ -44,6 +46,12 @@ BEGIN
   END IF;
 
   SELECT par_id INTO author_id FROM login.user WHERE usr_token = prm_token;
+
+  IF prm_end_time IS null THEN
+    evt_duration := 3600;
+  ELSE
+    evt_duration := EXTRACT(EPOCH FROM (prm_end_time - prm_start_time));
+  END IF;
 
   WHILE loop_id < prm_occrepeat LOOP
     INSERT INTO events.event (
@@ -87,13 +95,14 @@ BEGIN
 
     IF prm_recurent THEN
       st_date := date (prm_start_time);
+      st_time := extract(EPOCH FROM (prm_start_time - st_date));
       CASE 
 	WHEN prm_occurence = 'daily' THEN
-	  prm_start_time := cast((st_date + prm_docctime) as text);
+	  prm_start_time := cast((st_date + prm_docctime * interval '1 day' + st_time * interval '1 second') as text);
 
 	WHEN prm_occurence = 'monthly' THEN
 	    IF prm_mocctime = 'day' THEN
-	      prm_start_time := cast((st_date + interval '1 month') as text);
+	      prm_start_time := cast((st_date + interval '1 month' + st_time * interval '1 second') as text);
 
 	    ELSIF prm_mocctime = 'weekday' THEN
 		-- next event is the Nth weekday of next month
@@ -102,6 +111,7 @@ BEGIN
 				    fdnm_date								  -- 1st day of the next month
 				    + (7 - extract(dow from fdnm_date) + extract(dow from st_date))::integer % 7  -- (7 - 1st weekday code next month + weekday code of start_date)  % 7
 				    + (ceil((date_part('day', st_date)) / 7) - 1)::integer * 7)		  -- (Nth weekday occurence of start_date month - 1) * 7
+				    + st_time * interval '1 second'
 				  as text);
 
 		IF date_part('day', st_date) > 28 THEN
@@ -113,6 +123,9 @@ BEGIN
 
 	    END IF;
       END CASE;
+      IF prm_end_time IS NOT NULL THEN
+	prm_end_time := cast((date(prm_start_time) + (evt_duration + st_time) * interval '1 second') as text);
+      END IF;
     END IF;
 
   END LOOP;
