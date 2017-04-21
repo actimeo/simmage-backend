@@ -50,6 +50,10 @@ class EventsTest extends PHPUnit_Framework_TestCase {
   {
     self::$base->rollback();
   }
+
+  public function testOk() {
+    $this->assertTrue(true);
+  }
   
 }
 ?>
