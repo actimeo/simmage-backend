@@ -350,7 +350,7 @@ BEGIN
       eve_cost = prm_cost,
       eve_description = prm_description,
       eve_sumup = prm_sumup
-    WHERE eve_id = e_id;
+    WHERE eve_id = prm_eve_id;
 
     PERFORM events.event_set_topics(prm_token, prm_eve_id, topics);
     PERFORM events.event_set_dossiers(prm_token, prm_eve_id, prm_dossiers);
@@ -672,7 +672,25 @@ BEGIN
       WHERE eve_author = participant OR par_id = participant)), req);
 END;
 $$;
-COMMENT ON FUNCTION events.event_user_participant_list(prm_token integer, req json) IS 'Returns all events the user is supposed to attend';
+COMMENT ON FUNCTION events.event_user_participant_list(prm_token integer, req json) IS 'Returns all events the user is supposed to attend or has created';
+
+CREATE OR REPLACE FUNCTION events.event_dossier_event_list(prm_token integer, prm_dos_id integer, prm_evv_id integer, req json)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN events.event_json(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT eve_id FROM events.event_dossier
+      INNER JOIN events.event_topic USING(eve_id)
+      INNER JOIN events.eventsview_topic USING(top_id)
+      WHERE evv_id = prm_evv_id
+      AND dos_id = prm_dos_id
+  )), req);
+END;
+$$;
+COMMENT ON FUNCTION events.event_dossier_event_list(prm_token integer, prm_dos_id integer, prm_evv_id integer, req json) IS 'Returns all events that concerns a dossier for a specific view';
 
 CREATE OR REPLACE FUNCTION events.event_in_view_report_list(prm_token integer, prm_evv_id integer, prm_grp_id integer)
 RETURNS JSON
@@ -686,7 +704,7 @@ BEGIN
       INNER JOIN events.event_topic USING(eve_id)
       INNER JOIN events.eventsview_topic USING(top_id)
       INNER JOIN events.eventsview USING(evv_id)
-      INNER JOIN events.evet_dossier USING(eve_id)
+      INNER JOIN events.event_dossier USING(eve_id)
       INNER JOIN organ.dossiers_authorized_for_user(prm_token)
 	ON dossiers_authorized_for_user = event_dossier.dos_id
       WHERE evv_id = prm_evv_id	AND
@@ -742,11 +760,29 @@ BEGIN
   RETURN events.event_report_list(prm_token, (SELECT ARRAY(
     SELECT DISTINCT eve_id FROM events.event
       LEFT JOIN events.event_participant USING(eve_id)
-      WHERE eve_author = participant OR par_id = participant
+      WHERE par_id = participant
   )));
 END;
 $$;
 COMMENT ON FUNCTION events.event_user_participant_report_list(prm_token integer) IS 'REturns the sum of hours and/or days of any type of events where an user is participating or has created';
+
+CREATE OR REPLACE FUNCTION events.event_dossier_event_report_list(prm_token integer, prm_dos_id integer, prm_evv_id integer)
+RETURNS JSON
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, null);
+  RETURN events.event_report_list(prm_token, (SELECT ARRAY(
+    SELECT DISTINCT eve_id FROM events.event_dossier
+      INNER JOIN events.event_topic USING(eve_id)
+      INNER JOIN events.eventsview_topic USING(top_id)
+      WHERE evv_id = prm_evv_id
+      AND dos_id = prm_dos_id
+  )));
+END;
+$$;
+COMMENT ON FUNCTION events.event_dossier_event_report_list(prm_token integer, prm_dos_id integer, prm_evv_id integer) IS 'Returns the sum of hours and/or days of any type of events that concerns a dossier';
 
 CREATE OR REPLACE FUNCTION events.event_status_list()
 RETURNS SETOF events.event_status

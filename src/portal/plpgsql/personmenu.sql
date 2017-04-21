@@ -62,6 +62,21 @@ $$;
 COMMENT ON FUNCTION personmenu_list(prm_token integer, prm_pse_id integer) 
 IS 'List the menu entries in a section of an entity view';
 
+CREATE OR REPLACE FUNCTION portal.personmenu_get(prm_token integer, prm_pme_id integer)
+RETURNS portal.personmenu
+LANGUAGE plpgsql
+STABLE
+AS $$
+DECLARE
+  ret portal.personmenu;
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  SELECT * INTO ret FROM portal.personmenu WHERE pme_id = prm_pme_id;
+  RETURN ret;
+END;
+$$;
+COMMENT ON FUNCTION portal.personmenu_get(prm_token integer, prm_pme_id integer) IS 'Returns informations about a personmenu';
+
 CREATE OR REPLACE FUNCTION personmenu_rename(prm_token integer, prm_id integer, prm_name text)
 RETURNS void
 LANGUAGE plpgsql

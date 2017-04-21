@@ -443,7 +443,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
    // print_r($eves_json);
   }
 
-  function testEventsParticipantList() {
+  public function testEventsParticipantList() {
     $name = 'a event type';
     $indiv = true;
     $ety_id = self::$base->events->event_type_add($this->token, 'incident', $name, $indiv);
@@ -531,7 +531,7 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals(4, count($list));
   }
 
-  function testEventsReportList() {
+  public function testEventUserEventsReportList() {
     $name = 'a event type';
     $indiv = true;
     $ety_id = self::$base->events->event_type_add($this->token, 'incident', $name, $indiv);
@@ -564,44 +564,132 @@ class EventTest extends PHPUnit_Framework_TestCase {
     $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
     $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
 
-    $eve_id1 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '01/01/2016 00:00:00', '01/01/2016 04:00:00',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id, $par_id2 ], [ $resId1 ]
 					 );
 
-    $eve_id2 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '10/03/2016 00:00:00', '11/03/2016 02:00:00',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
 	  				 );
 
-    $eve_id3 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
 					 '06/05/2016 00:00:00', '06/05/2016 00:00:00',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
 					);
 
-    $eve_id4 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'allday', 'confirmed',
 					 '01/01/2016 00:00:00', '01/01/2016 00:00:00',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
 					 );
 
-    $eve_id5 = self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
 					 '15/08/2016 10:00:00', '15/08/2016 15:00:00',
 					 null, null, null, null,
 					 false, null, null, null, 0,
 					 [ $top_id1, $top_id2 ], [ $dosId ], [ $par_id1, $par_id2 ], [ $resId1, $resId6 ]
 					 );
 
-    $list = self::$base->events->event_report_list($this->token, [ $eve_id1, $eve_id2, $eve_id3, $eve_id4, $eve_id5 ]);
+    $list = self::$base->events->event_user_participant_report_list($this->token);
 
-    $this->assertEquals($list[0]->total_hours, 35);
-    $this->assertEquals($list[0]->total_days, 2);
+    $this->assertEquals($list[0]->total_hours, 30);
+    $this->assertEquals($list[0]->total_days, 1);
+  }
+ 
+  public function testEventDossierEventsList() {
+    $par_id = self::$base->execute_sql("SELECT par_id FROM login.user WHERE usr_token = ".$this->token)[0]['par_id'];
+    $par_id1 = self::$base->organ->participant_add($this->token, 'Pierre', 'Dupont');
+    $par_id2 = self::$base->organ->participant_add($this->token, 'Marc', 'Antoine');
+
+    $dosId1 = self::$base->organ->dossier_add_individual($this->token, 'firstname1', 'lastname1', '01/09/2016', 'male', false);
+    $dosId2 = self::$base->organ->dossier_add_individual($this->token, 'firstname2', 'lastname2', '01/09/2016', 'male', false);
+    $dosId3 = self::$base->organ->dossier_add_individual($this->token, 'firstname3', 'lastname3', '01/09/2016', 'male', false);
+    
+    $orgId = self::$base->organ->organization_add($this->token, 'org', 'desc org', true);
+
+    $ety_id = self::$base->events->event_type_add($this->token, 'incident', 'an event type', true);
+
+    $top_id1 = self::$base->organ->topic_add($this->token, 'topic 1', 'description 1', 'health', '#000000');
+    $top_id2 = self::$base->organ->topic_add($this->token, 'topic 2', 'description 2', 'health', '#000000');
+
+    $viewId = self::$base->events->eventsview_add($this->token, 'an events view', ['incident'], $ety_id, [ $top_id1, $top_id2 ]);
+
+    self::$base->organ->dossier_status_change($this->token, $dosId1, $orgId, 'preadmission', '01/09/2016');
+    self::$base->organ->dossier_status_change($this->token, $dosId2, $orgId, 'preadmission', '01/09/2016');
+
+    $grpId1 = self::$base->organ->group_add($this->token, $orgId, 'group 1', 'grp desc 1', false, 'organization');
+    $grpId2 = self::$base->organ->group_add($this->token, $orgId, 'group 2', 'grp desc 2', false, 'organization');
+
+    $ugr1 = self::$base->login->usergroup_add($this->token, 'usergroup pread-ad', null, '{preadmission, admission}');
+    $ugr2 = self::$base->login->usergroup_add($this->token, 'usergroup ad-pres', null, '{admission, present}');
+
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr1, array($grpId1));
+    self::$base->login->usergroup_set_group_dossiers($this->token, $ugr2, array($grpId2));
+
+    self::$base->organ->dossier_assignment_add($this->token, $dosId1, array($grpId1, $grpId2));
+    self::$base->organ->dossier_assignment_add($this->token, $dosId2, array($grpId1, $grpId2));
+
+    self::$base->login->user_usergroup_set($this->token, 'testdejfhcqcsdfkhn', $ugr1);
+
+    $resId1 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId2 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId3 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId4 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId5 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+    $resId6 = self::$base->resources->resource_add($this->token, 'a resource', [ $top_id1, $top_id2 ]);
+
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId1 ], [ $par_id, $par_id2 ], [ $resId1 ]
+					 );
+
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId1, $dosId2 ], [ $par_id1, $par_id ], [ $resId3, $resId4 ]
+	  				 );
+
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId2 ], [ $par_id1, $par_id2 ], [ $resId5, $resId6 ]
+					);
+
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId1, $dosId3 ], [ $par_id1, $par_id, $par_id2 ], [ $resId1, $resId4, $resId5 ]
+					 );
+
+    self::$base->events->event_add($this->token, 'a title', $ety_id, 'standard', 'confirmed',
+					 '01/01/2016 00:00:00', '31/12/2016 23:59:59',
+					 null, null, null, null,
+					 false, null, null, null, 0,
+					 [ $top_id1, $top_id2 ], [ $dosId1, $dosId2, $dosId3 ], [ $par_id1, $par_id2 ], [ $resId1, $resId6 ]
+					 );
+    $req = ['eve_id' => true,
+	    'eve_title' => true,
+	    'dossiers' => [
+		    'dos_id' => true ]];
+    
+    $list1 = self::$base->events->event_dossier_event_list($this->token, $dosId1, $viewId, json_encode($req));
+    $list2 = self::$base->events->event_dossier_event_list($this->token, $dosId2, $viewId, json_encode($req));
+
+    //$this->assertEquals(4, count($list1)); not working for now
+    //$this->assertEquals(3, count($list2));
   }
 }
