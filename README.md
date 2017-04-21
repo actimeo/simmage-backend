@@ -52,4 +52,8 @@ $ sudo su postgres -c ./scripts/update.sh
 ./vendor/bin/phpunit --stop-on-error src/
 ```
 
-.
+## Import arrangement
+
+```sh
+./scripts/import.php /path/to/arrangement/directory
+```
