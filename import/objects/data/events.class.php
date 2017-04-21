@@ -15,13 +15,14 @@ class VariationEvents extends iVariation {
     $type = $line[1];
     $ety_id = $deps['eventstypes'][$type];
     $duration_type = $line[2];
-    $start_time = $line[3];
-    $end_time = $line[4];
-    $place = $line[5];
-    $cost = $line[6];
-    $description = $line[7];
-    $sumup = $line[8];
-    $dossiers = $line[9];
+    $status = $line[3];
+    $start_time = $line[4];
+    $end_time = $line[5];
+    $place = $line[6];
+    $cost = $line[7];
+    $description = $line[8];
+    $sumup = $line[9];
+    $dossiers = $line[10];
 
     $topics_selected = array_slice($line, 10, count($deps['topics']));
     $topics_headers = array_slice($this->headers, 10, count($deps['topics']));
@@ -34,7 +35,7 @@ class VariationEvents extends iVariation {
       $dos_ids[] = $deps['data/dossiers'][$d];
     }
 
-    $base->events->event_add($token, $title, $ety_id, $duration_type, 
+    $base->events->event_add($token, $title, $ety_id, $duration_type, $status,
 			     $start_time, $end_time, $place, $cost, 
 			     $description, $sumup,
 			     false, null, null, null, 0,
