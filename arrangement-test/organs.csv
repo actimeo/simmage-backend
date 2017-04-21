@@ -1,0 +1,17 @@
+# code,name,description,internal(x)
+# internal ,,,
+mecs,MECS,Établissement,x
+# external,,,
+tribunal1,Tribunal pour enfants 1,Tribunal pour enfants 1,
+tribunal2,Tribunal pour enfants 2,Tribunal pour enfants 2,
+tribunal3,Tribunal pour enfants 3,Tribunal pour enfants 3,
+ase,ASE,ASE,
+prefecture,Préfecture,Préfecture,
+lycee1,Lycée 1,Lycée 1,
+lycee2,Lycée 2,Lycée 2,
+college1,Collège 1,Collège 1,
+college2,Collège 2,Collège 2,
+ecole1,École primaire 1,École primaire 1,
+ecole2,École primaire 2,École primaire 2,
+docteur1,Cabinet docteur 1,Cabinet docteur 1,
+docteur2,Cabinet docteur 2,Cabinet docteur 2,

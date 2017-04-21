@@ -1,0 +1,15 @@
+# name,aide_a_la_personne,aide_financiere_directe,decideur,droits_de_sejour,education,emploi,entretien,equipement_personnel,famille,hebergement,justice,pedagogie,suivi_administratif,projet,psychologie,restauration,sante,social,transport
+#,topics →,,,,,,,,,,,,,,,,,,← topics
+Voiture,,,,,,,,,,,,,,,,,,,x
+Minibus,,,,,,,,,,,,,,,,,,,x
+Rétro-projecteur 1,,,,,x,x,,,,,,x,,,,,,,
+Rétro-projecteur 2,,,,,x,x,,,,,,x,,,,,,,
+Rétro-projecteur 3,,,,,x,x,,,,,,x,,,,,,,
+Rétro-projecteur 4,,,,,x,x,,,,,,x,,,,,,,
+Béquilles 1,,,,,,,,,,,,,,,,,x,,
+Béquilles 2,,,,,,,,,,,,,,,,,x,,
+Matériel nettoyage 1,,,,,,,x,,,,,,,,,,,,
+Matériel nettoyage 2,,,,,,,x,,,,,,,,,,,,
+Matériel nettoyage 3,,,,,,,x,,,,,,,,,,,,
+Ballon de foot,,,,,,,,,,,,,,,,,,x,
+Ballon de rugby,,,,,,,,,,,,,,,,,,x,

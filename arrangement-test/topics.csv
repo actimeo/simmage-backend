@@ -1,0 +1,20 @@
+# code,name,description,icon,color
+education,Éducatif,Accompagnement éducatif,pedagogy,#F44336
+aide_financiere_directe,Budget,Budget et aides,financer,#E91E63
+pedagogie,Enseignement,Enseignement et formation,education,#9C27B0
+droits_de_sejour,État civil,Etat civil et droits de séjour,residence_right,#673AB7
+famille,Famille,Famille tuteur et parrainage,family,#3F51B5
+aide_a_la_personne,Hygiène,Hygiène corporelle,shower,#2196F3
+justice,Justice,Justice,justice,#03A9F4
+hebergement,Logement,Logement collectif ou individuel,lodging,#00BCD4
+decideur,Placement,Mesures de placement,decisionmaker,#009688
+entretien,Participation aux services,Participation aux services,housekeeping,#4CAF50
+suivi_administratif,Suivi administratif,Suivi administratif,support,#8BC34A
+projet,Projet Individuel,Projet Individuel,project,#CDDC39
+psychologie,Psychologie,Psychologie,psychology,#FFEB38
+restauration,Restauration et alimentation,Restauration et alimentation,catering,#FFC107
+emploi,Stages et apprentissage,Stages et apprentissage,employment,#FF9800
+sante,Suivi médical,Suivi médical,medical_care,#FF5722
+transport,Transport,Transport,transport,#795548
+equipement_personnel,Vêture et autres fournitures,Vêture et autres fournitures,equipment,#9E9E9E
+social,Vie sociale loisirs et séjours,Vie sociale loisirs et séjours,entertainment,#607D8B

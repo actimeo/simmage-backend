@@ -1,0 +1,9 @@
+# code,name,preadmission,admission,present,left,encadrement,educateur,aide_a_la_personne,aide_financiere_directe,decideur,droits_de_sejour,education,emploi,entretien,equipement_personnel,famille,hebergement,justice,pedagogie,suivi_administratif,projet,psychologie,restauration,sante,social,transport,mecs_pavillon1,mecs_pavillon2,mecs_appartements,mecs_suivi_administratif,mecs_suivi_psy
+#,,Dossier statuses →,,,,All portals →,,All topics →,,,,,,,,,,,,,,,,,,,Some groups →,,,,
+educateurs_pavillon1,Éducateurs Pavillon 1,,x,x,,,x,event_read;event_add,,,,x,,event_read;event_add,x,,x,,x,,,,x,,x,,x,x,,,
+educateurs_pavillon2,Éducateurs Pavillon 2,,x,x,,,x,event_read;event_add,,,,x,,event_read;event_add,x,,x,,x,,,,x,,x,,x,x,,,
+educateurs_appartements,Éducateurs Appartements,,x,x,,,x,event_read;event_add,,,,x,,event_read;event_add,x,,x,,x,,,,x,,x,,,,x,,
+chef_service_educatif,Chef de service éducatif,x,x,x,x,x,,event_read;event_add,,,,x,,event_read;event_add,x,,x,,x,,,,x,,x,,x,x,x,,
+administration,Administration,x,x,x,x,x,,,,,,,,,,,,,,x,,,,,,,,,,x,
+psychologues,Psychologues,x,x,x,,x,,,,,,,,,,,,,,,,x,,,,,,,,,x
+direction,Direction,x,x,x,x,x,,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,,,,x,

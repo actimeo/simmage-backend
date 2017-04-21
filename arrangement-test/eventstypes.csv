@@ -1,0 +1,250 @@
+# event type code,name,category,individual name,aide_a_la_personne,aide_financiere_directe,decideur,droits_de_sejour,education,emploi,entretien,equipement_personnel,famille,hebergement,justice,pedagogie,suivi_administratif,projet,psychologie,restauration,sante,social,transport,mecs
+eventtype1,Absence transport,incident,,,,,,,,,,,,,,,,,,,,X,X
+eventtype2,Absentéisme,incident,X,,,,,,X,,,,,,X,,,,,,,,X
+eventtype3,Accident,incident,,,,,,,,,,,,,,,,,,X,,,X
+eventtype4,Accident de travail,incident,X,,,,,,X,,,,,,,,,,,X,,,X
+eventtype5,Atteinte à la vie privée,incident,X,,,,,X,,,,,,,,,,,,,X,,X
+eventtype6,* Autre,incident,X,,,,,,,,,,,,,,,,X,,,,X
+eventtype7,* Autre,incident,X,,,,,,,,,,X,,,,,,,,,,X
+eventtype8,* Autre,incident,X,,,,,,,,,X,,,,,,,,,,,X
+eventtype9,* Autre,incident,X,,,,,,X,,,,,,,,,,,,,,X
+eventtype10,* Autre,incident,X,X,,,,,,,,,,,,,,,,,,,X
+eventtype11,* Autre,incident,X,,,,,,,,,,,,,,,,,,X,,X
+eventtype12,* Autre,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype13,* Autre,incident,X,,,,,,,,,,,,,,,,,,,,X
+eventtype14,* Autre,incident,X,,,,,,,X,,,,,,,,,,,,,X
+eventtype15,* Autre,incident,,,,,,,,,,,,,,,,,,,,,X
+eventtype16,* Autre,incident,X,,,,,,,,,,,X,,,,,,,,,X
+eventtype17,* Autre,incident,X,,,,,,,,,,X,,,,,,,,,,X
+eventtype18,Blessure,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype19,Chute,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype20,Cigarette,incident,,,,,,X,,,,,,,,,,,,,X,,X
+eventtype21,Consommation de stupéfiants,incident,X,,,,,X,,,,,,,,,,,,X,X,,X
+eventtype22,Crampes musculaires,incident,,,,,,,,,,,,,,,,,,X,,,X
+eventtype23,Crise cardiaque,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype24,Crise d'asthme,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype25,Crise de nerfs,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype26,Crise d'épilepsie,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype27,Défaut de titre de transport,incident,,,,,,X,,,,,,,,,,,,,,X,X
+eventtype28,Dégât des eaux,incident,,,,,,,,,,,X,,,,,,,,,,X
+eventtype29,Dégradation d'équipement,incident,X,,,,,X,,,X,,,,,,,,,,,,X
+eventtype30,Délits dans environnement scolaire,incident,,,,,,X,,,,,,X,X,,,,,,,,X
+eventtype31,Destruction de biens involontaire (fournitures),incident,,,,,,,,,X,,,,,,,,,,,,X
+eventtype32,Destruction de biens involontaire (logement),incident,,,,,,,,,,,X,,,,,,,,,,X
+eventtype33,Destruction de biens volontaire (fournitures),incident,,,,,,,,,X,,,,,,,,,,,,X
+eventtype34,Destruction de biens volontaire (logement),incident,,,,,,,,,,,X,,,,,,,,,,X
+eventtype35,Détérioration de matériel,incident,X,,,,,,X,,,,,,,,,,,,,,X
+eventtype36,Dommage au véhicule,incident,X,,,,,X,,,,,,,,,,,,,,X,X
+eventtype37,Dommage aux biens personnels,incident,X,,,,,,,,X,,,,,,,,,,X,,X
+eventtype38,Dommage aux locaux ou au matériel,incident,X,,,,,X,,,,,,,,,,,,,X,,X
+eventtype39,Exclusion scolaire,incident,,,,,,,,,,,,,X,,,,,,,,X
+eventtype40,Fugue,incident,X,,,,,X,,,,,,,X,,,,,,X,,X
+eventtype41,Incendie,incident,X,,,,,,,,,,X,,,,,,,,,,X
+eventtype42,* Incident (sans autre indication),incident,,,,,,,,,,,,,,,,,,,,,X
+eventtype43,* Incident (sans autre indication),incident,,,,,,,,,,,,,,,,,,,,,X
+eventtype44,* Incident (sans autre indication),incident,,,,,,,,,,,,,,,,,,,,,X
+eventtype45,Incivilités (stage et apprentissage),incident,,,,,,,X,,,,,,,,,,,,,,X
+eventtype46,Incivilités (vie sociale),incident,,,,,,,,,,,,,,,,,,,,,X
+eventtype47,Insalubrité,incident,,,,,,,,X,,,X,,,,,,,,,,X
+eventtype48,Maladie,incident,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype49,Manquement majeur au réglement,incident,,,,,,X,,,,,,,,,,,,,X,,X
+eventtype50,Mise à pied,incident,,,,,,,X,,,,,,,,,,,,,,X
+eventtype51,Nuisance sonore,incident,,,,,,,,,,,X,,,,,,,,,,X
+eventtype52,Port d'arme à feu,incident,X,,,,,X,,,,,,X,X,,,,,,X,,X
+eventtype53,Port d'arme blanche,incident,X,,,,,X,,,,,,,X,,,,,,X,,X
+eventtype54,Racket,incident,X,,,,,,,,,,,X,X,,,,,,X,,X
+eventtype55,Refus de participer,incident,,,,,,,,X,,,,,,,,,,,,,X
+eventtype56,Refus de s'alimenter,incident,,,,,,,,,,,,,,,,,X,,,,X
+eventtype57,Renvoi,incident,,,,,,,X,,,,,,,,,,,,,,X
+eventtype58,Retard transport,incident,,,,,,,,,,,,,,,,,,,,X,X
+eventtype59,retenues,incident,,,,,,,,,,,,,X,,,,,,,,X
+eventtype60,Suivi régulier,incident,,,,,,,,,,,,,,,,,,X,,,X
+eventtype61,Trafic de stupéfiants,incident,X,,,,,X,,,,,,X,,,,,,,X,,X
+eventtype62,Troubles alimentaires,incident,,,,,,,,,,,,,,,,,X,X,,,X
+eventtype63,Violence physique,incident,X,,,,,X,X,,,,,,X,,,,,,X,X,X
+eventtype64,Violence sexuelle,incident,X,,,,,X,,,,,,X,X,,,,,,X,,X
+eventtype65,Violence verbale,incident,X,,,,,X,X,,,,,,X,,,,,,X,X,X
+eventtype66,Vol et vol aggravé,incident,X,,,,,X,,,,,,X,X,,,,,,X,,X
+eventtype67,Accessoires de toilette,expense,,X,,,,,,,,,,,,,,,,,,,X
+eventtype68,Ameublement et décoration,expense,,,,,,,,,X,,X,,,,,,,,,,X
+eventtype69,Ammende,expense,,,,,,X,,,,,,,,,,,,,,,X
+eventtype70,Appareils électroménagers,expense,,,,,,,,,,,X,,,,,,,,,,X
+eventtype71,Articles de ménage en textile,expense,,,,,,,,,,,X,,,,,,,,,,X
+eventtype72,* Autre,expense,X,,,,,,,,,,,,,,,,,,X,,X
+eventtype73,* Autre,expense,X,,,,,,,,,,,,,,,,X,,,,X
+eventtype74,* Autre,expense,X,,,,,,,,,X,,,,,,,,,,,X
+eventtype75,* Autre,expense,X,,,,,,,,,,X,,,,,,,,,,X
+eventtype76,* Autre,expense,X,,,,,,,,,,,,X,,,,,,,,X
+eventtype77,* Autre,expense,X,X,,,,,,,,,,,,,,,,,,,X
+eventtype78,* Autre,expense,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype79,* Autre,expense,X,,,,,X,,,,,,,,,,,,,,,X
+eventtype80,Cadeaux,expense,,,,,,,,,X,,,,,,,,,,,,X
+eventtype81,Coiffeur,expense,,X,,,,,,,,,,,,,,,,,,,X
+eventtype82,Equipement de transport,expense,,,,,,,,,,,,,,,,,,,,X,X
+eventtype83,Equipement professionnel,expense,,,,,,,X,,,,,,,,,,,,,,X
+eventtype84,Equipement sportif,expense,,,,,,,,,,,,,,,,,,,X,,X
+eventtype85,Fournitures scolaires,expense,,,,,,,,,,,,,X,,,,,,,,X
+eventtype86,Frais de sorties scolaires,expense,,,,,,,,,,,,,X,,,,,,X,,X
+eventtype87,Frais de transport (enseignement),expense,,,,,,,,,,,,,X,,,,,,,X,X
+eventtype88,Frais de transport (famille),expense,,,,,,,,,,X,,,,,,,,,,X,X
+eventtype89,Frais de transport (social),expense,,,,,,,,,,,,,,,,,,,X,X,X
+eventtype90,Frais de transport (stage et apprentissage),expense,,,,,,,X,,,,,,,,,,,,,X,X
+eventtype91,Frais de voyages et séjours,expense,,,,,,,,,,,,,,,,,,,X,,X
+eventtype92,Frais d'inscription scolaire,expense,,,,,,,,,,,,,X,,,,,,,,X
+eventtype93,Loyer,expense,,,,,,,,,,,X,,,,,,,,,,X
+eventtype94,Multimédia,expense,,,,,,,,,X,,,,,,,,,,,,X
+eventtype95,Optique,expense,,,,,,,,,,,,,,,,,,X,,,X
+eventtype96,Orthèses,expense,,,,,,,,,,,,,,,,,,X,,,X
+eventtype97,Petit matériel et pansements,expense,,,,,,,,,,,,,,,,,,X,,,X
+eventtype98,Pièces d'identité,expense,,,,,X,,,,,,,,,,,,,,,,X
+eventtype99,Produits alimentaires,expense,,,,,,,,,,,,,,,,,X,,,,X
+eventtype100,Produits d'entretien,expense,,,,,,,,,X,,X,,,,,,,,,,X
+eventtype101,Produits d'hygiène,expense,,X,,,,,,,,,,,,,,,,,,,X
+eventtype102,Prothèses,expense,,,,,,,,,,,,,,,,,,X,,,X
+eventtype103,Réparation de chambre,expense,,,,,,,,,,,X,,,,,,,,,,X
+eventtype104, Réparation et remboursement,expense,,,,,,X,,,,,,,,,,,,,,,X
+eventtype105,Service de restauration,expense,,,,,,,,,,,,,,,,,X,,,,X
+eventtype106,Tickets et inscriptions à activités,expense,,,,,,,,,,,,,,,,,,,X,,X
+eventtype107,Ustensiles de cuisine,expense,,,,,,,,,,,X,,,,,,,,,,X
+eventtype108,Vêtements et chaussures,expense,,,,,,,,,X,,,,,,,,,,,,X
+eventtype109,Achat de fournitures scolaires,meeting,,,,,,,,,X,,,,X,,,,,,,,X
+eventtype110,Achat de produits d'hygiène,meeting,,X,,,,,,,X,,,,,,,,,,,,X
+eventtype111,Achat de vêture,meeting,,X,,,,,,,X,,,,,,,,,,,,X
+eventtype112,Aide à la prise de traitement,meeting,,X,,,,,,,,,,,,,,,,X,,,X
+eventtype113,Aide à la toilette,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype114,Aide personnalisée,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype115,Audience tribunal,meeting,,,,X,,,,,,,,,,X,,,,,,,X
+eventtype116,* Autre,meeting,X,,,,,,,,,,,,,,,,X,,,,X
+eventtype117,* Autre,meeting,X,,,,,,,,,,,,,,,,,,,X,X
+eventtype118,* Autre,meeting,X,,,,,,,X,,,,,,,,,,,,,X
+eventtype119,* Autre,meeting,X,,,,,,,,,,,X,,,,,,,,,X
+eventtype120,* Autre,meeting,X,,,,,,X,,,,,,,,,,,,,,X
+eventtype121,* Autre,meeting,X,,,,,,,,,X,,,,,,,,,,,X
+eventtype122,* Autre,meeting,X,,,X,,,,,,,,,,,,,,,,,X
+eventtype123,* Autre,meeting,X,,,,,,,,,,,,,,,,,,X,,X
+eventtype124,* Autre,meeting,X,,,,,,,,,,,,,X,,,,,,,X
+eventtype125,* Autre,meeting,X,,,,,,,,,,,,,,X,,,,,,X
+eventtype126,* Autre,meeting,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype127,* Autre,meeting,X,,,,,,,,X,,,,,,,,,,,,X
+eventtype128,Bilan global,meeting,,,,,,,X,,,,,,,,,,,,,,X
+eventtype129,Bilan intermédiaire,meeting,,,,,,,X,,,,,,,,,,,,,,X
+eventtype130,Coiffeur ,meeting,,X,,,,,,,,,,,,,,,,,,,X
+eventtype131,Compétition,meeting,,,,,,,,,,,,,,,,,,,X,,X
+eventtype132,Conseil de classe,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype133,Conseil de la Vie Sociale,meeting,,,,,,,,,,,,,,,,,,,X,,X
+eventtype134,Entraînement,meeting,,,,,,,,,,,,,,,,,,,X,,X
+eventtype135,Entretien avec partenaires ,meeting,,,,,,,,,,,,,,,X,,,,,,X
+eventtype136,Entretien avec professeur,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype137,Entretien d'embauche,meeting,,,,,,,X,,,,,,,,,,,,,,X
+eventtype138,Entretien familial à domicile,meeting,,,,,,X,,,,X,,,,,,,,,,,X
+eventtype139,Entretien familial au service,meeting,,,,,,X,,,,X,,,,,,,,,,,X
+eventtype140,Entretien individuel,meeting,,,,,,X,,,,,,,,,X,,,,,,X
+eventtype141,Entretien PNP élargi,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype142,Entretien téléphonique avec famille et proches,meeting,,,,,,X,,,,X,,,,,,,,,,,X
+eventtype143,Entretien téléphonique médiatisé,meeting,,,,,,X,,,,X,,,,,,,,,,,X
+eventtype144,Etat des lieux d'entrée ou de sortie,meeting,,,,,,,,,,,X,,,,,,,,,,X
+eventtype145,Evaluation,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype146,Garde d'enfants,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype147,Horaires taxi,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype148,Inventaire vestimentaire ,meeting,,,,,,,,,X,,,,,,,,,,,,X
+eventtype149,Ménage,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype150,Mise à pied ou exclusion,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype151,Mobilisation,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype152,Nécessaire de voyage,meeting,,,,,,,,,X,,,,,,,,,,X,,X
+eventtype153,Office midi,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype154,Office soir,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype155,Pansement et soins mineurs,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype156,Passage d'examen,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype157,Pré admission,meeting,,,,,,,,,,,,,,X,,,,,,,X
+eventtype158,Première rencontre,meeting,,,,,,,X,,,,,,,,,,,,,,X
+eventtype159,Préparation à la sortie,meeting,,,,X,,,,,,,,,,X,,,,,,,X
+eventtype160,Préparation de repas,meeting,,X,,,,,,,,,,,,,,,X,,,,X
+eventtype161,Pré-rapport et réunion de synthèse,meeting,,,,,,X,,,,,,,,X,X,,,,,,X
+eventtype162,Préventions et surveillances,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype163,Prise en charge MDPH/SESSAD,meeting,,,,,,,,,,,,,,X,,,,,,,X
+eventtype164,Recherche de logement,meeting,,,,,,,,,,,X,,,,,,,,,,X
+eventtype165,Recherche de stage et apprentissage,meeting,,,,,,,X,,,,,,,,,,,,,,X
+eventtype166,Remise du projet et rapport,meeting,,,,,,,,,,,,,,,X,,,,,,X
+eventtype167,Rendez-vous anesthésiste,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype168,Rendez-vous ASE ,meeting,,,,X,,,,,,,,,,X,,,,,,,X
+eventtype169,Rendez-vous CMP,meeting,,,,,,,,,,,,,,X,,,,X,,,X
+eventtype170,Rendez-vous commissariat,meeting,,,,,,,,,,,,X,,,,,,,,,X
+eventtype171,Rendez-vous dentiste,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype172,Rendez-vous dermatologue,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype173,Rendez-vous kinésithérapeute,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype174,Rendez-vous médecine scolaire,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype175,Rendez-vous médecin généraliste,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype176,Rendez-vous orthodontiste,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype177,Rendez-vous orthophoniste,meeting,,,,,,,,,,,,,,X,,,,X,,,X
+eventtype178,Rendez-vous PJJ,meeting,,,,,,,,,,,,X,,,,,,,,,X
+eventtype179,Rendez-vous polyclinique,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype180,Rendez-vous psychiatre,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype181,Rendez-vous psychologue,meeting,,,,,,,,,,,,,,,,,,X,,,X
+eventtype182,Rendez-vous SEMO,meeting,,,,,,,,,,,,X,,,,,,,,,X
+eventtype183,Rendez-vous tribunal,meeting,,,,,,,,,,,,X,,,,,,,,,X
+eventtype184,Réparation d'équipement,meeting,,,,,,,,,X,,,,,,,,,,,,X
+eventtype185,Repas en cantine midi,meeting,,,,,,,,,,,,,,,,,X,,,,X
+eventtype186,Repas en cantine soir,meeting,,,,,,,,,,,,,,,,,X,,,,X
+eventtype187,Repas en casse-croute,meeting,,,,,,,,,,,,,,,,,X,,,,X
+eventtype188,Repas en famille ,meeting,,,,,,,,,,,,,,,,,X,,,,X
+eventtype189,Repas FJT,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype190,Repassage,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype191,Repas sur place ,meeting,,,,,,,,,,,,,,,,,X,,,,X
+eventtype192,Réunion d'admission,meeting,,,,X,,,,,,,,,,X,,,,,,,X
+eventtype193,Réunion d'équipe,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype194,Réunion de synthèse,meeting,,,,,,X,,,,,,,,X,X,,,,,,X
+eventtype195,Réunion générale,meeting,X,,,,,,,,,X,,,,X,,,,,X,,X
+eventtype196,Réunion scolaire,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype197,Séance d'enseignement,meeting,X,,,,,,,,,,,,X,,,,,,,,X
+eventtype198,Signature de projet individuel,meeting,,,,,,,,,,,,,,,X,,,,,,X
+eventtype199,Soin en interne,meeting,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype200,Soutien scolaire,meeting,,,,,,,,,,,,,X,,,,,,,,X
+eventtype201,Suivi de projet individuel,meeting,,,,,,X,,,,,,,,,X,,,,,,X
+eventtype202,Table gouter,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype203,Table petit déjeuner,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype204,Tables midi,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype205,Table soir,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype206,Vaccination,meeting,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype207,Vaisselle,meeting,,,,,,,,X,,,,,,,,,,,,,X
+eventtype208,Visite de famille et proches au service,meeting,,,,,,X,,,,X,,,,,,,,,,,X
+eventtype209,Visite d'inspection de logement,meeting,,,,,,,,,,,X,,,,,,,,,,X
+eventtype210,Visite FJT,meeting,,,,,,,,,,,,,,,,,,,,,X
+eventtype211,Visite logement autonome,meeting,,,,,,,,,,,X,,,,,,,,,,X
+eventtype212,Visites et sorties de loisir,meeting,,,,,,,,,,,,,,,,,,,X,,X
+eventtype213,Vitrerie,meeting,X,,,,,,,,,,,,,,,,,,,,X
+eventtype214,Absentéisme,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype215,Accident du travail,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype216,Arrêt maladie,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype217,* Autre,absence,X,,,,,,,,,,,,X,,,,,,,,X
+eventtype218,* Autre,absence,X,,,,,X,,,,,,,,,,,,,,,X
+eventtype219,* Autre,absence,X,,,,,,,,,,X,,,,,,,,,,X
+eventtype220,* Autre,absence,X,,,,,,,,,,,,,,X,,,,,,X
+eventtype221,* Autre,absence,X,,,,,,X,,,,,,,,,,,,,,X
+eventtype222,* Autre,absence,X,,,,,,,,,,,,,,,,,,X,,X
+eventtype223,* Autre,absence,X,,,,,,,,,,,,,,,,,X,,,X
+eventtype224,* Autre,absence,X,,,,,,,,,,,,,,,,X,,,,X
+eventtype225,Cantine scolaire,absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype226,CER,absence,,,,,,X,,,,,X,,,X,,,X,,,,X
+eventtype227,Colonies et autres séjours de vacances,absence,,,,,,X,,,,,X,,,X,,,X,,,,X
+eventtype228,Congés,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype229,Cours supplémentaires,absence,,,,,,,,,,,,,X,,,,,,,,X
+eventtype230,En entreprise en journée,absence,,,,,,,X,,,,,,,X,,,,,,,X
+eventtype231,En établissement,absence,,,,,,,,,,,,,,X,,,,,,,X
+eventtype232,En formation en journée,absence,,,,,,,,,,,,,X,X,,,,,,,X
+eventtype233,Fugue,absence,,,,,,X,,,,,X,,,X,,,X,,,,X
+eventtype234,Hébergement en famille,absence,,,,,,X,,,,X,X,,,X,,,,,,,X
+eventtype235,Hébergement en famille de parrainage,absence,,,,,,X,,,,X,X,,,X,,,,,,,X
+eventtype236,Hospitalisation,absence,,,,,,X,,,,,X,,,X,,,X,X,,,X
+eventtype237,Maladie,absence,,,,,,,,,,,,,X,,,,,,,,X
+eventtype238,Maladie,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype239,Mise à pied,absence,,,,,,,,,,,,,X,X,,,,,,,X
+eventtype240,RDV administratif,absence,,,,,,,,,,,,,X,,,,,,,,X
+eventtype241,Repas en casse croute,absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype242,Repas en famille,absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype243,Repas en groupe midi,absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype244,Repas en groupe soir,absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype245,Repas sur place (extérieur),absence,,,,,,,,,,,,,,,,,X,,,,X
+eventtype246,Retard,absence,,,,,,,X,,,,,,,,,,,,,,X
+eventtype247,Séjour de rupture,absence,,,,,,,,,,,,X,,,,,,,,,X
+eventtype248,Visite familiale à la journée,absence,,,,,,,,,,X,,,,,,,,,,,X
+eventtype249,Visite familiale médiatisée,absence,,,,,,,,,,X,,,,,,,,,,,X

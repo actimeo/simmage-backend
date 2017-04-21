@@ -1,0 +1,54 @@
+[
+    {
+	"pane": "Admin et mesures",
+	"topics": [
+	    "droits_de_sejour", 
+	    "decideur", 
+	    "suivi_administratif", 
+	    "justice"
+	]
+    },
+    {
+	"pane": "Projet individuel et suivi psycho-éducatif",
+	"topics": [
+	    "education", 
+	    "psychologie", 
+	    "projet"
+	]
+    },
+    {
+	"pane": "Hébergement, vie quotidienne et sociale",
+	"topics": [
+	    "aide_financiere_directe", 
+	    "entretien", 
+	    "aide_a_la_personne",
+	    "hebergement", 
+	    "restauration", 
+	    "transport", 
+	    "equipement_personnel", 
+	    "social"
+	]
+    },
+    {
+	"pane": "Suivi médical",
+	"topics": [
+	    "sante"
+	]
+    },
+    {
+	"pane": "Famille, tuteur et parrainage",
+	"topics": [
+	    "famille"
+	]
+    },
+    {
+	"pane": "Scolarité, stages et apprentissage",
+	"topics": [
+	    "pedagogie", 
+	    "emploi"
+	]
+    }
+]
+
+
+
