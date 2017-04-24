@@ -126,5 +126,28 @@ class dossierStatusTest extends PHPUnit_Framework_TestCase {
     $list = self::$base->organ->dossier_status_value_list();
     $this->assertEquals($list[0], 'preadmission');
   }
+
+  public function testDossierStatusHistory() {
+    $orgId1 = self::$base->organ->organization_add($this->token, 'an org 1', 'a desc 1', true);
+    $orgId2 = self::$base->organ->organization_add($this->token, 'an org 2', 'a desc 2', true);
+    $fname = 'firstname';
+    $lname = 'lastname';
+    $bdate = '01/09/2016';    
+    $dosId = self::$base->organ->dossier_add_individual($this->token, 'first', 'last', '01/01/2000', 'male', false);    
+    $dst1 = self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'preadmission', '01/12/2015');
+    $dst2 = self::$base->organ->dossier_status_change($this->token, $dosId, $orgId1, 'admission', '01/01/2016');
+    $dst3 = self::$base->organ->dossier_status_change($this->token, $dosId, $orgId2, 'present', '01/02/2016');
+    $list = self::$base->organ->dossier_status_history($this->token, $dosId, null, null);
+    $ids = array_map(function($a) { return $a['dst_id']; }, $list);
+    $this->assertEquals([$dst3, $dst2, $dst1], $ids);
+
+    $list = self::$base->organ->dossier_status_history($this->token, $dosId, $orgId1, null);
+    $ids = array_map(function($a) { return $a['dst_id']; }, $list);
+    $this->assertEquals([$dst2, $dst1], $ids);
+
+    $list = self::$base->organ->dossier_status_history($this->token, $dosId, null, 'present');
+    $ids = array_map(function($a) { return $a['dst_id']; }, $list);
+    $this->assertEquals([$dst3], $ids);
+  }
 }
 ?>

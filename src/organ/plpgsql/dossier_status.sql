@@ -1,10 +1,10 @@
 CREATE OR REPLACE FUNCTION organ.dossier_status_change(prm_token integer, prm_dos_id integer, prm_org_id integer, prm_value organ.dossier_status_value, prm_when date)
-RETURNS VOID
+RETURNS integer
 LANGUAGE plpgsql
 VOLATILE
 AS $$
 DECLARE
-
+  ret integer;
 BEGIN
   -- TODO rights to change status?
   PERFORM login._token_assert(prm_token, NULL);
@@ -13,9 +13,10 @@ BEGIN
    WHERE 
      dos_id = prm_dos_id AND org_id = prm_org_id
      AND dst_end > prm_when - interval '1 day';
-
   INSERT INTO organ.dossier_status (dos_id, org_id, dst_value, dst_start)
-    VALUES (prm_dos_id, prm_org_id, prm_value, prm_when);
+    VALUES (prm_dos_id, prm_org_id, prm_value, prm_when)
+    RETURNING dst_id INTO ret;
+  RETURN ret;
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_status_change(prm_token integer, dos_id integer, org_id integer, prm_value organ.dossier_status_value, prm_when date) IS 'Change a dossier status in an organization';
@@ -32,7 +33,7 @@ BEGIN
   PERFORM login._token_assert(prm_token, NULL);
   SELECT dst_value INTO ret FROM organ.dossier_status
    WHERE dos_id = prm_dos_id AND org_id = prm_org_id 
-   AND prm_when BETWEEN dst_start AND dst_end;
+   AND prm_when >= dst_start ORDER BY dst_start DESC LIMIT 1;
   RETURN ret;
 END;
 $$;
@@ -73,3 +74,39 @@ BEGIN
 END;
 $$;
 COMMENT ON FUNCTION organ.dossier_status_value_list() IS 'Returns the list of dossier statuses';
+
+DROP TYPE IF EXISTS organ.dossier_status_history;
+DROP FUNCTION IF EXISTS organ.dossier_status_history(prm_token integer, prm_dos_id integer, prm_org_id integer, prm_status organ.dossier_status_value);
+CREATE TYPE organ.dossier_status_history AS (
+  dst_id integer,
+  org_id integer,
+  org_name text,
+  dst_value organ.dossier_status_value,
+  dst_start date,
+  dst_end date
+);
+CREATE FUNCTION organ.dossier_status_history(prm_token integer, prm_dos_id integer, prm_org_id integer, prm_status organ.dossier_status_value)
+RETURNS SETOF organ.dossier_status_history
+LANGUAGE plpgsql
+STABLE
+AS $$
+BEGIN
+  PERFORM login._token_assert(prm_token, NULL);
+  RETURN QUERY SELECT
+    dst_id,
+    org_id,
+    org_name,
+    dst_value,
+    dst_start,
+    dst_end
+    FROM organ.dossier_status
+    INNER JOIN organ.organization USING(org_id)
+    WHERE 
+      dos_id = prm_dos_id AND 
+      (prm_org_id ISNULL OR dossier_status.org_id = prm_org_id) AND
+      (prm_status ISNULL OR dst_value = prm_status)
+    ORDER BY dst_start DESC;
+END;
+$$;
+COMMENT ON FUNCTION organ.dossier_status_history(prm_token integer, prm_dos_id integer, prm_org_id integer, prm_status organ.dossier_status_value)
+IS 'Returns the history of statuses for a dossier';
