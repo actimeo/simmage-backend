@@ -53,16 +53,17 @@ BEGIN
     FROM (SELECT
       CASE WHEN (req->>'org_id') IS NULL THEN NULL ELSE org_id END as org_id, 
       CASE WHEN (req->>'org_name') IS NULL THEN NULL ELSE org_name END as org_name,
-      CASE WHEN (req->>'dst_value') IS NULL THEN NULL ELSE 
-        organ.dossier_status_get(prm_token, prm_dos_id, org_id, COALESCE(prm_when, CURRENT_DATE)) END as dst_value
+      CASE WHEN (req->>'dst_value') IS NULL THEN NULL ELSE dst_value END as dst_value
       FROM organ.dossier_status
       INNER JOIN organ.organization USING(org_id)
-      WHERE dos_id = prm_dos_id
+      WHERE 
+        dos_id = prm_dos_id AND 
+        COALESCE(prm_when, CURRENT_DATE) BETWEEN dst_start AND dst_end
       ) d;
   RETURN ret;
 END;
 $$;
-COMMENT ON FUNCTION organ.dossier_status_list_json(prm_token integer, prm_dos_id integer, prm_when date, req json) IS 'Returns the list of statuses of a dossier in the different organizations';
+COMMENT ON FUNCTION organ.dossier_status_list_json(prm_token integer, prm_dos_id integer, prm_when date, req json) IS 'Returns the list of statuses of a dossier in the different organizations at a given time';
 
 CREATE OR REPLACE FUNCTION organ.dossier_status_value_list()
 RETURNS SETOF organ.dossier_status_value

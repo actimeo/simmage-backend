@@ -120,6 +120,15 @@ class dossierStatusTest extends PHPUnit_Framework_TestCase {
 	}, []);
     ksort($list2);
     $this->assertEquals(array($orgId1 => 'admission', $orgId2 => 'present'), $list2);
+
+    $list = self::$base->organ->dossier_status_list_json($this->token, $dosId, '15/12/2015', json_encode($req));
+    $list2 = array_reduce($list, function($pot, $item) { 
+	$pot[$item->org_id] = $item->dst_value;
+	return $pot;
+	}, []);
+    ksort($list2);
+    $this->assertEquals(array($orgId1 => 'preadmission'), $list2);
+
   }
 
   public function testDossierStatusValueList() {
